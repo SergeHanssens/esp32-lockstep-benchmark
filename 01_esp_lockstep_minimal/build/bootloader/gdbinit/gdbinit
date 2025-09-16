@@ -1,0 +1,2 @@
+source D:/eindelijk/esp_lockstep_minimal/build/bootloader/gdbinit/symbols
+source D:/eindelijk/esp_lockstep_minimal/build/bootloader/gdbinit/connect
