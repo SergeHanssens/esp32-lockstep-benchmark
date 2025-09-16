@@ -76,6 +76,9 @@ Handig voor visualisatie van betrouwbaarheid, timing en foutdetectie.
 
 ## 📷 Hardware foto's
 
+### OverzichtESP32-S3
+![Overzicht](docs/images/Overzicht.jpg)
+
 ### ESP32-S3 DevKitC
 ![ESP32-S3 DevKitC voorzijde](docs/images/ESP32-S3-DevKitC-1_voor.jpg)
 ![ESP32-S3 DevKitC achterzijde](docs/images/ESP32-S3-DevKitC-1_achter.jpg)
