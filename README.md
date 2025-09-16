@@ -87,18 +87,18 @@ Handig voor visualisatie van betrouwbaarheid, timing en foutdetectie.
 [specs](https://github.com/Fri3dCamp/badge_2024_hw)
 
 ### ESP32WROOM32 ontwikkelbord (Wemos)
-![ESP32WROOM32 Wemos voorzijde](docs/images/ESP32-ESP32WROOM32_Wemos_voor.jpg)
-![ESP32WROOM32 Wemos achterzijde](docs/images/ESP32-ESP32WROOM32_Wemos_achter.jpg)
+![ESP32WROOM32 Wemos voorzijde](docs/images/ESP32WROOM32_Wemos_voor.jpg)
+![ESP32WROOM32 Wemos achterzijde](docs/images/ESP32WROOM32_Wemos_achter.jpg)
 [specs](https://wiki.geekworm.com/WEMOS_ESP32_Board_with_OLED)
 
 ### ESP32WROOM32 ontwikkelbord (Joy-it)
-![ESP32WROOM32 Joy-it voorzijde](docs/images/ESP32-ESP32WROOM32_Joy-it_voor.jpg)
-![ESP32WROOM32 Joy-it achterzijde](docs/images/ESP32-ESP32WROOM32_Joy-it_achter.jpg)
+![ESP32WROOM32 Joy-it voorzijde](docs/images/ESP32WROOM32_Joy-it_voor.jpg)
+![ESP32WROOM32 Joy-it achterzijde](docs/images/ESP32WROOM32_Joy-it_achter.jpg)
 [specs](https://joy-it.net/en/products/SBC-NodeMCU-ESP32)
 
 ### ESP32WROOM32 ontwikkelbord (Otronic)
-![ESP32WROOM32 Otronic voorzijde](docs/images/ESP32-ESP32WROOM32_Otronic_voor.jpg)
-![ESP32WROOM32 Otronic achterzijde](docs/images/ESP32-ESP32WROOM32_Otronic_achter.jpg)
+![ESP32WROOM32 Otronic voorzijde](docs/images/ESP32WROOM32_Otronic_voor.jpg)
+![ESP32WROOM32 Otronic achterzijde](docs/images/ESP32WROOM32_Otronic_achter.jpg)
 [specs](https://www.otronic.nl/nl/esp32-wroom-4mb-devkit-v1-met-losse-header-pins.html)
 
 ### ESP32-P4 DevKit (Olimex)
