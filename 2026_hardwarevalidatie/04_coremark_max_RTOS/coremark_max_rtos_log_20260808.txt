@@ -1,0 +1,138 @@
+ESP-ROM:esp32s3-20210327
+Build:Mar 27 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0x8 (SPI_FAST_FLASH_BOOT)
+Saved PC:0x42016554
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fce2820,len:0x159c
+load:0x403c8700,len:0xd24
+load:0x403cb700,len:0x2f48
+entry 0x403c8924
+I (24) boot: ESP-IDF v5.5 2nd stage bootloader
+I (24) boot: compile time Aug  8 2026 10:12:27
+I (25) boot: Multicore bootloader
+I (25) boot: chip revision: v0.2
+I (27) boot: efuse block revision: v1.3
+I (31) boot.esp32s3: Boot SPI Speed : 80MHz
+I (35) boot.esp32s3: SPI Mode       : DIO
+I (39) boot.esp32s3: SPI Flash Size : 2MB
+I (42) boot: Enabling RNG early entropy source...
+I (47) boot: Partition Table:
+I (49) boot: ## Label            Usage          Type ST Offset   Length
+I (56) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (62) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (69) boot:  2 factory          factory app      00 00 00010000 00100000
+I (75) boot: End of partition table
+I (79) esp_image: segment 0: paddr=00010020 vaddr=3c020020 size=0a610h ( 42512) map
+I (93) esp_image: segment 1: paddr=0001a638 vaddr=3fc91900 size=029ech ( 10732) load
+I (96) esp_image: segment 2: paddr=0001d02c vaddr=40374000 size=02fech ( 12268) load
+I (104) esp_image: segment 3: paddr=00020020 vaddr=42000020 size=17c5ch ( 97372) map
+I (125) esp_image: segment 4: paddr=00037c84 vaddr=40376fec size=0a80ch ( 43020) load
+I (135) esp_image: segment 5: paddr=00042498 vaddr=600fe000 size=00020h (    32) load
+I (141) boot: Loaded app from partition at offset 0x10000
+I (141) boot: Disabling RNG early entropy source...
+I (153) cpu_start: Multicore app
+I (162) cpu_start: Pro cpu start user code
+I (162) cpu_start: cpu freq: 240000000 Hz
+I (162) app_init: Application information:
+I (162) app_init: Project name:     coremark_max_rtos
+I (167) app_init: App version:      1
+I (170) app_init: Compile time:     Aug  8 2026 10:11:56
+I (175) app_init: ELF file SHA256:  1af4396d7...
+I (180) app_init: ESP-IDF:          v5.5
+I (183) efuse_init: Min chip rev:     v0.0
+I (187) efuse_init: Max chip rev:     v0.99 
+I (191) efuse_init: Chip rev:         v0.2
+I (195) heap_init: Initializing. RAM available for dynamic allocation:
+I (201) heap_init: At 3FC953A8 len 00054368 (336 KiB): RAM
+I (206) heap_init: At 3FCE9710 len 00005724 (21 KiB): RAM
+I (211) heap_init: At 3FCF0000 len 00008000 (32 KiB): DRAM
+I (217) heap_init: At 600FE020 len 00001FC8 (7 KiB): RTCRAM
+I (223) spi_flash: detected chip: boya
+I (225) spi_flash: flash io: dio
+W (228) spi_flash: Detected size(16384k) larger than the size in the binary image header(2048k). Using the size in the binary image header.
+I (241) sleep_gpio: Configure to isolate all GPIO pins in sleep state
+I (247) sleep_gpio: Enable automatic switching of GPIO sleep configuration
+I (254) main_task: Started on CPU0
+I (264) main_task: Calling app_main()
+
+=== 04_coremark_max_RTOS: EEMBC CoreMark, VOLLEDIG RTOS (aparte firmware), core 0, CPU 240 MHz ===
+E (5264) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:
+E (5264) task_wdt:  - IDLE0 (CPU 0)
+E (5264) task_wdt: Tasks currently running:
+E (5264) task_wdt: CPU 0: coremark
+E (5264) task_wdt: CPU 1: IDLE1
+E (5264) task_wdt: Print CPU 0 (current core) backtrace
+
+
+Backtrace: 0x4200B08F:0x3FC92A50 0x40376FCD:0x3FC92A80 0x4201641D:0x3FCA0C30 0x420095FB:0x3FCA0C50 0x42008EE1:0x3FCA0CC0 0x42008F46:0x3FCA0CE0 0x420160D9:0x3FCA0D00 0x42009055:0x3FCA0D30 0x42008976:0x3FCA0D50 0x42008AE4:0x3FCA0D70 0x420088AD:0x3FCA0E00
+
+E (10264) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:
+E (10264) task_wdt:  - IDLE0 (CPU 0)
+E (10264) task_wdt: Tasks currently running:
+E (10264) task_wdt: CPU 0: coremark
+E (10264) task_wdt: CPU 1: IDLE1
+E (10264) task_wdt: Print CPU 0 (current core) backtrace
+
+
+Backtrace: 0x4200B08F:0x3FC92A50 0x40376FCD:0x3FC92A80 0x42008F7D:0x3FCA0D30 0x42008976:0x3FCA0D50 0x42008AE4:0x3FCA0D70 0x420088AD:0x3FCA0E00
+
+E (15264) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:
+E (15264) task_wdt:  - IDLE0 (CPU 0)
+E (15264) task_wdt: Tasks currently running:
+E (15264) task_wdt: CPU 0: coremark
+E (15264) task_wdt: CPU 1: IDLE1
+E (15264) task_wdt: Print CPU 0 (current core) backtrace
+
+
+Backtrace: 0x4200B08F:0x3FC92A50 0x40376FCD:0x3FC92A80 0x42008F8C:0x3FCA0D30 0x42008988:0x3FCA0D50 0x42008AE4:0x3FCA0D70 0x420088AD:0x3FCA0E00
+
+E (20264) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:
+E (20264) task_wdt:  - IDLE0 (CPU 0)
+E (20264) task_wdt: Tasks currently running:
+E (20264) task_wdt: CPU 0: coremark
+E (20264) task_wdt: CPU 1: IDLE1
+E (20264) task_wdt: Print CPU 0 (current core) backtrace
+
+
+Backtrace: 0x4200B08F:0x3FC92A50 0x40376FCD:0x3FC92A80 0x42008F8C:0x3FCA0D30 0x42008988:0x3FCA0D50 0x42008AE4:0x3FCA0D70 0x420088AD:0x3FCA0E00
+
+E (25264) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:
+E (25264) task_wdt:  - IDLE0 (CPU 0)
+E (25264) task_wdt: Tasks currently running:
+E (25264) task_wdt: CPU 0: coremark
+E (25264) task_wdt: CPU 1: IDLE1
+E (25264) task_wdt: Print CPU 0 (current core) backtrace
+
+
+Backtrace: 0x4200B08F:0x3FC92A50 0x40376FCD:0x3FC92A80 0x420097C7:0x3FCA0D10 0x4200909D:0x3FCA0D30 0x42008976:0x3FCA0D50 0x42008AE4:0x3FCA0D70 0x420088AD:0x3FCA0E00
+
+E (30264) task_wdt: Task watchdog got triggered. The following tasks/users did not reset the watchdog in time:
+E (30264) task_wdt:  - IDLE0 (CPU 0)
+E (30264) task_wdt: Tasks currently running:
+E (30264) task_wdt: CPU 0: coremark
+E (30264) task_wdt: CPU 1: IDLE1
+E (30264) task_wdt: Print CPU 0 (current core) backtrace
+
+
+Backtrace: 0x4200B08F:0x3FC92A50 0x40376FCD:0x3FC92A80 0x420163DE:0x3FCA0C30 0x420095FB:0x3FCA0C50 0x42008EE1:0x3FCA0CC0 0x42008F46:0x3FCA0CE0 0x420160D9:0x3FCA0D00 0x42009055:0x3FCA0D30 0x42008976:0x3FCA0D50 0x42008AE4:0x3FCA0D70 0x420088AD:0x3FCA0E00
+
+2K performance run parameters for coremark.
+CoreMark Size    : 666
+Total ticks      : 34406652
+Total time (secs): 34.406652
+Iterations/Sec   : 581.282945
+Iterations       : 20000
+Compiler version : GCC14.2.0
+Compiler flags   : -O2 ESP-IDF v5.5
+Memory location  : STATIC
+seedcrc          : 0xe9f5
+[0]crclist       : 0xe714
+[0]crcmatrix     : 0x1fd7
+[0]crcstate      : 0x8e3a
+[0]crcfinal      : 0x382f
+Correct operation validated. See README.md for run and reporting rules.
+CoreMark 1.0 : 581.282945 / GCC14.2.0 -O2 ESP-IDF v5.5 / STATIC
+
+=== KLAAR (max_RTOS) ===
+I (34714) main_task: Returned from app_main()

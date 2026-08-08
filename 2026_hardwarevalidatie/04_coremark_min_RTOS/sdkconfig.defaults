@@ -1,0 +1,6 @@
+# CoreMark MINIMAAL RTOS — scheduler geschorst + interrupts uit in meetlus
+# Watchdogs uit (anders reset tijdens de ~34 s meetlus), 240 MHz, -O2
+CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ_240=y
+CONFIG_COMPILER_OPTIMIZATION_PERF=y
+CONFIG_ESP_INT_WDT=n
+CONFIG_ESP_TASK_WDT_EN=n

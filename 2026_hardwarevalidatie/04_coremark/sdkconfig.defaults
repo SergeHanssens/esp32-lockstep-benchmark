@@ -1,0 +1,8 @@
+# CoreMark baseline — masterproef Serge Hanssens
+# CPU op 240 MHz (vergelijkbaar met Espressif-referentiescores)
+CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ_240=y
+# -O2 voor de hele build
+CONFIG_COMPILER_OPTIMIZATION_PERF=y
+# Watchdogs uit: pass B schorst scheduler + interrupts gedurende ~20 s
+CONFIG_ESP_INT_WDT=n
+CONFIG_ESP_TASK_WDT_EN=n
