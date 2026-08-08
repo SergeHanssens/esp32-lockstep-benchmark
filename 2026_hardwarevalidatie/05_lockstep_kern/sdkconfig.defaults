@@ -1,0 +1,8 @@
+# Lockstep-kern — masterproef Serge Hanssens
+# 240 MHz zoals de 04_coremark-projecten (zelfde klok als de latere overheadmeting)
+CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ_240=y
+CONFIG_COMPILER_OPTIMIZATION_PERF=y
+# Watchdogs uit: beide cores spin-waiten in het meetpad (zoals 04 pass B);
+# de idle-taken komen tijdens de run niet aan bod.
+CONFIG_ESP_INT_WDT=n
+CONFIG_ESP_TASK_WDT_EN=n
