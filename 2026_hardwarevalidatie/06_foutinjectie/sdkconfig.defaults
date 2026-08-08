@@ -1,0 +1,7 @@
+# Foutinjectie op de lockstep-kern — masterproef Serge Hanssens
+# Zelfde basis als 05_lockstep_kern: 240 MHz, -O2, watchdogs uit
+# (spin-wait-meetpad; interrupts blijven AAN voor de esp_timer-injector).
+CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ_240=y
+CONFIG_COMPILER_OPTIMIZATION_PERF=y
+CONFIG_ESP_INT_WDT=n
+CONFIG_ESP_TASK_WDT_EN=n

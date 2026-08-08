@@ -1,0 +1,421 @@
+ESP-ROM:esp32s3-20210327
+Build:Mar 27 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0x8 (SPI_FAST_FLASH_BOOT)
+Saved PC:0x40377e2a
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fce2820,len:0x159c
+load:0x403c8700,len:0xd24
+load:0x403cb700,len:0x2f48
+entry 0x403c8924
+I (24) boot: ESP-IDF v5.5 2nd stage bootloader
+I (24) boot: compile time Aug  8 2026 12:47:51
+I (25) boot: Multicore bootloader
+I (25) boot: chip revision: v0.2
+I (27) boot: efuse block revision: v1.3
+I (31) boot.esp32s3: Boot SPI Speed : 80MHz
+I (35) boot.esp32s3: SPI Mode       : DIO
+I (39) boot.esp32s3: SPI Flash Size : 2MB
+I (42) boot: Enabling RNG early entropy source...
+I (47) boot: Partition Table:
+I (49) boot: ## Label            Usage          Type ST Offset   Length
+I (56) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (62) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (69) boot:  2 factory          factory app      00 00 00010000 00100000
+I (75) boot: End of partition table
+I (79) esp_image: segment 0: paddr=00010020 vaddr=3c020020 size=0a2d8h ( 41688) map
+I (93) esp_image: segment 1: paddr=0001a300 vaddr=3fc91a00 size=029d0h ( 10704) load
+I (96) esp_image: segment 2: paddr=0001ccd8 vaddr=40374000 size=03340h ( 13120) load
+I (104) esp_image: segment 3: paddr=00020020 vaddr=42000020 size=1666ch ( 91756) map
+I (125) esp_image: segment 4: paddr=00036694 vaddr=40377340 size=0a658h ( 42584) load
+I (134) esp_image: segment 5: paddr=00040cf4 vaddr=600fe000 size=00020h (    32) load
+I (140) boot: Loaded app from partition at offset 0x10000
+I (140) boot: Disabling RNG early entropy source...
+I (152) cpu_start: Multicore app
+I (161) cpu_start: Pro cpu start user code
+I (161) cpu_start: cpu freq: 240000000 Hz
+I (161) app_init: Application information:
+I (161) app_init: Project name:     foutinjectie
+I (165) app_init: App version:      1
+I (169) app_init: Compile time:     Aug  8 2026 12:47:21
+I (174) app_init: ELF file SHA256:  a46d1249a...
+I (178) app_init: ESP-IDF:          v5.5
+I (182) efuse_init: Min chip rev:     v0.0
+I (186) efuse_init: Max chip rev:     v0.99 
+I (189) efuse_init: Chip rev:         v0.2
+I (193) heap_init: Initializing. RAM available for dynamic allocation:
+I (200) heap_init: At 3FC95DD8 len 00053938 (334 KiB): RAM
+I (205) heap_init: At 3FCE9710 len 00005724 (21 KiB): RAM
+I (210) heap_init: At 3FCF0000 len 00008000 (32 KiB): DRAM
+I (215) heap_init: At 600FE020 len 00001FC8 (7 KiB): RTCRAM
+I (221) spi_flash: detected chip: boya
+I (224) spi_flash: flash io: dio
+W (227) spi_flash: Detected size(16384k) larger than the size in the binary image header(2048k). Using the size in the binary image header.
+I (239) sleep_gpio: Configure to isolate all GPIO pins in sleep state
+I (245) sleep_gpio: Enable automatic switching of GPIO sleep configuration
+I (252) main_task: Started on CPU0
+I (262) main_task: Calling app_main()
+=== 06_foutinjectie: lockstep-kern + gerichte en asynchrone bitflips ===
+[core 1] checkercore gestart
+[core 0] applicatiecore gestart
+[campagne A klaar: 333 injecties]
+[core 1] checkercore klaar
+[campagne B klaar: 50000 rondes, 1133 injecties]
+
+=== RESULTATEN foutinjectie (8 aug 2026) ===
+--- CAMPAGNE A: 333 gerichte injecties (1 bitflip per injectie) ---
+doelwit invoer   : 111 injecties, 111 exact verwacht verdict 0x7, 0 NIET gedetecteerd
+   detectielatentie: min   640 / gem   654.2 / max  2213 cycli (gem 2.726 us)
+doelwit resultaat: 111 injecties, 111 exact verwacht verdict 0x6, 0 NIET gedetecteerd
+   detectielatentie: min   385 / gem   385.0 / max   385 cycli (gem 1.604 us)
+doelwit uitvoer  : 111 injecties, 111 exact verwacht verdict 0x4, 0 NIET gedetecteerd
+   detectielatentie: min   370 / gem   370.0 / max   370 cycli (gem 1.542 us)
+detectiegraad campagne A: 333/333 = 100.0%
+--- CAMPAGNE B: asynchrone injecties (elke 250 us, willekeurige bit) ---
+rondes 50000, injecties 1133, rondes met gedetecteerde fout 210
+detecties per categorie: invoer 210 / verwerking 210 / uitvoer 210
+gemaskeerd of samengevallen: 923 (81.5% van de injecties)
+(maskering = flip buiten het levende venster van de data: al door de
+ checker gelezen, of voor het lezen alweer overschreven door een
+ volgende ronde - zoals bij echte SEU's; meerdere injecties kunnen
+ ook in dezelfde ronde samenvallen)
+
+CSV_START
+INJ;ronde;doelwit;woord;bit;verdict;latentie_cycli
+INJ;1;invoer;14;23;0x7;640
+INJ;4;resultaat;13;13;0x6;385
+INJ;7;uitvoer;21;27;0x4;370
+INJ;10;invoer;22;5;0x7;640
+INJ;13;resultaat;27;12;0x6;385
+INJ;16;uitvoer;24;4;0x4;370
+INJ;19;invoer;25;28;0x7;640
+INJ;22;resultaat;26;12;0x6;385
+INJ;25;uitvoer;7;20;0x4;370
+INJ;28;invoer;4;31;0x7;640
+INJ;31;resultaat;13;21;0x6;385
+INJ;34;uitvoer;14;3;0x4;370
+INJ;37;invoer;3;29;0x7;640
+INJ;40;resultaat;0;7;0x6;385
+INJ;43;uitvoer;1;14;0x4;370
+INJ;46;invoer;2;2;0x7;640
+INJ;49;resultaat;31;18;0x6;385
+INJ;52;uitvoer;28;14;0x4;370
+INJ;55;invoer;6;22;0x7;640
+INJ;58;resultaat;9;2;0x6;385
+INJ;61;uitvoer;8;19;0x4;370
+INJ;64;invoer;15;1;0x7;640
+INJ;67;resultaat;10;31;0x6;385
+INJ;70;uitvoer;21;1;0x4;370
+INJ;73;invoer;20;19;0x7;640
+INJ;76;resultaat;19;0;0x6;385
+INJ;79;uitvoer;30;16;0x4;370
+INJ;82;invoer;17;0;0x7;640
+INJ;85;resultaat;16;16;0x6;385
+INJ;88;uitvoer;23;0;0x4;370
+INJ;91;invoer;18;17;0x7;640
+INJ;94;resultaat;13;7;0x6;385
+INJ;97;uitvoer;12;17;0x4;370
+INJ;100;invoer;11;3;0x7;640
+INJ;103;resultaat;23;17;0x6;385
+INJ;106;uitvoer;24;31;0x4;370
+INJ;109;invoer;25;22;0x7;640
+INJ;112;resultaat;30;2;0x6;385
+INJ;115;uitvoer;27;18;0x4;370
+INJ;118;invoer;4;6;0x7;640
+INJ;121;resultaat;5;14;0x6;385
+INJ;124;uitvoer;2;5;0x4;370
+INJ;127;invoer;15;19;0x7;640
+INJ;130;resultaat;0;13;0x6;385
+INJ;133;uitvoer;1;23;0x4;370
+INJ;136;invoer;6;29;0x7;640
+INJ;139;resultaat;3;20;0x6;385
+INJ;142;uitvoer;28;4;0x4;370
+INJ;145;invoer;29;28;0x7;640
+INJ;148;resultaat;26;4;0x6;385
+INJ;151;uitvoer;8;12;0x4;370
+INJ;154;invoer;11;28;0x7;640
+INJ;157;resultaat;14;21;0x6;385
+INJ;160;uitvoer;13;15;0x4;370
+INJ;163;invoer;20;21;0x7;640
+INJ;166;resultaat;23;27;0x6;385
+INJ;169;uitvoer;18;13;0x4;370
+INJ;172;invoer;17;6;0x7;640
+INJ;175;resultaat;16;30;0x6;385
+INJ;178;uitvoer;19;10;0x4;370
+INJ;181;invoer;22;10;0x7;640
+INJ;184;resultaat;21;30;0x6;385
+INJ;187;uitvoer;12;23;0x4;370
+INJ;190;invoer;15;9;0x7;640
+INJ;193;resultaat;10;27;0x6;385
+INJ;196;uitvoer;9;25;0x4;370
+INJ;199;invoer;25;15;0x7;640
+INJ;202;resultaat;26;25;0x6;385
+INJ;205;uitvoer;31;24;0x4;370
+INJ;208;invoer;28;8;0x7;640
+INJ;211;resultaat;5;8;0x6;385
+INJ;214;uitvoer;6;24;0x4;370
+INJ;217;invoer;3;8;0x7;640
+INJ;220;resultaat;0;11;0x6;385
+INJ;223;uitvoer;1;25;0x4;370
+INJ;226;invoer;2;23;0x7;640
+INJ;229;resultaat;7;9;0x6;385
+INJ;232;uitvoer;4;27;0x4;370
+INJ;235;invoer;29;26;0x7;640
+INJ;238;resultaat;30;14;0x6;385
+INJ;241;uitvoer;27;6;0x4;370
+INJ;244;invoer;24;26;0x7;640
+INJ;247;resultaat;10;10;0x6;385
+INJ;250;uitvoer;13;22;0x4;370
+INJ;253;invoer;12;31;0x7;640
+INJ;256;resultaat;19;21;0x6;385
+INJ;259;uitvoer;22;11;0x4;370
+INJ;262;invoer;17;29;0x7;640
+INJ;265;resultaat;16;7;0x6;385
+INJ;268;uitvoer;31;12;0x4;370
+INJ;271;invoer;18;4;0x7;640
+INJ;274;resultaat;21;20;0x6;385
+INJ;277;uitvoer;20;12;0x4;370
+INJ;280;invoer;11;20;0x7;640
+INJ;283;resultaat;14;29;0x6;385
+INJ;286;uitvoer;9;19;0x4;370
+INJ;289;invoer;8;5;0x7;640
+INJ;292;resultaat;7;31;0x6;385
+INJ;295;uitvoer;27;5;0x4;370
+INJ;298;invoer;28;19;0x7;640
+INJ;301;resultaat;29;2;0x6;385
+INJ;304;uitvoer;2;22;0x4;370
+INJ;307;invoer;7;14;0x7;640
+INJ;310;resultaat;0;18;0x6;385
+INJ;313;uitvoer;1;2;0x4;370
+INJ;316;invoer;14;17;0x7;640
+INJ;319;resultaat;3;7;0x6;385
+INJ;322;uitvoer;4;17;0x4;370
+INJ;325;invoer;5;3;0x7;640
+INJ;328;resultaat;26;17;0x6;385
+INJ;331;uitvoer;31;0;0x4;370
+INJ;334;invoer;24;16;0x7;640
+INJ;337;resultaat;25;0;0x6;385
+INJ;340;uitvoer;22;16;0x4;370
+INJ;343;invoer;12;0;0x7;640
+INJ;346;resultaat;15;16;0x6;385
+INJ;349;uitvoer;18;1;0x4;370
+INJ;352;invoer;17;19;0x7;640
+INJ;355;resultaat;16;1;0x6;385
+INJ;358;uitvoer;19;23;0x4;370
+INJ;361;invoer;30;1;0x7;640
+INJ;364;resultaat;29;18;0x6;385
+INJ;367;uitvoer;20;2;0x4;370
+INJ;370;invoer;23;30;0x7;640
+INJ;373;resultaat;10;6;0x6;385
+INJ;376;uitvoer;9;18;0x4;370
+INJ;379;invoer;8;3;0x7;640
+INJ;382;resultaat;11;21;0x6;385
+INJ;385;uitvoer;6;15;0x4;370
+INJ;388;invoer;5;21;0x7;640
+INJ;391;resultaat;29;3;0x6;385
+INJ;394;uitvoer;30;13;0x4;370
+INJ;397;invoer;3;4;0x7;640
+INJ;400;resultaat;0;28;0x6;385
+INJ;403;uitvoer;1;4;0x4;370
+INJ;406;invoer;2;20;0x7;640
+INJ;409;resultaat;15;28;0x6;385
+INJ;412;uitvoer;12;23;0x4;370
+INJ;415;invoer;5;13;0x7;640
+INJ;418;resultaat;6;27;0x6;385
+INJ;421;uitvoer;27;5;0x4;370
+INJ;424;invoer;24;15;0x7;640
+INJ;427;resultaat;25;6;0x6;385
+INJ;430;uitvoer;26;26;0x4;370
+INJ;433;invoer;23;10;0x7;640
+INJ;436;resultaat;20;22;0x6;385
+INJ;439;uitvoer;14;30;0x4;370
+INJ;442;invoer;17;10;0x7;640
+INJ;445;resultaat;16;11;0x6;385
+INJ;448;uitvoer;23;25;0x4;370
+INJ;451;invoer;18;7;0x7;640
+INJ;454;resultaat;29;9;0x6;385
+INJ;457;uitvoer;28;27;0x4;370
+INJ;460;invoer;27;24;0x7;640
+INJ;463;resultaat;22;8;0x6;385
+INJ;466;uitvoer;9;24;0x4;370
+INJ;469;invoer;8;24;0x7;640
+INJ;472;resultaat;15;8;0x6;385
+INJ;475;uitvoer;10;9;0x4;370
+INJ;478;invoer;5;31;0x7;640
+INJ;481;resultaat;4;9;0x6;385
+INJ;484;uitvoer;3;11;0x4;370
+INJ;487;invoer;31;25;0x7;640
+INJ;490;resultaat;0;7;0x6;385
+INJ;493;uitvoer;1;14;0x4;370
+INJ;496;invoer;6;26;0x7;640
+INJ;499;resultaat;3;26;0x6;385
+INJ;502;uitvoer;12;14;0x4;370
+INJ;505;invoer;13;22;0x7;640
+INJ;508;resultaat;10;29;0x6;385
+INJ;511;uitvoer;7;11;0x4;370
+INJ;514;invoer;24;5;0x7;640
+INJ;517;resultaat;25;31;0x6;385
+INJ;520;uitvoer;30;5;0x4;370
+INJ;523;invoer;27;12;0x7;640
+INJ;526;resultaat;20;28;0x6;385
+INJ;529;uitvoer;21;20;0x4;370
+INJ;532;invoer;18;12;0x7;640
+INJ;535;resultaat;16;20;0x6;385
+INJ;538;uitvoer;19;4;0x4;370
+INJ;541;invoer;22;13;0x7;640
+INJ;544;resultaat;21;7;0x6;385
+INJ;547;uitvoer;28;29;0x4;370
+INJ;550;invoer;31;3;0x7;640
+INJ;553;resultaat;26;21;0x6;385
+INJ;556;uitvoer;25;30;0x4;370
+INJ;559;invoer;8;22;0x7;640
+INJ;562;resultaat;11;2;0x6;385
+INJ;565;uitvoer;14;18;0x4;370
+INJ;568;invoer;13;6;0x7;640
+INJ;571;resultaat;4;15;0x6;385
+INJ;574;uitvoer;7;1;0x4;370
+INJ;577;invoer;2;19;0x7;640
+INJ;580;resultaat;1;1;0x6;385
+INJ;583;uitvoer;1;23;0x4;370
+INJ;586;invoer;2;1;0x7;640
+INJ;589;resultaat;7;16;0x6;385
+INJ;592;uitvoer;4;0;0x4;370
+INJ;595;invoer;13;16;0x7;640
+INJ;598;resultaat;14;0;0x6;385
+INJ;601;uitvoer;11;16;0x4;370
+INJ;604;invoer;8;3;0x7;640
+INJ;607;resultaat;25;17;0x6;385
+INJ;610;uitvoer;26;15;0x4;370
+INJ;613;invoer;31;17;0x7;640
+INJ;616;resultaat;28;3;0x6;385
+INJ;619;uitvoer;21;18;0x4;370
+INJ;622;invoer;22;6;0x7;640
+INJ;625;resultaat;19;30;0x6;385
+INJ;628;uitvoer;16;2;0x4;370
+INJ;631;invoer;18;18;0x7;640
+INJ;634;resultaat;21;30;0x6;385
+INJ;637;uitvoer;20;23;0x4;370
+INJ;640;invoer;27;13;0x7;640
+INJ;643;resultaat;30;19;0x6;385
+INJ;646;uitvoer;25;5;0x4;370
+INJ;649;invoer;24;15;0x7;640
+INJ;652;resultaat;7;4;0x6;385
+INJ;655;uitvoer;10;28;0x4;370
+INJ;658;invoer;13;12;0x7;640
+INJ;661;resultaat;12;20;0x6;385
+INJ;664;uitvoer;3;28;0x4;370
+INJ;667;invoer;6;21;0x7;640
+INJ;670;resultaat;1;11;0x6;385
+INJ;673;uitvoer;0;29;0x4;370
+INJ;676;invoer;31;7;0x7;640
+INJ;679;resultaat;3;13;0x6;385
+INJ;682;uitvoer;4;27;0x4;370
+INJ;685;invoer;5;26;0x7;640
+INJ;688;resultaat;10;14;0x6;385
+INJ;691;uitvoer;15;22;0x4;370
+INJ;694;invoer;8;26;0x7;640
+INJ;697;resultaat;9;10;0x6;385
+INJ;700;uitvoer;22;9;0x4;370
+INJ;703;invoer;27;31;0x7;640
+INJ;706;resultaat;28;9;0x6;385
+INJ;709;uitvoer;29;11;0x4;370
+INJ;712;invoer;18;25;0x7;640
+INJ;715;resultaat;23;24;0x6;385
+INJ;718;uitvoer;16;8;0x4;370
+INJ;721;invoer;17;24;0x7;640
+INJ;724;resultaat;14;24;0x6;385
+INJ;727;uitvoer;20;8;0x4;370
+INJ;730;invoer;23;24;0x7;640
+INJ;733;resultaat;26;25;0x6;385
+INJ;736;uitvoer;25;11;0x4;370
+INJ;739;invoer;24;9;0x7;640
+INJ;742;resultaat;27;31;0x6;385
+INJ;745;uitvoer;6;9;0x4;370
+INJ;748;invoer;5;10;0x7;640
+INJ;751;resultaat;12;26;0x6;385
+INJ;754;uitvoer;15;22;0x4;370
+INJ;757;invoer;2;14;0x7;640
+INJ;760;resultaat;1;26;0x6;385
+INJ;763;uitvoer;0;27;0x4;370
+INJ;766;invoer;3;13;0x7;640
+INJ;769;resultaat;30;7;0x6;385
+INJ;772;uitvoer;29;29;0x4;370
+INJ;775;invoer;5;11;0x7;640
+INJ;778;resultaat;6;21;0x6;385
+INJ;781;uitvoer;11;28;0x4;370
+INJ;784;invoer;8;20;0x7;640
+INJ;787;resultaat;9;12;0x6;385
+INJ;790;uitvoer;10;28;0x4;370
+INJ;793;invoer;23;4;0x7;640
+INJ;796;resultaat;20;15;0x6;385
+INJ;799;uitvoer;29;5;0x4;370
+INJ;802;invoer;30;19;0x7;640
+INJ;805;resultaat;19;13;0x6;385
+INJ;808;uitvoer;16;23;0x4;370
+INJ;811;invoer;17;30;0x7;640
+INJ;814;resultaat;18;18;0x6;385
+INJ;817;uitvoer;15;2;0x4;370
+INJ;820;invoer;12;30;0x7;640
+INJ;823;resultaat;22;6;0x6;385
+INJ;826;uitvoer;25;18;0x4;370
+INJ;829;invoer;24;3;0x7;640
+INJ;832;resultaat;31;17;0x6;385
+INJ;835;uitvoer;26;15;0x4;370
+INJ;838;invoer;5;17;0x7;640
+INJ;841;resultaat;4;3;0x6;385
+INJ;844;uitvoer;3;16;0x4;370
+INJ;847;invoer;14;0;0x7;640
+INJ;850;resultaat;1;16;0x6;385
+INJ;853;uitvoer;0;0;0x4;370
+INJ;856;invoer;7;16;0x7;640
+INJ;859;resultaat;2;1;0x6;385
+INJ;862;uitvoer;29;23;0x4;370
+INJ;865;invoer;28;1;0x7;640
+INJ;868;resultaat;27;19;0x6;385
+INJ;871;uitvoer;7;1;0x4;370
+INJ;874;invoer;8;15;0x7;640
+INJ;877;resultaat;9;6;0x6;385
+INJ;880;uitvoer;14;18;0x4;370
+INJ;883;invoer;11;2;0x7;2213
+INJ;886;resultaat;20;22;0x6;385
+INJ;889;uitvoer;21;30;0x4;370
+INJ;892;invoer;18;21;0x7;640
+INJ;895;resultaat;31;3;0x6;385
+INJ;898;uitvoer;16;29;0x4;370
+INJ;901;invoer;17;7;0x7;640
+INJ;904;resultaat;22;13;0x6;385
+INJ;907;uitvoer;19;4;0x4;370
+INJ;910;invoer;12;20;0x7;640
+INJ;913;resultaat;13;12;0x6;385
+INJ;916;uitvoer;10;20;0x4;370
+INJ;919;invoer;24;28;0x7;640
+INJ;922;resultaat;27;12;0x6;385
+INJ;925;uitvoer;30;5;0x4;370
+INJ;928;invoer;29;31;0x7;640
+INJ;931;resultaat;4;5;0x6;385
+INJ;934;uitvoer;7;11;0x4;370
+INJ;937;invoer;2;29;0x7;640
+INJ;940;resultaat;1;22;0x6;385
+INJ;943;uitvoer;0;14;0x4;370
+INJ;946;invoer;3;26;0x7;640
+INJ;949;resultaat;6;26;0x6;385
+INJ;952;uitvoer;5;14;0x4;370
+INJ;955;invoer;28;7;0x7;640
+INJ;958;resultaat;31;25;0x6;385
+INJ;961;uitvoer;26;11;0x4;370
+INJ;964;invoer;25;9;0x7;640
+INJ;967;resultaat;9;31;0x6;385
+INJ;970;uitvoer;10;9;0x4;370
+INJ;973;invoer;15;8;0x7;640
+INJ;976;resultaat;12;24;0x6;385
+INJ;979;uitvoer;21;24;0x4;370
+INJ;982;invoer;22;8;0x7;640
+INJ;985;resultaat;19;24;0x6;385
+INJ;988;uitvoer;16;27;0x4;370
+INJ;991;invoer;17;9;0x7;640
+INJ;994;resultaat;18;7;0x6;385
+INJ;997;uitvoer;23;25;0x4;370
+CSV_EIND
+BEWIJS: alle tellers en latenties komen uit deze run op het bord.
+=== KLAAR ===
+I (642) main_task: Returned from app_main()
