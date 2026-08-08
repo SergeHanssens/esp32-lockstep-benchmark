@@ -70,10 +70,13 @@ waarvan de interrupt vast op core 0 gealloceerd wordt; elke 5 s print de
 wdt-ISR blokkerend zijn volledige rapport op precies de core waar CoreMark
 draait (de log toont letterlijk "Print CPU 0 (current core) backtrace").
 
-**De CoreMark is echt en actueel.** De gebruikte bronbestanden zijn per
-MD5-hash byte-identiek aan de laatste commit op
+**De CoreMark is echt en actueel.** De zes algoritmische kernbestanden
+(`coremark.h`, `core_main.c`, `core_list_join.c`, `core_matrix.c`,
+`core_state.c`, `core_util.c`) zijn per MD5-hash byte-identiek aan de
+laatste commit op
 [github.com/eembc/coremark](https://github.com/eembc/coremark)
-(`1f483d5`, 1 mei 2025). De kruisvalidatie klopt bovendien intern: pass B en
+(`1f483d5`, 1 mei 2025); de porting-laag (`core_portme.c/.h`) is, zoals de
+EEMBC-runregels voorzien, eigen werk voor dit platform. De kruisvalidatie klopt bovendien intern: pass B en
 de aparte minimale firmware geven exact dezelfde score (585,06 it/s), zoals
 het hoort wanneer beide effectief zonder scheduler-verstoring draaien. Ter
 referentie: Espressif rapporteert 613,86 voor de S3 op 240 MHz single-core;
@@ -134,9 +137,13 @@ Xtensa ISA Reference Manual, p. 490) dwingt af dat alle voorafgaande
 geheugentoegangen afgerond zijn vóór de volgende beginnen (p. 61); de ISA
 vermeldt expliciet dat MEMW "intended for implementing C's volatile
 attribute" is en niet voor high-performance multiprocessorsynchronisatie
-(p. 117) — precies het gebruik in dit prototype. De formeel bedoelde
-MP-primitieven (L32AI/S32RI, of C11-atomics op taalniveau) zijn de
-aangewezen weg voor een productie-implementatie.
+(p. 117) — precies het gebruik in dit prototype. Op taalniveau geldt
+daarbij: alle gedeelde velden in het kanaal zijn `volatile`, en de
+C-standaard verbiedt de compiler om volatile-toegangen onderling te
+herordenen; die garantie dekt níét eventuele niet-volatile toegangen
+eromheen. De formeel bedoelde MP-primitieven (L32AI/S32RI, of C11-atomics
+met `atomic_thread_fence` op taalniveau) zijn de aangewezen weg voor een
+productie-implementatie.
 
 **Meetcontext.** Alle metingen komen van één bord, één dag, één
 toolchain/configuratie: sterk als proof-of-concept met bewezen
@@ -145,9 +152,15 @@ reproduceerbaarheid binnen die opstelling (10 resets, spreiding
 buildflags. Campagne A bewijst de detectieketen (injecties op detecteerbare
 momenten); campagne B kwantificeert maskering bij asynchrone
 software-injectie — geen van beide simuleert fysieke SEU's, EM-glitches of
-spanningsdips.
+spanningsdips. De software-injector van campagne B is bovendien intrusief:
+hij draait op dezelfde CPU (esp_timer-interrupts) en beïnvloedt dus zelf
+licht de timing en scheduling van het gemeten systeem — inherent aan
+softwarematige foutinjectie zonder externe hardware-glitcher.
 
 **Statistiek.** Gerapporteerd worden min/gemiddelde/max per meetreeks. Een
 gemeten maximum is een *high-water mark*, géén formele WCET (die vereist
-statische analyse). Bij de CoreMark-overheadmeting worden P99/P99,9 en
-standaarddeviatie toegevoegd.
+statische analyse). Bij de CoreMark-overheadmeting geldt: percentielen
+(P99/P99,9) worden berekend op de per-checkpoint-latenties bínnen de runs
+(duizenden datapunten); over de ≥10 runscores zelf — te weinig punten voor
+zinvolle percentielen — worden gemiddelde en standaarddeviatie/spreiding
+gerapporteerd.
