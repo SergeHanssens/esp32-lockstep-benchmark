@@ -1,0 +1,76 @@
+ESP-ROM:esp32s3-20210327
+Build:Mar 27 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0x8 (SPI_FAST_FLASH_BOOT)
+Saved PC:0x40377d26
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fce2820,len:0x159c
+load:0x403c8700,len:0xd24
+load:0x403cb700,len:0x2f48
+entry 0x403c8924
+I (24) boot: ESP-IDF v5.5 2nd stage bootloader
+I (24) boot: compile time Aug  8 2026 10:14:46
+I (25) boot: Multicore bootloader
+I (25) boot: chip revision: v0.2
+I (27) boot: efuse block revision: v1.3
+I (31) boot.esp32s3: Boot SPI Speed : 80MHz
+I (35) boot.esp32s3: SPI Mode       : DIO
+I (39) boot.esp32s3: SPI Flash Size : 2MB
+I (42) boot: Enabling RNG early entropy source...
+I (47) boot: Partition Table:
+I (49) boot: ## Label            Usage          Type ST Offset   Length
+I (56) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (62) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (69) boot:  2 factory          factory app      00 00 00010000 00100000
+I (75) boot: End of partition table
+I (79) esp_image: segment 0: paddr=00010020 vaddr=3c020020 size=0a620h ( 42528) map
+I (93) esp_image: segment 1: paddr=0001a648 vaddr=3fc92700 size=02ad8h ( 10968) load
+I (96) esp_image: segment 2: paddr=0001d128 vaddr=40374000 size=02ef0h ( 12016) load
+I (103) esp_image: segment 3: paddr=00020020 vaddr=42000020 size=17bc4h ( 97220) map
+I (125) esp_image: segment 4: paddr=00037bec vaddr=40376ef0 size=0b7fch ( 47100) load
+I (136) esp_image: segment 5: paddr=000433f0 vaddr=600fe000 size=00020h (    32) load
+I (142) boot: Loaded app from partition at offset 0x10000
+I (142) boot: Disabling RNG early entropy source...
+I (154) cpu_start: Multicore app
+I (163) cpu_start: Pro cpu start user code
+I (163) cpu_start: cpu freq: 160000000 Hz
+I (163) app_init: Application information:
+I (163) app_init: Project name:     pingpong_oneway_rtos
+I (168) app_init: App version:      1
+I (171) app_init: Compile time:     Aug  8 2026 10:10:20
+I (176) app_init: ELF file SHA256:  ad0753ddf...
+I (181) app_init: ESP-IDF:          v5.5
+I (184) efuse_init: Min chip rev:     v0.0
+I (188) efuse_init: Max chip rev:     v0.99 
+I (192) efuse_init: Chip rev:         v0.2
+I (196) heap_init: Initializing. RAM available for dynamic allocation:
+I (202) heap_init: At 3FC960F8 len 00053618 (333 KiB): RAM
+I (208) heap_init: At 3FCE9710 len 00005724 (21 KiB): RAM
+I (213) heap_init: At 3FCF0000 len 00008000 (32 KiB): DRAM
+I (218) heap_init: At 600FE020 len 00001FC8 (7 KiB): RTCRAM
+I (224) spi_flash: detected chip: boya
+I (227) spi_flash: flash io: dio
+W (230) spi_flash: Detected size(16384k) larger than the size in the binary image header(2048k). Using the size in the binary image header.
+I (242) sleep_gpio: Configure to isolate all GPIO pins in sleep state
+I (248) sleep_gpio: Enable automatic switching of GPIO sleep configuration
+I (255) main_task: Started on CPU0
+I (265) main_task: Calling app_main()
+=== 03_pingpong_oneway_rtos: heen/terug-ontleding via FreeRTOS-queues ===
+[core 1] taak gestart
+[core 0] taak gestart
+I (365) main_task: Returned from app_main()
+
+=== RESULTATEN (100 rondes per fase, 8 aug 2026, transport = FreeRTOS-queues) ===
+--- Fase 1: core 0 -> core 1 -> core 0 ---
+rondreis (core 0)            min  3786 / gem  3856.2 / max  6222 cycli (max in ronde 1)  (gem 24.101 us)
+verwerking core 1            min     5 / gem     5.0 / max     5 cycli (max in ronde 0)  (gem 0.031 us)
+--- Fase 2: core 1 -> core 0 -> core 1 ---
+rondreis (core 1)            min  3794 / gem 11829.5 / max 803271 cycli (max in ronde 0)  (gem 73.934 us)
+verwerking core 0            min     5 / gem     5.0 / max     5 cycli (max in ronde 0)  (gem 0.031 us)
+--- Transport = rondreis - verwerking (heen + terug samen, incl. queue-overhead) ---
+transport richting 0->1->0   min  3781 / gem  3851.2 / max  6217 cycli (max in ronde 1)  (gem 24.070 us)
+transport richting 1->0->1   min  3789 / gem 11824.5 / max 803266 cycli (max in ronde 0)  (gem 73.903 us)
+
+Symmetrie-check: verschil tussen beide richtingen: 7973.3 cycli (101.7%)
+=> enkele reis (heen ~= terug) ~= 3918.9 cycli ~= 24.493 us
+BEWIJS: zelfde ontleding als 03_pingpong_oneway, transport via xQueueSend/xQueueReceive.
