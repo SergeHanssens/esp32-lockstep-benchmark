@@ -1,0 +1,52 @@
+# Verantwoording AI-gebruik
+
+Ik gebruik generatieve AI in dit traject openlijk als hulpmiddel, en dit
+document legt vast hoe — conform de KU Leuven GenAI-gedragscode voor
+studenten en artikel 84 van het onderwijs- en examenreglement (het werk moet
+mijn eigen kennis, inzicht en vaardigheden weerspiegelen). Bij de thesis
+dien ik het bijbehorende GenAI-verklaringsformulier van de faculteit in; mijn
+promotor is per mail geïnformeerd dat AI transparant als hulpmiddel wordt
+ingezet. Dit gebruik is er mede door mijn les van 2025: toen heb ik
+AI-gegenereerde code en resultaten onvoldoende gevalideerd, en dat werk heb
+ik zelf als niet-verdedigbaar bestempeld. De werkwijze hieronder is het
+antwoord op die fout.
+
+## Welke tool, waarvoor
+
+**Tool:** Claude (Anthropic), gebruikt in werksessies op mijn eigen machine
+(augustus 2026). **Gebruikscategorieën** volgens het faculteitsformulier:
+genereren van programmeercode (testprogramma's, instrumentatie, meet- en
+buildscripts), hulp bij het analyseren van meetdata en broncode (o.a. de
+ESP-IDF-implementatie van de task-watchdog), en het mee structureren van
+documentatie zoals dit logboek. AI wordt níét gebruikt om resultaten,
+metingen of conclusies te verzinnen, en thesistekst neem ik niet zonder
+markering uit een AI-tool over.
+
+## Rolverdeling en validatie
+
+De onderzoeksvragen, de scope-afbakening, de meetopzet en elke go/no-go-
+beslissing zijn van mij; AI fungeert als versneller bij het uitschrijven van
+code die ik specificeer en als kritische sparringpartner bij het duiden van
+metingen. Voor elke AI-geassisteerde bijdrage geldt dezelfde toets: ik lees
+de code na, bouw ze, flash ze op het echte bord en aanvaard alleen wat een
+seriële log of meting bevestigt. Alle cijfers in deze repository komen uit
+runs op mijn eigen hardware, met de ruwe logs als bewijs naast de code.
+Claims die AI aandraagt, worden tegen primaire bronnen gecontroleerd
+(bijvoorbeeld: de verklaring van het watchdog-effect is geverifieerd in de
+ESP-IDF v5.5-broncode en in mijn eigen log, en de CoreMark-bronnen zijn per
+MD5-hash vergeleken met de officiële EEMBC-repository) — niet op gezag van
+het model aanvaard.
+
+## Auteurschap en herkenbaarheid
+
+Alle commits in deze repository staan uitsluitend op mijn naam, en dat is
+een bewuste keuze: een auteur moet verantwoordelijkheid kunnen dragen voor
+het werk, en een AI-model kan dat niet. AI is hier een gereedschap, zoals
+een compiler of een IDE — die staan ook niet als contributor vermeld. De
+transparantie over AI-gebruik verschuift daarmee niet, ze staat op de
+juiste plaats: in dit document, in het logboek (dat per werksessie
+beschrijft wat met AI-assistentie gebeurde) en in de Code of Conduct
+GenAI-transparantieverklaring die als bijlage bij de masterproef hoort.
+Ik valideer elke wijziging op de hardware en voer de commits zelf uit. In
+de thesistekst verwijs ik naar AI-gebruik volgens de geldende
+KU Leuven-richtlijnen voor refereren naar GenAI.
