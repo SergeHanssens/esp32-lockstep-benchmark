@@ -107,11 +107,35 @@ detectiegraad 18,5 % (210 van 1133): een flip wordt alleen gezien als hij
 in het korte leefvenster van de data valt; daarbuiten wordt hij door de
 volgende ronde overschreven — maskering, precies zoals bij echte
 single-event upsets. Dat die 18,5 % consistent is met de verhouding
-venster/rondeduur, en dat álle campagne-B-detecties invoerfouten waren
-(het invoerblok is 32 van de 34 aangevallen woorden én leeft het langst),
-maakt het cijfer verklaarbaar in plaats van alleen maar gemeten. Alle 333
+venster/rondeduur, en dat álle gedetecteerde rondes verdict 0x7 droegen —
+invoerfouten die naar verwerking en uitvoer propageren, zodat de drie
+categorietellers elk tot 210 oplopen; logisch, want het invoerblok is 32
+van de 34 aangevallen woorden én leeft het langst — maakt het cijfer
+verklaarbaar in plaats van alleen maar gemeten. Alle 333
 A-injecties staan als CSV in de repo (`foutinjectie_campagneA_20260808.csv`,
 geparst uit de log met `scripts/parse_foutinjectie.py`).
+
+**Avond: externe review gevraagd én verwerkt.** Ik heb de repo bewust laten
+doorlichten door een onafhankelijke AI-reviewer (OpenAI Codex), als externe
+toets op mijn eigen blinde vlekken. De review bevestigde de methodologische
+kern (harde scheiding 2025/2026, logs die de cijfers dragen, transparant
+AI-gebruik) en legde terecht een aantal gebreken bloot. Wat ik meteen heb
+rechtgezet: de 2.890 in 2025 ingecheckte `build/`-artefacten zijn uit `main`
+verwijderd (een verse Windows-clone faalde op te lange paden — de
+geschiedenis herschrijf ik bewust níét, zodat bestaande commit-links naar
+mijn promotor geldig blijven); de MD5-claim over de CoreMark-bronnen is nu
+reproduceerbaar via `scripts/verify_coremark_sources.ps1` met een
+hashbestand (LF-genormaliseerd, dus autocrlf-bestendig; uitvoer: 6/6 OK);
+de campagne-B-verwoording is gecorrigeerd (alle 210 detecties droegen
+verdict 0x7 — invoerfouten die propageren — niet "alleen invoer" in enge
+zin); de term "lockstep" is in beide README's genuanceerd tot softwarematige
+checkpoint-lockstep, met expliciete afbakening van de prototype-
+synchronisatie (geen atomics/timeouts/heartbeat — bewust buiten scope, in
+de thesis te benoemen als beperking); en het meetsessie-script is
+geparametriseerd (poort/paden) met een scripts-README die eerlijk zegt wat
+labspoor is. Terechte punten die bewust op de takenlijst blijven in plaats
+van nu: CoreMark-in-lockstep (dé volgende meting), meerdere seeds/langere
+campagnes met betrouwbaarheidsintervallen, en metingen op meerdere borden.
 
 **Bewijs van vandaag:** alle logs met datum 20260808 in de projectmappen
 (inclusief `05_lockstep_kern/…` en `06_foutinjectie/…`), de CSV's in

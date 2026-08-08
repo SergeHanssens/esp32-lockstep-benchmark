@@ -10,7 +10,12 @@ resultaten onvoldoende gevalideerd werden.
 2. **Officiële EEMBC CoreMark**, geen stub. Bronnen staan geverifieerd
    (MD5 t.o.v. upstream `1f483d5`).
 3. **Scope bewaken:** lockstep-kern → CoreMark-overhead → foutinjectie.
-   Geen rollback, heartbeat, Tracealyzer of RISC-V-uitbreidingen.
+   Geen rollback, heartbeat, Tracealyzer of RISC-V-uitbreidingen. De
+   synchronisatie is bewust een minimaal, meetbaar prototype (volatile +
+   memw + spin-wait, geen timeouts/recovery); die beperking wordt in de
+   thesis expliciet benoemd, niet stilzwijgend genegeerd. "Lockstep" =
+   softwarematige checkpoint-lockstep (zie README's), geen cycle-accurate
+   lockstep — conclusies binnen dat model houden.
 4. **Kleine stappen, alles flashbaar.** Log met datum bij elk resultaat, in
    de projectmap. Eén taak tegelijk.
 5. **Bewijs tonen, onzekerheid benoemen.** Verklaringen onderbouwen met

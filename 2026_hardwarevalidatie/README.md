@@ -21,6 +21,16 @@ rollen om te draaien (core 1 initieert, core 0 antwoordt) meet ik de
 symmetrie in plaats van ze aan te nemen; het gemeten verschil tussen beide
 richtingen bedraagt 6,9 %.
 
+**Terminologie en afbakening.** "Lockstep" is hier steeds softwarematige
+checkpoint-lockstep: onafhankelijk rekenende cores, vergeleken op
+gedefinieerde controlepunten — geen cycle-accurate of instructie-synchrone
+lockstep. De synchronisatie (volatile + `memw` + spin-wait) is een bewust
+minimale, meetbare prototype-synchronisatie: geen C11-atomics, geen
+timeouts, geen heartbeat of recovery bij een uitgevallen checker. Die
+mechanismen staan expliciet buiten scope (zie CLAUDE.md); voor een
+productierijpe veiligheidsarchitectuur zouden ze nodig zijn, en de thesis
+benoemt dat als beperking en toekomstwerk.
+
 **Geheugenbarrières.** Bij communicatie via gedeeld geheugen plaatst de
 schrijvende core een `memw`-instructie tussen het schrijven van de data en
 het zetten van de vlag, zodat de leesvolgorde op de andere core gegarandeerd
@@ -41,7 +51,7 @@ gebruikt.
 | `04_coremark_min_RTOS/` | aparte firmware, minimale modus | 585,06 it/s, geldig (`coremark_min_rtos_log_20260808.txt`) |
 | `metingen/coremark_runs_20260808/` | reproduceerbaarheid (checkpoint 1) | 10 resets × 2 passes = 20 geldige runs in CSV; spreiding < 0,0002 it/s |
 | `05_lockstep_kern/` | de lockstep-kern zelf (checkpoint 2): app-core rekent, checker-core controleert invoer/verwerking/uitvoer | 1000 rondes @240 MHz: 0 valse positieven; detector-zelftest (bewuste bitflip in ronde 500) exact gedetecteerd met verdict VERWERKING+UITVOER; 1229,8 vs 263,1 cycli/ronde → ≈967 cycli vaste overhead per controlecyclus (`lockstep_kern_log_20260808.txt`) |
-| `06_foutinjectie/` | foutinjectie op de kern: campagne A = 333 gerichte bitflips (invoer/resultaat/uitvoer, random woord+bit, latentiemeting); campagne B = 1133 asynchrone flips via esp_timer over 50.000 rondes | A: **100 % detectie**, elk doelwit exact het voorspelde verdict (invoer→0x7, resultaat→0x6, uitvoer→0x4); latentie gem 2,7 / 1,6 / 1,5 µs. B: 210 detecties (18,5 %), 81,5 % gemaskeerd — consistent met het korte leefvenster van de data per ronde (`foutinjectie_log_20260808.txt`, CSV `foutinjectie_campagneA_20260808.csv`) |
+| `06_foutinjectie/` | foutinjectie op de kern: campagne A = 333 gerichte bitflips (invoer/resultaat/uitvoer, random woord+bit, latentiemeting); campagne B = 1133 asynchrone flips via esp_timer over 50.000 rondes | A: **100 % detectie**, elk doelwit exact het voorspelde verdict (invoer→0x7, resultaat→0x6, uitvoer→0x4); latentie gem 2,7 / 1,6 / 1,5 µs. B: 210 gedetecteerde rondes (18,5 %), alle met verdict 0x7 — invoerfouten die naar verwerking en uitvoer propageren, waardoor de drie categorietellers elk tot 210 oplopen; 81,5 % gemaskeerd, consistent met het korte leefvenster van de data per ronde (`foutinjectie_log_20260808.txt`, CSV `foutinjectie_campagneA_20260808.csv`) |
 
 Drie bevindingen verdienen toelichting, omdat ze het verschil tonen tussen
 een getal rapporteren en een getal begrijpen.

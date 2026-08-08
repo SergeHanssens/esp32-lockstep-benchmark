@@ -9,6 +9,14 @@ op fouten bij het inlezen, verwerken en wegschrijven van data (checkercore).
 De EEMBC CoreMark-benchmark dient als workload om de overhead van die
 foutdetectie te kwantificeren.
 
+Over de term "lockstep": dit is géén cycle-accurate hardware-lockstep en ook
+geen instructie-synchrone software-lockstep. Precies benoemd is dit
+**softwarematige dual-core redundantie met checkpointvergelijking via
+gedeeld geheugen** — de cores rekenen onafhankelijk en worden op
+gedefinieerde controlepunten vergeleken. De naam "lockstep" blijft in
+projectnamen staan (historisch en als roepnaam), maar alle conclusies in
+dit werk gelden voor het checkpointmodel.
+
 ## Twee fasen, één bewijsregel
 
 Deze repository bevat twee duidelijk gescheiden fasen, en ik kies er bewust
