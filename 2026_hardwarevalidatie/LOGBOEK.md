@@ -60,23 +60,44 @@ zijn rapport print — op de CoreMark-core dus. Mijn eerdere, lossere
 verklaring ("de meldingen printen op dezelfde core") was onvolledig; de
 correcte formulering staat nu in de README van dit deel.
 
-**Avond: checkpoint 1 binnen, een dag vóór de deadline.** Meetscript
+**Middag: checkpoint 1 binnen, een dag vóór de deadline.** Meetscript
 geschreven dat per run het bord hard reset en beide passes naar CSV parst;
 eerst een smoke-test met één run, daarna de volledige sessie: 10 resets, 20
 geldige metingen, spreiding kleiner dan 0,0002 it/s, alle CRC's correct.
 Reproduceerbaarheid was het doel van dit checkpoint en die is er:
 wie het script draait, krijgt dezelfde CSV-structuur met eigen metingen.
 
-**Bewijs van vandaag:** alle logs met datum 20260808 in de projectmappen,
-de CSV in `metingen/coremark_runs_20260808/`, en de commits van deze dag.
+**Namiddag (vervolg): de lockstep-kern zelf — checkpoint 2 drie dagen vroeg.**
+Met alle bouwstenen gevalideerd was de kern zelf een kwestie van samenstellen:
+de applicatiecore (core 0) genereert per ronde een invoerblok, deelt het met
+CRC via gedeeld geheugen (data → memw → vlag), rekent op zijn eigen kopie en
+schrijft het resultaat weg; de checkercore (core 1) rekent onafhankelijk mee
+en controleert op drie punten — invoer (CRC), verwerking (resultaat-
+vergelijking) en uitvoer (terugleescontrole). Eén ontwerpkeuze wil ik hier
+expliciet verantwoorden: de firmware bevat een **zelftest van de detector**,
+een bewuste bitflip door de applicatiecore in ronde 500. Een detector die
+nog nooit iets gedetecteerd heeft, bewijst niets; deze ene gecontroleerde
+fout bewijst de hele detectieketen. Resultaat van de run (1000 rondes,
+240 MHz, `lockstep_kern_log_20260808.txt`): exact één gedetecteerde ronde —
+ronde 500, verdict VERWERKING+UITVOER zoals voorspeld (de corrupte waarde
+propageert naar de uitvoer, de invoer-CRC blijft correct) — en nul valse
+positieven in de 999 andere rondes. De kosten: 1229,8 cycli per beschermde
+ronde tegenover 263,1 onbeschermd, dus ≈967 cycli vaste overhead per blok.
+Bij deze bewust kleine workload is dat relatief veel (+367 %); het is een
+vast bedrag per controlecyclus, dus de relatieve overhead zakt naarmate de
+workload groeit — precies wat de CoreMark-overheadmeting straks moet
+kwantificeren. Ook hier weer: max in ronde 0, het intussen vertrouwde
+koude-start-effect.
+
+**Bewijs van vandaag:** alle logs met datum 20260808 in de projectmappen
+(inclusief `05_lockstep_kern/lockstep_kern_log_20260808.txt`), de CSV in
+`metingen/coremark_runs_20260808/`, en de commits van deze dag.
 
 ## Volgende stappen (in volgorde, één taak tegelijk)
 
-1. **Checkpoint 2 (di 11/8): de lockstep-kern.** Beide cores voeren dezelfde
-   berekening uit; vergelijking via gedeeld geheugen met het gevalideerde
-   data → memw → vlag-patroon; mismatch-detectie met teller en log.
-2. Foutinjectie (bitflips) met aantoonbare detectie in de log.
-3. Overheadmeting beschermd versus onbeschermd met het bestaande
+1. Foutinjectie (bitflips van buitenaf, bv. timer-ISR) met aantoonbare
+   detectiegraad en -latentie in de log.
+2. Overheadmeting beschermd versus onbeschermd met het bestaande
    CoreMark-meetprotocol, meermaals herhaald, CSV in de repo.
-4. Parallel: thesistekst bijwerken naar wat werkelijk gemeten is;
+3. Parallel: thesistekst bijwerken naar wat werkelijk gemeten is;
    `-O3`-run om het verschil met de Espressif-referentie te duiden.
