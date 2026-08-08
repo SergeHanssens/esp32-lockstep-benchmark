@@ -141,9 +141,43 @@ campagnes met betrouwbaarheidsintervallen, en metingen op meerdere borden.
 (inclusief `05_lockstep_kern/…` en `06_foutinjectie/…`), de CSV's in
 `metingen/` en `06_foutinjectie/`, en de commits van deze dag.
 
-## Volgende stappen (in volgorde, één taak tegelijk)
+**Avond (slot): reviewclaims tegen primaire bronnen geverifieerd.** De
+technische beweringen uit de AI-reviews heb ik niet op gezag aangenomen
+maar nagetrokken op deze machine: `esp_cpu_wait_for_intr()` blijkt
+letterlijk `asm volatile("waiti 0")` (`xt_utils.h:82`) — een
+interrupt-wachtinstructie, geen geheugenbarrière, dus die suggestie uit
+review A was fout; interne SRAM is op de S3 niet gecachet
+(`SOC_CACHE_INTERNAL_MEM_VIA_L1CACHE` bestaat op de P4, niet op de S3);
+en de Xtensa ISA-referentie definieert `MEMW` als "Memory Wait" met
+expliciet "intended for implementing C's volatile attribute" (p. 117) —
+ons synchronisatiepatroon is dus precies het bedoelde gebruik. Deze
+onderbouwing staat nu in de sectie "Beperkingen en geldigheid" van de
+README, samen met common-cause-failures en de SPOF-afbakening.
 
-1. Overheadmeting beschermd versus onbeschermd met het bestaande
-   CoreMark-meetprotocol, meermaals herhaald, CSV in de repo.
-2. Parallel: thesistekst bijwerken naar wat werkelijk gemeten is;
-   `-O3`-run om het verschil met de Espressif-referentie te duiden.
+**Avond (governance): auteurschap expliciet vastgelegd.** De commits in
+deze repository staan op mijn naam, en dat is een principiële keuze: een
+auteur moet verantwoordelijkheid kunnen dragen voor het werk, en een
+AI-model kan dat niet — het is gereedschap, zoals een compiler. De
+transparantie over AI-gebruik staat waar ze hoort: in
+`AI_VERANTWOORDING.md`, in dit logboek en straks in de
+transparantieverklaring bij de thesis. Ik valideer en committeer alles
+zelf; die afspraak is nu ook als werkregel verankerd in CLAUDE.md.
+
+## Volgende stappen — planning vervroegd (beslist 8/8 avond)
+
+De onderzoekskern staat; de resterende dagen zijn voor het kerncijfer en
+vooral de tekst. De centrale onderzoeksvraag — de overhead van échte
+CoreMark bínnen de beschermde architectuur — is bewust het eerstvolgende
+werk: dat cijfer is er nog niet, en dat benoem ik liever zelf dan het te
+laten ondersneeuwen onder wat al wél gemeten is. Nieuwe mijlpalen:
+**zondag 9/8** CoreMark-in-lockstep meten (beschermd vs onbeschermd, met
+P99/P99,9 en standaarddeviatie) en alles uitschrijven wat al geschreven
+kan worden; **maandag 10/8 ochtend: eerste DRAFT (werkversie) naar de
+promotor** — bewust vroeg en met open punten gemarkeerd, zodat hij iets
+concreets heeft om zijn beslissing op te baseren; **dinsdag 11/8 avond:
+onderzoek volledig afgerond** (onder voorbehoud van bijsturingen), incl.
+eventueel de S3-bordensweep als de tijd het toelaat; **woensdag 12/8:
+tweede DRAFT ter nalezing**; donderdag t.e.m. zondag uitsluitend
+bijsturingen; **maandag 17/8 vóór 23u59 indienen**. Optioneel en alleen
+als alles op schema zit: langere injectiecampagnes met
+betrouwbaarheidsintervallen, `-O3`-duidingsrun.

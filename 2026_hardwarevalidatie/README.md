@@ -101,3 +101,53 @@ alle met "Correct operation validated" en crcfinal 0x382f.
 3. Log capteren: `python scripts/capture_generic.py COM3 <seconden> <logbestand>`
    (reset het bord via RTS en schrijft de volledige uitvoer weg).
 4. Voor de CoreMark-reeks: `powershell -File scripts/meet_coremark_runs.ps1 -Runs 10`.
+
+## Beperkingen en geldigheid (limitations & threats to validity)
+
+Deze sectie benoemt expliciet wat dit werk níét aantoont — mede naar
+aanleiding van twee externe AI-reviews (Codex, Gemini) waarvan de
+technische claims stuk voor stuk tegen primaire bronnen zijn geverifieerd.
+
+**Common cause failures.** Beide cores delen dezelfde silicium-die,
+dezelfde voeding en dezelfde klokbron. Een spanningsdip, klok-glitch of
+temperatuureffect raakt ze samen en kan identieke fouten veroorzaken die
+een vergelijkende checker per definitie niet ziet. Echte
+veiligheidsarchitecturen (bv. hardware-lockstep in automotive-MCU's)
+gebruiken daarom fysieke scheiding, tijdsverschuiving tussen de cores of
+diversiteit. Dit prototype claimt daar niets over.
+
+**Single point of failure, geen timeouts.** De handshake heeft bewust geen
+timeout of heartbeat: hangt de checker, dan spint de applicatiecore
+oneindig op `vlag_klaar`. Voor het meetdoel (overhead en detectiegedrag
+kwantificeren) is dat een aanvaardbare vereenvoudiging; voor een
+productiearchitectuur is een onafhankelijke bewaker (externe watchdog of
+arbiter) noodzakelijk. Bewuste scopekeuze, zie CLAUDE.md.
+
+**Waarom volatile + `memw` hier volstaat (bron-onderbouwd).** Op de
+ESP32-S3 gaat CPU-toegang tot interne SRAM niet door een cache: de
+D/I-cache bedient flash en PSRAM (ESP-IDF-docs `memory-types.rst`,
+`external-ram.rst`), en de soc-capability
+`SOC_CACHE_INTERNAL_MEM_VIA_L1CACHE` bestaat wél voor de ESP32-P4 maar
+níét voor de S3 (`components/soc/*/soc_caps.h`). Het klassieke
+cache-coherentieprobleem speelt hier dus niet. `MEMW` ("Memory Wait",
+Xtensa ISA Reference Manual, p. 490) dwingt af dat alle voorafgaande
+geheugentoegangen afgerond zijn vóór de volgende beginnen (p. 61); de ISA
+vermeldt expliciet dat MEMW "intended for implementing C's volatile
+attribute" is en niet voor high-performance multiprocessorsynchronisatie
+(p. 117) — precies het gebruik in dit prototype. De formeel bedoelde
+MP-primitieven (L32AI/S32RI, of C11-atomics op taalniveau) zijn de
+aangewezen weg voor een productie-implementatie.
+
+**Meetcontext.** Alle metingen komen van één bord, één dag, één
+toolchain/configuratie: sterk als proof-of-concept met bewezen
+reproduceerbaarheid binnen die opstelling (10 resets, spreiding
+< 0,0002 it/s), zwak voor generalisatie over exemplaren, temperatuur of
+buildflags. Campagne A bewijst de detectieketen (injecties op detecteerbare
+momenten); campagne B kwantificeert maskering bij asynchrone
+software-injectie — geen van beide simuleert fysieke SEU's, EM-glitches of
+spanningsdips.
+
+**Statistiek.** Gerapporteerd worden min/gemiddelde/max per meetreeks. Een
+gemeten maximum is een *high-water mark*, géén formele WCET (die vereist
+statische analyse). Bij de CoreMark-overheadmeting worden P99/P99,9 en
+standaarddeviatie toegevoegd.
