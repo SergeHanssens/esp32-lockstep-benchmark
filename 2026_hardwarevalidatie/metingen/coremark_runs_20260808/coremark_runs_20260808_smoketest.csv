@@ -1,0 +1,3 @@
+datum_iso,run,pass,iterations,total_ticks,iterations_per_sec,crcfinal,gevalideerd,score_regel,logbestand
+2026-08-08T10:47:16,1,A,20000,34202585,584.751123,0x382f,ja,CoreMark 1.0 : 584.751123 / GCC14.2.0 -O2 ESP-IDF v5.5 / STATIC,run01_104827.txt
+2026-08-08T10:47:16,1,B,20000,34184434,585.061610,0x382f,ja,CoreMark 1.0 : 585.061610 / GCC14.2.0 -O2 ESP-IDF v5.5 / STATIC,run01_104827.txt
