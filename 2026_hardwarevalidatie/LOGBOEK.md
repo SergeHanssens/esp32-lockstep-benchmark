@@ -89,15 +89,37 @@ workload groeit — precies wat de CoreMark-overheadmeting straks moet
 kwantificeren. Ook hier weer: max in ronde 0, het intussen vertrouwde
 koude-start-effect.
 
+**Namiddag (slot): foutinjectie — de detector onder vuur.** Op de kern van
+05 heb ik twee injectiecampagnes gebouwd, omdat één campagne maar het halve
+verhaal vertelt. Campagne A injecteert 333 gerichte enkelvoudige bitflips
+(random woord en bit, afwisselend in het gedeelde invoerblok, het
+rekenresultaat en de uitvoer) op exact gekende punten in de pijplijn, zodat
+detectiegraad én -latentie per foutklasse meetbaar zijn. Resultaat: 100 %
+detectie, en — belangrijker — elk doelwit gaf exact het vooraf voorspelde
+verdict: een invoerfout propageert door alles (0x7), een resultaatfout
+raakt verwerking en uitvoer (0x6), een uitvoerfout alleen de uitvoer (0x4).
+De latenties zijn logisch geordend: een invoerfout kost gemiddeld 2,7 µs om
+te detecteren (de checker moet eerst zelf rekenen), een resultaat- of
+uitvoerfout 1,6 en 1,5 µs. Campagne B laat een esp_timer elke 250 µs een
+willekeurige bit flippen terwijl de lockstep 50.000 rondes draait — het
+realistische SEU-scenario zonder gecontroleerd injectiemoment. Daar is de
+detectiegraad 18,5 % (210 van 1133): een flip wordt alleen gezien als hij
+in het korte leefvenster van de data valt; daarbuiten wordt hij door de
+volgende ronde overschreven — maskering, precies zoals bij echte
+single-event upsets. Dat die 18,5 % consistent is met de verhouding
+venster/rondeduur, en dat álle campagne-B-detecties invoerfouten waren
+(het invoerblok is 32 van de 34 aangevallen woorden én leeft het langst),
+maakt het cijfer verklaarbaar in plaats van alleen maar gemeten. Alle 333
+A-injecties staan als CSV in de repo (`foutinjectie_campagneA_20260808.csv`,
+geparst uit de log met `scripts/parse_foutinjectie.py`).
+
 **Bewijs van vandaag:** alle logs met datum 20260808 in de projectmappen
-(inclusief `05_lockstep_kern/lockstep_kern_log_20260808.txt`), de CSV in
-`metingen/coremark_runs_20260808/`, en de commits van deze dag.
+(inclusief `05_lockstep_kern/…` en `06_foutinjectie/…`), de CSV's in
+`metingen/` en `06_foutinjectie/`, en de commits van deze dag.
 
 ## Volgende stappen (in volgorde, één taak tegelijk)
 
-1. Foutinjectie (bitflips van buitenaf, bv. timer-ISR) met aantoonbare
-   detectiegraad en -latentie in de log.
-2. Overheadmeting beschermd versus onbeschermd met het bestaande
+1. Overheadmeting beschermd versus onbeschermd met het bestaande
    CoreMark-meetprotocol, meermaals herhaald, CSV in de repo.
-3. Parallel: thesistekst bijwerken naar wat werkelijk gemeten is;
+2. Parallel: thesistekst bijwerken naar wat werkelijk gemeten is;
    `-O3`-run om het verschil met de Espressif-referentie te duiden.
