@@ -60,7 +60,7 @@ def overhead(basis, doel, label):
               f"({gb:.2f} -> {gd:.2f} it/s)")
 
 print("\n=== Overhead = relatieve score-daling t.o.v. referentie ===")
-overhead("onbeschermd_vol", "beschermd_duaal_vol", "duale uitvoering (buscontentie), vol")
+overhead("onbeschermd_vol", "beschermd_duaal_vol", "duale uitvoering (gedeelde resources; oorzaak niet geisoleerd), vol")
 overhead("onbeschermd_vol", "onbeschermd_segment", "segmentatie alleen")
 overhead("onbeschermd_segment", "beschermd_segment", "checkpoint-lockstep bovenop segmentatie")
 overhead("onbeschermd_vol", "beschermd_segment", "checkpoint-lockstep TOTAAL (kerncijfer)")

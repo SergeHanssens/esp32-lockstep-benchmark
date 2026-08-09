@@ -169,12 +169,12 @@ opties op tafel: duale uitvoering (beide cores een volledige eigen CoreMark,
 één vergelijking op het einde) of gesegmenteerde uitvoering (CoreMark in
 korte segmenten met een checkpoint na elk segment). Gekozen: beide, in één
 firmware — de gesegmenteerde variant als hoofdmeting, de duale als
-referentiepunt om de buscontentiekost te isoleren. Het vijffasenontwerp
+referentiepunt om de duale-uitvoeringskost te isoleren. Het vijffasenontwerp
 (`07_coremark_lockstep`) voegt daar een onbeschermde volle run (in-situ
 kruischeck met de 04-baseline), een onbeschermd gesegmenteerde run
 (isoleert de segmentatiekost) en een zelftestfase aan toe.
 
-**Binnen de EEMBC-regels gebleven.** De zes kernbestanden zijn opnieuw
+**Kernbestanden ongewijzigd; afwijkingen benoemd.** De zes kernbestanden zijn opnieuw
 byte-identiek aan upstream `1f483d5` (verificatiescript uitgebreid naar 07,
 12/12 OK). Parallellisme via het officiële `MULTITHREAD`-mechanisme in de
 porting-laag: context 0 = applicatiecore, context 1 = checkercore, met het
@@ -187,8 +187,12 @@ niet beïnvloedt.
 
 **Het kerncijfer, met ontleding (10 resets, 18u55–19u22).**
 Onbeschermd 584,75 it/s (stddev 0,0000); beschermd gesegmenteerd met 400
-checkpoints per run 462,51 it/s (stddev 0,033) → **20,90 % scoreverlies**
-(21,26 % effectief incl. herinitialisatie). De ontleding maakt het cijfer
+checkpoints per run 462,51 it/s (stddev 0,033) → **20,90 % lagere
+doorvoer** (21,26 % effectief incl. herinitialisatie). Terminologie
+bewust: het gesegmenteerde aggregaat is geen officiële CoreMark-score
+(elk segment blijft onder de vereiste 10 s); alleen de volle runs zijn
+geldige scores. De vergelijking beschermd/onbeschermd gebeurt op identiek
+gesegmenteerde metingen en blijft daarmee zuiver. De ontleding maakt het cijfer
 begrijpelijk: duale uitvoering alleen kost al 20,43 % (waarschijnlijke
 verklaring: contentie op de gedeelde SRAM-interconnect; niet afzonderlijk
 geïsoleerd), segmentatie kost getimed vrijwel niets (0,03 %), en het

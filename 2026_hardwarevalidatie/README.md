@@ -52,7 +52,7 @@ gebruikt.
 | `metingen/coremark_runs_20260808/` | reproduceerbaarheid (checkpoint 1) | 10 resets × 2 passes = 20 geldige runs in CSV; spreiding < 0,0002 it/s |
 | `05_lockstep_kern/` | de lockstep-kern zelf (checkpoint 2): app-core rekent, checker-core controleert invoer/verwerking/uitvoer | 1000 rondes @240 MHz: 0 valse positieven; detector-zelftest (bewuste bitflip in ronde 500) exact gedetecteerd met verdict VERWERKING+UITVOER; 1229,8 vs 263,1 cycli/ronde → ≈967 cycli vaste overhead per controlecyclus (`lockstep_kern_log_20260808.txt`) |
 | `06_foutinjectie/` | foutinjectie op de kern: campagne A = 333 gerichte bitflips (invoer/resultaat/uitvoer, random woord+bit, latentiemeting); campagne B = 1133 asynchrone flips via esp_timer over 50.000 rondes | A: **100 % detectie**, elk doelwit exact het voorspelde verdict (invoer→0x7, resultaat→0x6, uitvoer→0x4); latentie gem 2,7 / 1,6 / 1,5 µs. B: 210 gedetecteerde rondes (18,5 %), alle met verdict 0x7 — invoerfouten die naar verwerking en uitvoer propageren, waardoor de drie categorietellers elk tot 210 oplopen; 81,5 % gemaskeerd, consistent met het korte leefvenster van de data per ronde (`foutinjectie_log_20260808.txt`, CSV `foutinjectie_campagneA_20260808.csv`) |
-| `07_coremark_lockstep/` | het kerncijfer: overhead van echte CoreMark binnen de checkpoint-lockstep | vijf fasen per run (onbeschermd vol / beschermd duaal vol / onbeschermd gesegmenteerd / beschermd gesegmenteerd 400×50 iteraties / zelftest); onbeschermd 584,75 it/s = exact de 04-baseline; beschermd gesegmenteerd 462,51 it/s → **20,90 % scoreverlies** (getimed; 21,26 % effectief incl. herinitialisatie); ontleding: duale uitvoering 20,43 %, segmentatie 0,03 %, checkpointmechanisme ≈ 0,5 procentpunt; beide volle runs "Correct operation validated", crcfinal 0x382f op beide cores; zelftest-bitflip 10/10 exact gedetecteerd (`coremark_lockstep_log_20260808.txt`) |
+| `07_coremark_lockstep/` | het kerncijfer: overhead van echte CoreMark binnen de checkpoint-lockstep | vijf fasen per run (onbeschermd vol / beschermd duaal vol / onbeschermd gesegmenteerd / beschermd gesegmenteerd 400×50 iteraties / zelftest); onbeschermd 584,75 it/s = exact de 04-baseline; beschermd gesegmenteerd 462,51 it/s → **20,90 % lagere doorvoer** (gesegmenteerd aggregaat, geen officiële CoreMark-score — zie toelichting onder de tabel; getimed; 21,26 % effectief incl. herinitialisatie); ontleding: duale uitvoering 20,43 %, segmentatie 0,03 %, checkpointmechanisme ≈ 0,5 procentpunt; beide volle runs "Correct operation validated", crcfinal 0x382f op beide cores; zelftest-bitflip 10/10 exact gedetecteerd (`coremark_lockstep_log_20260808.txt`) |
 | `metingen/lockstep_runs_20260808/` | reproduceerbaarheid kerncijfer | 10 resets × 5 fasen in CSV; stddev over runscores ≤ 0,10 it/s; 4000 checkpointlatenties binnen de beschermde runs: gem 2832 cycli (11,8 µs), P50 3826, P99 6623 (27,6 µs), P99,9 6908 (28,8 µs), max 6919; 0 valse positieven over 4100 checkpoints (`lockstep_fasen_20260808.csv`, `lockstep_checkpoints_20260808.csv`, `analyse_lockstep_20260808.txt`) |
 
 Vier bevindingen verdienen extra toelichting.
@@ -86,7 +86,7 @@ buildflags — een `-O3`-run staat op de lijst om dit te duiden.
 
 **De lockstep-overhead is vrijwel volledig duale-uitvoeringskost.** Het
 vierfasenontwerp van `07_coremark_lockstep` ontleedt het kerncijfer
-(20,90 % scoreverlies op de CoreMark-score) in zijn componenten: alleen al
+(20,90 % lagere doorvoer t.o.v. de baseline-score) in zijn componenten: alleen al
 beide cores simultaan dezelfde CoreMark laten draaien kost 20,43 %
 (waarschijnlijke verklaring: contentie op de gedeelde geheugen- en
 interconnectresources — beide cores vragen continu toegang tot dezelfde
@@ -104,12 +104,18 @@ blijft over 4000 checkpoints onder de 29 µs (P99,9 6908 cycli).
 Parallellisme loopt via het officiële EEMBC-`MULTITHREAD`-mechanisme
 (`core_start_parallel`/`core_stop_parallel` in de porting-laag); het
 aantal iteraties per segment is de officiële runtime-parameter (seed 4).
-Twee bewuste afwijkingen t.o.v. de 04-port, beide binnen de EEMBC-regels
-en beide gerapporteerd in de output: geheugenmethode STACK i.p.v. STATIC
-(core_main.c staat STATIC niet toe bij meerdere contexts) en de
-10-secondenmelding per kort segment (het aggregaat per fase draait ruim
-34 s; fase A reproduceert de 04-baseline exact, wat aantoont dat de
-STACK-methode de score niet beïnvloedt).
+Twee bewuste afwijkingen t.o.v. de 04-port, beide gerapporteerd in de
+output. Eén binnen de EEMBC-regels: geheugenmethode STACK i.p.v. STATIC
+(core_main.c staat STATIC niet toe bij meerdere contexts); dat fase A de
+04-baseline exact reproduceert, toont dat die keuze de score niet
+beïnvloedt. Eén afwijking van de rapporteerbaarheidsregels, en dat benoem
+ik expliciet: elk segment draait ver onder de door EEMBC vereiste
+10 seconden, dus het gesegmenteerde aggregaat (462,51 it/s) is geen
+officiële, rapporteerbare CoreMark-score maar een van CoreMark afgeleide
+workload-doorvoer. De poort telt de verwachte 10-secondenmelding per kort
+segment daarom niet als fout (elke andere ERROR-regel wel). De vergelijking
+blijft zuiver omdat beschermd en onbeschermd gesegmenteerd identiek gemeten
+worden; alleen fase A (volle run, ruim 10 s) is een geldige CoreMark-score.
 
 Let op bij het vergelijken: de 02/03-projecten draaien op 160 MHz
 (IDF-default), de 04-projecten op 240 MHz (`sdkconfig.defaults`).
@@ -173,7 +179,8 @@ kwantificeren) is dat een aanvaardbare vereenvoudiging; voor een
 productiearchitectuur is een onafhankelijke bewaker (externe watchdog of
 arbiter) noodzakelijk. Bewuste scopekeuze, zie CLAUDE.md.
 
-**Waarom volatile + `memw` hier volstaat (bron-onderbouwd).** Op de
+**Waarom volatile + `memw` hier in de praktijk werkt — en waarom het
+formeel geen C11-correcte synchronisatie is (bron-onderbouwd).** Op de
 ESP32-S3 gaat CPU-toegang tot interne SRAM niet door een cache: de
 D/I-cache bedient flash en PSRAM (ESP-IDF-docs `memory-types.rst`,
 `external-ram.rst`), en de soc-capability
@@ -188,9 +195,19 @@ attribute" is en niet voor high-performance multiprocessorsynchronisatie
 daarbij: alle gedeelde velden in het kanaal zijn `volatile`, en de
 C-standaard verbiedt de compiler om volatile-toegangen onderling te
 herordenen; die garantie dekt niet eventuele niet-volatile toegangen
-eromheen. De formeel bedoelde MP-primitieven (L32AI/S32RI, of C11-atomics
-met `atomic_thread_fence` op taalniveau) zijn de aangewezen weg voor een
-productie-implementatie.
+eromheen. Twee formele kanttekeningen horen daarbij. Ten eerste is
+gelijktijdige niet-atomaire toegang tot gedeelde objecten naar de letter
+van C11 een data race; dat dit patroon hier correct werkt, steunt op
+implementatie-eigenschappen (uitgelijnde 32-bit-toegangen zijn op de LX7
+ondeelbaar, alle gedeelde velden zijn volatile, geen cache op intern
+SRAM), niet op een taalgarantie. Ten tweede heeft
+`asm volatile("memw")` in deze code geen `"memory"`-clobber en is het dus
+geen algemene compilerbarrière; de ordening steunt op de
+volatile-kwalificatie van alle gedeelde velden. Dit is bewust
+prototypecode: empirisch gevalideerd op deze toolchain en dit silicium.
+De formeel correcte weg (L32AI/S32RI, of C11-atomics met
+acquire/release-semantiek en `atomic_thread_fence`) is de aangewezen route
+voor een productie-implementatie en staat als toekomstig werk genoteerd.
 
 **Meetcontext.** Alle metingen komen van één bord, één dag, één
 toolchain/configuratie: sterk als proof-of-concept met bewezen
@@ -200,8 +217,13 @@ buildflags. Campagne A bewijst de detectieketen (injecties op detecteerbare
 momenten); campagne B kwantificeert maskering bij asynchrone
 software-injectie — geen van beide simuleert fysieke SEU's, EM-glitches of
 spanningsdips. De software-injector van campagne B is bovendien intrusief:
-hij draait op dezelfde CPU (esp_timer-interrupts) en beïnvloedt dus zelf
-licht de timing en scheduling van het gemeten systeem — inherent aan
+de esp_timer-callback draait via de standaard task-dispatch in de
+hoogprioritaire esp_timer-taak op core 0 (er is geen `dispatch_method`
+gezet, dus geen ISR-dispatch), en deelt daarmee CPU en scheduler met het
+gemeten systeem. Het injectiemoment hangt zo mede af van
+FreeRTOS-preëmptie en taakvertraging; de gemeten 18,5 % is daarom een
+eigenschap van dit software-injectie-experiment, geen zuivere schatting
+van detectie bij willekeurig getimede fysieke bitflips — inherent aan
 softwarematige foutinjectie zonder externe hardware-glitcher.
 
 **Statistiek.** Gerapporteerd worden min/gemiddelde/max per meetreeks. Een
