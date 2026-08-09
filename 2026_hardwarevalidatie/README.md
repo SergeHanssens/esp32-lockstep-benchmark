@@ -115,15 +115,27 @@ officiële, rapporteerbare CoreMark-score maar een van CoreMark afgeleide
 workload-doorvoer. De poort telt de verwachte 10-secondenmelding per kort
 segment daarom niet als fout (elke andere ERROR-regel wel). De vergelijking
 blijft zuiver omdat beschermd en onbeschermd gesegmenteerd identiek gemeten
-worden. De beide volle fasen zijn wel EEMBC-conforme runs (ruim 34 s
-respectievelijk 43 s, "Correct operation validated"): fase A onbeschermd
-(584,75 it/s) en fase B beschermd duaal via het officiële
-MULTITHREAD-mechanisme (465,27 it/s per context, 20,43 % onder de
-baseline). Daarmee bestaat er dus ook een geldige CoreMark-meting mét
-bescherming; de gesegmenteerde variant ruilt die rapporteerbaarheid bewust
-in voor detectiegranulariteit: 400 checkpoints verlagen de maximale
-detectielatentie van de volledige runduur (≈43 s) naar minder dan 29 µs
-(P99,9), tegen ≈0,5 procentpunt extra doorvoerverlies.
+worden. De beide volle fasen zijn lange runs met geldige CRC-validatie
+(ruim 34 s respectievelijk 43 s, "Correct operation validated",
+performance-seeds): fase A onbeschermd (584,75 it/s) en fase B beschermd
+duaal via het officiële MULTITHREAD-mechanisme. Drie precisiepunten
+daarbij. Ten eerste telt de officiële multithread-uitvoer van fase B
+beide contexten mee (930,54 iteraties/s over 40.000 iteraties); omdat de
+tweede context redundant hetzelfde werk doet, rapporteer ik daarnaast de
+afgeleide applicatie-equivalente doorvoer: 465,27 it/s per context,
+20,43 % onder de single-context-baseline — een eigen afleiding, geen
+officiële score. Ten tweede vereisen de EEMBC-regels naast de
+performance-seeds ook een aparte validation-seed-run (0x3415); die is nog
+niet uitgevoerd en staat gepland — tot dan noem ik ook de volle fasen
+geen officiële scores. Ten derde de detectiegranulariteit: 400
+checkpoints verkorten de checkpointperiode van de volledige runduur
+(≈43 s) naar één segment (≈108 ms), waarna het verdict binnen maximaal
+29 µs volgt (gemeten P99,9-handshakelatentie ná publicatie van de
+CRC's) — een verbetering van de checkpointperiode met ongeveer een
+factor 400, tegen ≈0,5 procentpunt extra doorvoerverlies. Ook 108 ms is
+een checkpointperiode, geen gegarandeerde detectiegrens: maskering,
+CRC-collisies en common-cause-fouten blijven buiten bereik (zie
+"Beperkingen en geldigheid").
 
 Let op bij het vergelijken: de 02/03-projecten draaien op 160 MHz
 (IDF-default), de 04-projecten op 240 MHz (`sdkconfig.defaults`).
