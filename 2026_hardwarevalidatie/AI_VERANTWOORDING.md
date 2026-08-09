@@ -8,8 +8,8 @@ dien ik het bijbehorende GenAI-verklaringsformulier van de faculteit in; mijn
 promotor is per mail geïnformeerd dat AI transparant als hulpmiddel wordt
 ingezet. Dit gebruik is er mede door mijn les van 2025: toen heb ik
 AI-gegenereerde code en resultaten onvoldoende gevalideerd, en dat werk heb
-ik zelf als niet-verdedigbaar bestempeld. De werkwijze hieronder is het
-antwoord op die fout.
+ik zelf als niet-verdedigbaar bestempeld. De werkwijze hieronder is ingevoerd
+om die fout te vermijden.
 
 ## Welke tool, waarvoor
 
@@ -18,7 +18,7 @@ antwoord op die fout.
 genereren van programmeercode (testprogramma's, instrumentatie, meet- en
 buildscripts), hulp bij het analyseren van meetdata en broncode (o.a. de
 ESP-IDF-implementatie van de task-watchdog), en het mee structureren van
-documentatie zoals dit logboek. AI wordt níét gebruikt om resultaten,
+documentatie zoals dit logboek. AI wordt niet gebruikt om resultaten,
 metingen of conclusies te verzinnen, en thesistekst neem ik niet zonder
 markering uit een AI-tool over.
 
@@ -41,8 +41,9 @@ het model aanvaard.
 
 Alle commits in deze repository staan uitsluitend op mijn naam, en dat is
 een bewuste keuze: een auteur moet verantwoordelijkheid kunnen dragen voor
-het werk, en een AI-model kan dat niet. AI is hier een gereedschap, zoals
-een compiler of een IDE — die staan ook niet als contributor vermeld. De
+het werk, en een AI-model kan dat niet. AI is hier een ondersteunend
+hulpmiddel; de inhoudelijke verantwoordelijkheid, de validatie en het
+auteurschap blijven bij mij. De
 transparantie over AI-gebruik verschuift daarmee niet, ze staat op de
 juiste plaats: in dit document, in het logboek (dat per werksessie
 beschrijft wat met AI-assistentie gebeurde) en in de Code of Conduct

@@ -15,7 +15,7 @@ aan.
 | `parse_foutinjectie.py` | INJ-regels uit 06-log → CSV | log- en CSV-pad (argumenten) |
 | `meet_lockstep_runs.py` | n 07-runs (5 fasen) → fasen-CSV + checkpoints-CSV | poort, aantal runs, max duur (argumenten) |
 | `analyse_lockstep.py` | analyse 07-CSV's: gem/stddev over runs, overheadontleding, P50/P99/P99,9 over checkpointlatenties | fasen-CSV, checkpoints-CSV (argumenten) |
-| `verify_coremark_sources.ps1` | MD5-check CoreMark-bronnen (04 én 07) t.o.v. EEMBC upstream `1f483d5` | `-BronMappen`, `-RefBestand`; hashes in `coremark_md5_upstream_1f483d5.txt` |
+| `verify_coremark_sources.ps1` | MD5-check CoreMark-bronnen (04 en 07) t.o.v. EEMBC upstream `1f483d5` | `-BronMappen`, `-RefBestand`; hashes in `coremark_md5_upstream_1f483d5.txt` |
 | `build_flash_capture_05.ps1` / `_06.ps1` / `_07.ps1` / `flash_capture_new3.ps1` / `build_flash_capture_03oneway.ps1` | build + flash + capture per project | paden bovenaan het script (labspoor, bewust eenvoudig) |
 
 De hashes in `coremark_md5_upstream_1f483d5.txt` zijn berekend over

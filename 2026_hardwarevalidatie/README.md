@@ -52,22 +52,21 @@ gebruikt.
 | `metingen/coremark_runs_20260808/` | reproduceerbaarheid (checkpoint 1) | 10 resets × 2 passes = 20 geldige runs in CSV; spreiding < 0,0002 it/s |
 | `05_lockstep_kern/` | de lockstep-kern zelf (checkpoint 2): app-core rekent, checker-core controleert invoer/verwerking/uitvoer | 1000 rondes @240 MHz: 0 valse positieven; detector-zelftest (bewuste bitflip in ronde 500) exact gedetecteerd met verdict VERWERKING+UITVOER; 1229,8 vs 263,1 cycli/ronde → ≈967 cycli vaste overhead per controlecyclus (`lockstep_kern_log_20260808.txt`) |
 | `06_foutinjectie/` | foutinjectie op de kern: campagne A = 333 gerichte bitflips (invoer/resultaat/uitvoer, random woord+bit, latentiemeting); campagne B = 1133 asynchrone flips via esp_timer over 50.000 rondes | A: **100 % detectie**, elk doelwit exact het voorspelde verdict (invoer→0x7, resultaat→0x6, uitvoer→0x4); latentie gem 2,7 / 1,6 / 1,5 µs. B: 210 gedetecteerde rondes (18,5 %), alle met verdict 0x7 — invoerfouten die naar verwerking en uitvoer propageren, waardoor de drie categorietellers elk tot 210 oplopen; 81,5 % gemaskeerd, consistent met het korte leefvenster van de data per ronde (`foutinjectie_log_20260808.txt`, CSV `foutinjectie_campagneA_20260808.csv`) |
-| `07_coremark_lockstep/` | het kerncijfer: overhead van échte CoreMark bínnen de checkpoint-lockstep | vijf fasen per run (onbeschermd vol / beschermd duaal vol / onbeschermd gesegmenteerd / beschermd gesegmenteerd 400×50 iteraties / zelftest); onbeschermd 584,75 it/s = exact de 04-baseline; beschermd gesegmenteerd 462,51 it/s → **20,90 % scoreverlies** (getimed; 21,26 % effectief incl. herinitialisatie); ontleding: duale uitvoering 20,43 %, segmentatie 0,03 %, checkpointmechanisme ≈ 0,5 procentpunt; beide volle runs "Correct operation validated", crcfinal 0x382f op beide cores; zelftest-bitflip 10/10 exact gedetecteerd (`coremark_lockstep_log_20260808.txt`) |
-| `metingen/lockstep_runs_20260808/` | reproduceerbaarheid kerncijfer | 10 resets × 5 fasen in CSV; stddev over runscores ≤ 0,10 it/s; 4000 checkpointlatenties bínnen de beschermde runs: gem 2832 cycli (11,8 µs), P50 3826, P99 6623 (27,6 µs), P99,9 6908 (28,8 µs), max 6919; 0 valse positieven over 4100 checkpoints (`lockstep_fasen_20260808.csv`, `lockstep_checkpoints_20260808.csv`, `analyse_lockstep_20260808.txt`) |
+| `07_coremark_lockstep/` | het kerncijfer: overhead van echte CoreMark binnen de checkpoint-lockstep | vijf fasen per run (onbeschermd vol / beschermd duaal vol / onbeschermd gesegmenteerd / beschermd gesegmenteerd 400×50 iteraties / zelftest); onbeschermd 584,75 it/s = exact de 04-baseline; beschermd gesegmenteerd 462,51 it/s → **20,90 % scoreverlies** (getimed; 21,26 % effectief incl. herinitialisatie); ontleding: duale uitvoering 20,43 %, segmentatie 0,03 %, checkpointmechanisme ≈ 0,5 procentpunt; beide volle runs "Correct operation validated", crcfinal 0x382f op beide cores; zelftest-bitflip 10/10 exact gedetecteerd (`coremark_lockstep_log_20260808.txt`) |
+| `metingen/lockstep_runs_20260808/` | reproduceerbaarheid kerncijfer | 10 resets × 5 fasen in CSV; stddev over runscores ≤ 0,10 it/s; 4000 checkpointlatenties binnen de beschermde runs: gem 2832 cycli (11,8 µs), P50 3826, P99 6623 (27,6 µs), P99,9 6908 (28,8 µs), max 6919; 0 valse positieven over 4100 checkpoints (`lockstep_fasen_20260808.csv`, `lockstep_checkpoints_20260808.csv`, `analyse_lockstep_20260808.txt`) |
 
-Vier bevindingen verdienen toelichting, omdat ze het verschil tonen tussen
-een getal rapporteren en een getal begrijpen.
+Vier bevindingen verdienen extra toelichting.
 
 **Uitschieters zijn koude-start-effecten.** De maxima in de
 shared-memory-metingen (rondreis 543 cycli waar het gemiddelde 63,8 is) leken
 eerst op timer-interruptverstoring. Instrumentatie met een ronde-index wees
-uit dat álle maxima in ronde 0 van de eerste meetfase vallen; zodra caches
+uit dat alle maxima in ronde 0 van de eerste meetfase vallen; zodra caches
 warm zijn (fase 2) piekt de rondreis nog op amper 62 cycli. De eerdere
 hypothese "timer-interrupt" heb ik daarmee verworpen.
 
 **De −0,6 % bij volle RTOS is verklaard, niet weggewuifd.** Met watchdogs aan
 zakt de score van 584,75 naar 581,28 it/s. Oorzaak, onderbouwd met de
-IDF-broncode én de eigen log: de task-watchdog is één hardware-timer (MWDT0)
+IDF-broncode en de eigen log: de task-watchdog is één hardware-timer (MWDT0)
 waarvan de interrupt vast op core 0 gealloceerd wordt; elke 5 s print de
 wdt-ISR blokkerend zijn volledige rapport op precies de core waar CoreMark
 draait (de log toont letterlijk "Print CPU 0 (current core) backtrace").
@@ -155,7 +154,7 @@ checkpointrijen, 0 valse positieven, zelftest 10/10.
 
 ## Beperkingen en geldigheid (limitations & threats to validity)
 
-Deze sectie benoemt expliciet wat dit werk níét aantoont — mede naar
+Deze sectie benoemt expliciet wat dit werk niet aantoont — mede naar
 aanleiding van twee externe AI-reviews (Codex, Gemini) waarvan de
 technische claims stuk voor stuk tegen primaire bronnen zijn geverifieerd.
 
@@ -178,17 +177,17 @@ arbiter) noodzakelijk. Bewuste scopekeuze, zie CLAUDE.md.
 ESP32-S3 gaat CPU-toegang tot interne SRAM niet door een cache: de
 D/I-cache bedient flash en PSRAM (ESP-IDF-docs `memory-types.rst`,
 `external-ram.rst`), en de soc-capability
-`SOC_CACHE_INTERNAL_MEM_VIA_L1CACHE` bestaat wél voor de ESP32-P4 maar
-níét voor de S3 (`components/soc/*/soc_caps.h`). Het klassieke
+`SOC_CACHE_INTERNAL_MEM_VIA_L1CACHE` bestaat wel voor de ESP32-P4 maar
+niet voor de S3 (`components/soc/*/soc_caps.h`). Het klassieke
 cache-coherentieprobleem speelt hier dus niet. `MEMW` ("Memory Wait",
 Xtensa ISA Reference Manual, p. 490) dwingt af dat alle voorafgaande
-geheugentoegangen afgerond zijn vóór de volgende beginnen (p. 61); de ISA
+geheugentoegangen afgerond zijn voor de volgende beginnen (p. 61); de ISA
 vermeldt expliciet dat MEMW "intended for implementing C's volatile
 attribute" is en niet voor high-performance multiprocessorsynchronisatie
 (p. 117) — precies het gebruik in dit prototype. Op taalniveau geldt
 daarbij: alle gedeelde velden in het kanaal zijn `volatile`, en de
 C-standaard verbiedt de compiler om volatile-toegangen onderling te
-herordenen; die garantie dekt níét eventuele niet-volatile toegangen
+herordenen; die garantie dekt niet eventuele niet-volatile toegangen
 eromheen. De formeel bedoelde MP-primitieven (L32AI/S32RI, of C11-atomics
 met `atomic_thread_fence` op taalniveau) zijn de aangewezen weg voor een
 productie-implementatie.
@@ -206,9 +205,9 @@ licht de timing en scheduling van het gemeten systeem — inherent aan
 softwarematige foutinjectie zonder externe hardware-glitcher.
 
 **Statistiek.** Gerapporteerd worden min/gemiddelde/max per meetreeks. Een
-gemeten maximum is een *high-water mark*, géén formele WCET (die vereist
+gemeten maximum is een *high-water mark*, geen formele WCET (die vereist
 statische analyse). Bij de CoreMark-overheadmeting geldt: percentielen
-(P99/P99,9) worden berekend op de per-checkpoint-latenties bínnen de runs
+(P99/P99,9) worden berekend op de per-checkpoint-latenties binnen de runs
 (duizenden datapunten); over de ≥10 runscores zelf — te weinig punten voor
 zinvolle percentielen — worden gemiddelde en standaarddeviatie/spreiding
 gerapporteerd.

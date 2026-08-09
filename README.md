@@ -10,7 +10,7 @@ De EEMBC CoreMark-benchmark dient als workload om de prestatiekost van de
 beschermde dual-core uitvoering ten opzichte van de onbeschermde uitvoering
 te kwantificeren.
 
-Over de term "lockstep": dit is géén cycle-accurate hardware-lockstep en ook
+Over de term "lockstep": dit is geen cycle-accurate hardware-lockstep en ook
 geen instructie-synchrone software-lockstep. Precies benoemd is dit
 **softwarematige dual-core redundantie met checkpointvergelijking via
 gedeeld geheugen** — de cores rekenen onafhankelijk en worden op

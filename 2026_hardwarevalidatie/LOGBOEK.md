@@ -6,7 +6,7 @@ gedachtengang, niet als gepolijst eindverslag: beslissingen, verworpen
 hypotheses en bijgestuurde plannen horen er net bij. De regel uit de
 hoofd-README geldt overal: geen log van het bord, geen resultaat.
 
-## Donderdag 6 – vrijdag 7 augustus — orde scheppen vóór er gemeten wordt
+## Donderdag 6 – vrijdag 7 augustus — orde scheppen voor er gemeten wordt
 
 Voor ik één regel nieuwe code schreef, heb ik al het bestaande
 thesismateriaal van drie machines (oude desktop, laptop, externe SSD) en
@@ -30,21 +30,21 @@ geflasht als bewijs dat toolchain, bord en seriële capture werken
 (`boot_log_20260808.txt`). Daarna de kern van elke lockstep-vergelijking
 gekarakteriseerd: hoe snel kunnen twee cores elkaar iets melden? Via gedeeld
 geheugen met `memw`-barrière en spin-wait kost een rondreis gemiddeld 96
-cycli; via FreeRTOS-queues wordt dat ≈60× meer. Dat verschil is geen
-detail — het bepaalt de architectuurkeuze van de checker: het meetpad van de
+cycli; via FreeRTOS-queues wordt dat ≈60× meer. Dat verschil
+bepaalt de architectuurkeuze van de checker: het meetpad van de
 lockstep loopt via gedeeld geheugen, FreeRTOS dient alleen om taken op te
 starten.
 
-**Middag: meten is één ding, begrijpen is het echte werk.** De rondreis heb
+**Middag: de rondreis ontleed in transport en verwerking.** De rondreis heb
 ik vervolgens ontleed (transport versus verwerking) door elke core enkel met
 zijn eigen cycle-counter te laten meten en daarna de richting om te keren:
 enkele reis ≈ 20,2 cycli ≈ 0,126 µs, symmetrie tussen beide richtingen
 6,9 %. In de eerste metingen zaten uitschieters (rondreis max 543 cycli)
 waarvoor ik eerst timer-interrupts verdacht. Die hypothese heb ik niet
-opgeschreven maar getest: na instrumentatie met een ronde-index blijkt élk
+opgeschreven maar getest: na instrumentatie met een ronde-index blijkt elk
 maximum in ronde 0 van de eerste fase te vallen — koude caches, geen
-interrupts. Fase 2, met warme caches, piekt op 62 cycli. Een verworpen
-hypothese met bewijs is hier meer waard dan een juiste gok.
+interrupts. Fase 2, met warme caches, piekt op 62 cycli. De timer-hypothese kon ik
+zo met bewijs verwerpen.
 
 **Namiddag: officiële CoreMark, kruisgevalideerd.** De EEMBC-bronnen eerst
 per MD5 vergeleken met upstream (byte-identiek aan commit `1f483d5` van
@@ -60,9 +60,9 @@ zijn rapport print — op de CoreMark-core dus. Mijn eerdere, lossere
 verklaring ("de meldingen printen op dezelfde core") was onvolledig; de
 correcte formulering staat nu in de README van dit deel.
 
-**Middag: checkpoint 1 binnen, een dag vóór de deadline.** Meetscript
+**Middag: checkpoint 1 binnen, een dag voor de deadline.** Meetscript
 geschreven dat per run het bord hard reset en beide passes naar CSV parst;
-eerst een smoke-test met één run, daarna de volledige sessie: 10 resets, 20
+eerst één controlerun, daarna de volledige sessie: 10 resets, 20
 geldige metingen, spreiding kleiner dan 0,0002 it/s, alle CRC's correct.
 Reproduceerbaarheid was het doel van dit checkpoint en die is er:
 wie het script draait, krijgt dezelfde CSV-structuur met eigen metingen.
@@ -75,9 +75,9 @@ schrijft het resultaat weg; de checkercore (core 1) rekent onafhankelijk mee
 en controleert op drie punten — invoer (CRC), verwerking (resultaat-
 vergelijking) en uitvoer (terugleescontrole). Eén ontwerpkeuze wil ik hier
 expliciet verantwoorden: de firmware bevat een **zelftest van de detector**,
-een bewuste bitflip door de applicatiecore in ronde 500. Een detector die
-nog nooit iets gedetecteerd heeft, bewijst niets; deze ene gecontroleerde
-fout bewijst de hele detectieketen. Resultaat van de run (1000 rondes,
+een bewuste bitflip door de applicatiecore in ronde 500. Zo is aantoonbaar dat de volledige
+detectieketen effectief werkt, en niet alleen dat ze geen valse alarmen
+geeft. Resultaat van de run (1000 rondes,
 240 MHz, `lockstep_kern_log_20260808.txt`): exact één gedetecteerde ronde —
 ronde 500, verdict VERWERKING+UITVOER zoals voorspeld (de corrupte waarde
 propageert naar de uitvoer, de invoer-CRC blijft correct) — en nul valse
@@ -89,12 +89,12 @@ workload groeit — precies wat de CoreMark-overheadmeting straks moet
 kwantificeren. Ook hier weer: max in ronde 0, het intussen vertrouwde
 koude-start-effect.
 
-**Namiddag (slot): foutinjectie — de detector onder vuur.** Op de kern van
-05 heb ik twee injectiecampagnes gebouwd, omdat één campagne maar het halve
-verhaal vertelt. Campagne A injecteert 333 gerichte enkelvoudige bitflips
+**Namiddag (slot): foutinjectie op de kern.** Op de kern van
+05 heb ik twee injectiecampagnes gebouwd, omdat ze elk een andere vraag
+beantwoorden. Campagne A injecteert 333 gerichte enkelvoudige bitflips
 (random woord en bit, afwisselend in het gedeelde invoerblok, het
 rekenresultaat en de uitvoer) op exact gekende punten in de pijplijn, zodat
-detectiegraad én -latentie per foutklasse meetbaar zijn. Resultaat: 100 %
+detectiegraad en -latentie per foutklasse meetbaar zijn. Resultaat: 100 %
 detectie, en — belangrijker — elk doelwit gaf exact het vooraf voorspelde
 verdict: een invoerfout propageert door alles (0x7), een resultaatfout
 raakt verwerking en uitvoer (0x6), een uitvoerfout alleen de uitvoer (0x4).
@@ -107,22 +107,21 @@ detectiegraad 18,5 % (210 van 1133): een flip wordt alleen gezien als hij
 in het korte leefvenster van de data valt; daarbuiten wordt hij door de
 volgende ronde overschreven — maskering, precies zoals bij echte
 single-event upsets. Dat die 18,5 % consistent is met de verhouding
-venster/rondeduur, en dat álle gedetecteerde rondes verdict 0x7 droegen —
+venster/rondeduur, en dat alle gedetecteerde rondes verdict 0x7 droegen —
 invoerfouten die naar verwerking en uitvoer propageren, zodat de drie
 categorietellers elk tot 210 oplopen; logisch, want het invoerblok is 32
-van de 34 aangevallen woorden én leeft het langst — maakt het cijfer
-verklaarbaar in plaats van alleen maar gemeten. Alle 333
+van de 34 aangevallen woorden en leeft het langst — verklaart het cijfer. Alle 333
 A-injecties staan als CSV in de repo (`foutinjectie_campagneA_20260808.csv`,
 geparst uit de log met `scripts/parse_foutinjectie.py`).
 
-**Avond: externe review gevraagd én verwerkt.** Ik heb de repo bewust laten
+**Avond: externe review gevraagd en verwerkt.** Ik heb de repo bewust laten
 doorlichten door een onafhankelijke AI-reviewer (OpenAI Codex), als externe
 toets op mijn eigen blinde vlekken. De review bevestigde de methodologische
 kern (harde scheiding 2025/2026, logs die de cijfers dragen, transparant
 AI-gebruik) en legde terecht een aantal gebreken bloot. Wat ik meteen heb
 rechtgezet: de 2.890 in 2025 ingecheckte `build/`-artefacten zijn uit `main`
 verwijderd (een verse Windows-clone faalde op te lange paden — de
-geschiedenis herschrijf ik bewust níét, zodat bestaande commit-links naar
+geschiedenis herschrijf ik bewust niet, zodat bestaande commit-links naar
 mijn promotor geldig blijven); de MD5-claim over de CoreMark-bronnen is nu
 reproduceerbaar via `scripts/verify_coremark_sources.ps1` met een
 hashbestand (LF-genormaliseerd, dus autocrlf-bestendig; uitvoer: 6/6 OK);
@@ -134,7 +133,7 @@ synchronisatie (geen atomics/timeouts/heartbeat — bewust buiten scope, in
 de thesis te benoemen als beperking); en het meetsessie-script is
 geparametriseerd (poort/paden) met een scripts-README die eerlijk zegt wat
 labspoor is. Terechte punten die bewust op de takenlijst blijven in plaats
-van nu: CoreMark-in-lockstep (dé volgende meting), meerdere seeds/langere
+van nu: CoreMark-in-lockstep (de volgende meting), meerdere seeds/langere
 campagnes met betrouwbaarheidsintervallen, en metingen op meerdere borden.
 
 **Bewijs van vandaag:** alle logs met datum 20260808 in de projectmappen
@@ -157,7 +156,7 @@ README, samen met common-cause-failures en de SPOF-afbakening.
 **Avond (governance): auteurschap expliciet vastgelegd.** De commits in
 deze repository staan op mijn naam, en dat is een principiële keuze: een
 auteur moet verantwoordelijkheid kunnen dragen voor het werk, en een
-AI-model kan dat niet — het is gereedschap, zoals een compiler. De
+AI-model kan dat niet. De
 transparantie over AI-gebruik staat waar ze hoort: in
 `AI_VERANTWOORDING.md`, in dit logboek en straks in de
 transparantieverklaring bij de thesis. Ik valideer en committeer alles
@@ -212,7 +211,7 @@ analysescripts in `scripts/`. Eerste verificatierun apart bewaard als
 ## Volgende stappen — planning vervroegd (beslist 8/8 avond)
 
 De onderzoekskern staat; de resterende dagen zijn voor de tekst. De
-centrale onderzoeksvraag — de overhead van échte CoreMark bínnen de
+centrale onderzoeksvraag — de overhead van echte CoreMark binnen de
 beschermde architectuur — was bewust het eerstvolgende werk en is
 zaterdagavond gemeten en ontleed (zie hierboven): het kerncijfer staat.
 Nieuwe mijlpalen: **zondag 9/8** volledig voor de thesistekst — alles
@@ -223,6 +222,6 @@ concreets heeft om zijn beslissing op te baseren; **dinsdag 11/8 avond:
 onderzoek volledig afgerond** (onder voorbehoud van bijsturingen), incl.
 eventueel de S3-bordensweep als de tijd het toelaat; **woensdag 12/8:
 tweede DRAFT ter nalezing**; donderdag t.e.m. zondag uitsluitend
-bijsturingen; **maandag 17/8 vóór 23u59 indienen**. Optioneel en alleen
+bijsturingen; **maandag 17/8 voor 23u59 indienen**. Optioneel en alleen
 als alles op schema zit: langere injectiecampagnes met
 betrouwbaarheidsintervallen, `-O3`-duidingsrun.
