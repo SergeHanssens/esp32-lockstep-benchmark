@@ -100,7 +100,7 @@ uitvoering — inherent aan elke
 duale-uitvoeringsarchitectuur, ook hardware-lockstep. De
 checkpointlatentie (publicatie app-core tot verdict ontvangen) omvat naast
 handshake en vergelijking ook de restsynchronisatie tussen beide cores en
-blijft over 4000 checkpoints onder de 29 µs (P99,9 6908 cycli).
+blijft over 4000 checkpoints onder de 29 µs (P99,9 6908, maximum 6919 cycli).
 Parallellisme loopt via het officiële EEMBC-`MULTITHREAD`-mechanisme
 (`core_start_parallel`/`core_stop_parallel` in de porting-laag); het
 aantal iteraties per segment is de officiële runtime-parameter (seed 4).
@@ -120,11 +120,12 @@ worden. De beide volle fasen zijn lange runs met geldige CRC-validatie
 performance-seeds): fase A onbeschermd (584,75 it/s) en fase B beschermd
 duaal via het officiële MULTITHREAD-mechanisme. Drie precisiepunten
 daarbij. Ten eerste telt de officiële multithread-uitvoer van fase B
-beide contexten mee (930,54 iteraties/s over 40.000 iteraties); omdat de
-tweede context redundant hetzelfde werk doet, rapporteer ik daarnaast de
-afgeleide applicatie-equivalente doorvoer: 465,27 it/s per context,
-20,43 % onder de single-context-baseline — een eigen afleiding, geen
-officiële score. Ten tweede vereisen de EEMBC-regels naast de
+beide contexten mee (930,46 iteraties/s over 40.000 iteraties in de
+gepubliceerde verificatierun); omdat de tweede context redundant
+hetzelfde werk doet, rapporteer ik daarnaast de afgeleide
+applicatie-equivalente doorvoer: 465,31 it/s per context
+(10-run-gemiddelde, stddev 0,04), 20,43 % onder de
+single-context-baseline — een eigen afleiding, geen officiële score. Ten tweede vereisen de EEMBC-regels naast de
 performance-seeds ook een aparte validation-seed-run (0x3415); die heb ik
 op 9 augustus uitgevoerd (log
 `07_coremark_lockstep/coremark_lockstep_validation0x3415_log_20260809.txt`,
@@ -135,9 +136,9 @@ met seedcrc 0x18f2 en identieke CRC's in beide contexten. De
 rapporteerbare score blijft die van de performance-run; de validation-run
 bevestigt de correcte werking op de tweede vereiste seedset. Ten derde de detectiegranulariteit: 400
 checkpoints verkorten de checkpointperiode van de volledige runduur
-(≈43 s) naar één segment (≈108 ms), waarna het verdict binnen maximaal
-29 µs volgt (gemeten P99,9-handshakelatentie ná publicatie van de
-CRC's) — een verbetering van de checkpointperiode met ongeveer een
+(≈43 s) naar één segment (≈108 ms), waarna het verdict volgt binnen de
+gemeten handshakelatentie: onder 29 µs ná publicatie van de CRC's
+(P99,9 28,78 µs, maximum 28,83 µs) — een verbetering van de checkpointperiode met ongeveer een
 factor 400, tegen ≈0,5 procentpunt extra doorvoerverlies. Ook 108 ms is
 een checkpointperiode, geen gegarandeerde detectiegrens: maskering,
 CRC-collisies en common-cause-fouten blijven buiten bereik (zie
