@@ -1,0 +1,9 @@
+# 07_coremark_lockstep — masterproef Serge Hanssens
+# CPU op 240 MHz (zelfde meetcontext als 04-baseline)
+CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ_240=y
+# -O2 voor de hele build
+CONFIG_COMPILER_OPTIMIZATION_PERF=y
+# Watchdogs uit: de checkertaak spint tijdens beschermde fasen op core 1
+# (RTOS-vrij meetpad; idle-taak core 1 komt dan niet aan bod)
+CONFIG_ESP_INT_WDT=n
+CONFIG_ESP_TASK_WDT_EN=n
