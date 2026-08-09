@@ -125,9 +125,15 @@ tweede context redundant hetzelfde werk doet, rapporteer ik daarnaast de
 afgeleide applicatie-equivalente doorvoer: 465,27 it/s per context,
 20,43 % onder de single-context-baseline — een eigen afleiding, geen
 officiële score. Ten tweede vereisen de EEMBC-regels naast de
-performance-seeds ook een aparte validation-seed-run (0x3415); die is nog
-niet uitgevoerd en staat gepland — tot dan noem ik ook de volle fasen
-geen officiële scores. Ten derde de detectiegranulariteit: 400
+performance-seeds ook een aparte validation-seed-run (0x3415); die heb ik
+op 9 augustus uitgevoerd (log
+`07_coremark_lockstep/coremark_lockstep_validation0x3415_log_20260809.txt`,
+build-optie `idf.py -D LS_VALIDATION_RUN=1` in de porting-laag): fase A
+583,86 it/s en fase B 925,33 it/s officiële multithread-uitvoer
+(462,66 it/s applicatie-equivalent), beide "Correct operation validated"
+met seedcrc 0x18f2 en identieke CRC's in beide contexten. De
+rapporteerbare score blijft die van de performance-run; de validation-run
+bevestigt de correcte werking op de tweede vereiste seedset. Ten derde de detectiegranulariteit: 400
 checkpoints verkorten de checkpointperiode van de volledige runduur
 (≈43 s) naar één segment (≈108 ms), waarna het verdict binnen maximaal
 29 µs volgt (gemeten P99,9-handshakelatentie ná publicatie van de

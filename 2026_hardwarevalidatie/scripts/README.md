@@ -17,6 +17,7 @@ aan.
 | `analyse_lockstep.py` | analyse 07-CSV's: gem/stddev over runs, overheadontleding, P50/P99/P99,9 over checkpointlatenties | fasen-CSV, checkpoints-CSV (argumenten) |
 | `verify_coremark_sources.ps1` | MD5-check CoreMark-bronnen (04 en 07) t.o.v. EEMBC upstream `1f483d5` | `-BronMappen`, `-RefBestand`; hashes in `coremark_md5_upstream_1f483d5.txt` |
 | `build_flash_capture_05.ps1` / `_06.ps1` / `_07.ps1` / `flash_capture_new3.ps1` / `build_flash_capture_03oneway.ps1` | build + flash + capture per project | paden bovenaan het script (labspoor, bewust eenvoudig) |
+| `build_flash_capture_07_validation.ps1` | als `_07.ps1`, maar met validation-seeds 0x3415 via `idf.py -D LS_VALIDATION_RUN=1` en aparte lognaam | paden bovenaan het script (labspoor; let op de cachevariabele — zie commentaar in `07_coremark_lockstep/main/CMakeLists.txt`) |
 
 De hashes in `coremark_md5_upstream_1f483d5.txt` zijn berekend over
 LF-genormaliseerde inhoud, zodat de verificatie ook slaagt op een Windows-

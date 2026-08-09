@@ -251,8 +251,10 @@ multithread-uitvoer 925,33 it/s over 43,23 s; beide contexten publiceren
 identieke CRC's en valideren correct; 0 mismatches. Beide volle fasen
 duren ruim boven de vereiste 10 s. De afwijking t.o.v. de performance-run
 van 8/8 is klein (fase A −0,15 %, fase B −0,55 % op de afgeleide
-per-contextwaarde) — run-tot-runvariatie plus het andere datapatroon van
-de validation-seeds. De "CoreMark 1.0"-scoreregel verschijnt in deze log
+per-contextwaarde) — dat ligt ruim buiten de gemeten run-tot-runvariatie
+van de performance-runs (stddev 0,00 it/s fase A, 0,04 it/s fase B over
+tien runs) en is dus vrijwel zeker toe te schrijven aan het andere
+datapatroon van de validation-seeds. De "CoreMark 1.0"-scoreregel verschijnt in deze log
 bewust niet: CoreMark drukt die alleen af bij performance-seeds. De score
 blijft dus uit de performance-run van 8/8 komen; de validation-run maakt
 het paar rapporteerbaar volgens de run and reporting rules. De
@@ -262,3 +264,19 @@ precies één mismatch, in precies dat segment).
 
 Hiermee is de open meettaak van dinsdag 11/8 afgerond; de S3-bordensweep
 blijft expliciet optioneel.
+
+Correctieronde na een externe AI-audit van deze meting (zelfde avond,
+zie het proceshoofdstuk over AI-claims checken): drie punten hersteld.
+Eén, de README verwees nog naar de validation-run als "gepland" —
+geactualiseerd met de gemeten waarden en de vaststelling dat de
+rapporteerbare score uit de performance-run blijft komen. Twee,
+`LS_VALIDATION_RUN` is een CMake-cachevariabele en blijft in een
+bestaande builddirectory op 1 staan; terugschakelen naar
+performance-seeds vraagt dus expliciet `idf.py -D LS_VALIDATION_RUN=0
+build` of `idf.py fullclean` — zo gedocumenteerd in het
+CMake-commentaar en in `scripts/README.md`. Drie, de verklaring van de
+afwijking hierboven aangescherpt: eerst stond er "run-tot-runvariatie
+plus datapatroon", maar de gemeten variatie over tien performance-runs
+is daarvoor veel te klein; het datapatroon van de validation-seeds is de
+waarschijnlijke verklaring. De audit bevestigde verder de meting zelf
+(seedcrc, validation-CRC's, tijden, auteurschap van de commits).

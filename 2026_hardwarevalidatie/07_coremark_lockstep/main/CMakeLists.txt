@@ -15,6 +15,11 @@ set_source_files_properties(core_main.c PROPERTIES COMPILE_FLAGS "-Dmain=coremar
 #   idf.py -D LS_VALIDATION_RUN=1 build
 # Zonder deze cache-variabele blijven de performance-seeds (0x0/0x0/0x66) de standaard;
 # de seedkeuze zelf zit ongewijzigd in core_portme.c (VALIDATION_RUN/PERFORMANCE_RUN).
+# LET OP: dit is een CMake-cachevariabele — ze blijft in een bestaande
+# builddirectory staan. Terug naar performance-seeds dus expliciet met
+#   idf.py -D LS_VALIDATION_RUN=0 build
+# of met idf.py fullclean; wie beide configuraties naast elkaar wil, bouwt
+# de validation-variant in een aparte builddirectory (idf.py -B build-validation).
 if(LS_VALIDATION_RUN)
     target_compile_definitions(${COMPONENT_LIB} PRIVATE "VALIDATION_RUN=1")
 endif()
