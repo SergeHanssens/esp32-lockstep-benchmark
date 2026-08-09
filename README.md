@@ -23,8 +23,7 @@ dit werk gelden voor het checkpointmodel.
 Deze repository bevat twee duidelijk gescheiden fasen, en ik kies er bewust
 voor om ze allebei te laten staan.
 
-**Fase 2025** (`01_esp_lockstep_minimal/`, `02_enhanced_lockstep/`,
-`03_enhanced_lockstep_final/`, `docs/`) is het exploratie- en ontwerpwerk van
+**Fase 2025** (`2025_ontwerpfase/`) is het exploratie- en ontwerpwerk van
 september 2025: een minimale dual-core opzet, een uitgebreide versie met
 timing-analyse en CSV-logging, en een modulaire eindversie. Dit werk heeft
 me de architectuur en de synchronisatiepatronen opgeleverd waarop ik nu
@@ -52,10 +51,7 @@ de methodologie en resultaten in
 
 | Map | Fase | Inhoud |
 |---|---|---|
-| `01_esp_lockstep_minimal/` | 2025 | minimale dual-core opzet met eenvoudige synchronisatie |
-| `02_enhanced_lockstep/` | 2025 | timing-analyse, CSV-logging en checker (workload = stub) |
-| `03_enhanced_lockstep_final/` | 2025 | modulaire eindversie 2025 (workload = stub) |
-| `docs/` | 2025 | bordfoto's, schema's en de [originele README](docs/README_2025_origineel.md) |
+| `2025_ontwerpfase/` | 2025 | het volledige 2025-werk: minimale dual-core opzet (`01_...`), versie met timing-analyse en CSV-logging (`02_...`), modulaire eindversie (`03_...`) — workload telkens een stub — plus bordfoto's, schema's en de [originele README](2025_ontwerpfase/docs/README_2025_origineel.md) in `docs/` |
 | `2026_hardwarevalidatie/` | 2026 | stapsgewijze validatie op hardware: sync-primitieven, latentie-ontleding, echte CoreMark, checkpoint-lockstep met foutinjectie en CoreMark-overheadmeting, meetscripts, logs en CSV |
 
 ## Transparantie over AI-gebruik
