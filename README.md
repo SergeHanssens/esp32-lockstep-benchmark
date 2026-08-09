@@ -6,8 +6,9 @@ Industriële Ingenieurswetenschappen, campus Geel; promotor prof. dr. ing.
 Jeffrey Prinzie). Het doel is een softwarematige lockstep waarbij één core de
 eigenlijke berekeningen uitvoert (applicatiecore) en de tweede core controleert
 op fouten bij het inlezen, verwerken en wegschrijven van data (checkercore).
-De EEMBC CoreMark-benchmark dient als workload om de overhead van die
-foutdetectie te kwantificeren.
+De EEMBC CoreMark-benchmark dient als workload om de prestatiekost van de
+beschermde dual-core uitvoering ten opzichte van de onbeschermde uitvoering
+te kwantificeren.
 
 Over de term "lockstep": dit is géén cycle-accurate hardware-lockstep en ook
 geen instructie-synchrone software-lockstep. Precies benoemd is dit
