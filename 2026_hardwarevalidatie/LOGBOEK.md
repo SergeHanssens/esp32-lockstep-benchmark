@@ -229,3 +229,36 @@ tweede DRAFT ter nalezing**; donderdag t.e.m. zondag uitsluitend
 bijsturingen; **maandag 17/8 voor 23u59 indienen**. Optioneel en alleen
 als alles op schema zit: langere injectiecampagnes met
 betrouwbaarheidsintervallen, `-O3`-duidingsrun.
+
+## Zondag 9 augustus, laat op de avond — validation-seed-run 0x3415 (EEMBC-rapporteerbaarheid)
+
+De EEMBC-runregels vragen naast de performance-run (seeds 0x0/0x0/0x66)
+ook een validation-run met seeds 0x3415/0x3415/0x66. Die stond gepland
+voor dinsdag 11/8, maar ik heb ze vanavond al uitgevoerd. De wijziging
+bleef beperkt tot de porting-laag: een build-optie in `main/CMakeLists.txt`
+(`idf.py -D LS_VALIDATION_RUN=1`) die de bestaande VALIDATION_RUN-tak in
+`core_portme.c` activeert; de CoreMark-kernbestanden zijn byte-identiek
+gebleven. Herbuild, flash en capture liepen via
+`scripts/build_flash_capture_07_validation.ps1` (kopie van het 07-script
+met de extra vlag en een aparte lognaam).
+
+Resultaat (log `07_coremark_lockstep/coremark_lockstep_validation0x3415_log_20260809.txt`,
+build 23u43): de firmware meldt nu "2K validation run parameters for
+coremark." waar de run van 8/8 "performance" meldde. Fase A onbeschermd
+vol: 20.000 iteraties in 34,25 s, 583,86 it/s, seedcrc 0x18f2, "Correct
+operation validated". Fase B beschermd duaal vol: officiële
+multithread-uitvoer 925,33 it/s over 43,23 s; beide contexten publiceren
+identieke CRC's en valideren correct; 0 mismatches. Beide volle fasen
+duren ruim boven de vereiste 10 s. De afwijking t.o.v. de performance-run
+van 8/8 is klein (fase A −0,15 %, fase B −0,55 % op de afgeleide
+per-contextwaarde) — run-tot-runvariatie plus het andere datapatroon van
+de validation-seeds. De "CoreMark 1.0"-scoreregel verschijnt in deze log
+bewust niet: CoreMark drukt die alleen af bij performance-seeds. De score
+blijft dus uit de performance-run van 8/8 komen; de validation-run maakt
+het paar rapporteerbaar volgens de run and reporting rules. De
+segmentfasen en de zelftest liepen mee en gedroegen zich zoals op 8/8
+(0 valse mismatches; de bewuste bitflip in segment 5 exact gedetecteerd:
+precies één mismatch, in precies dat segment).
+
+Hiermee is de open meettaak van dinsdag 11/8 afgerond; de S3-bordensweep
+blijft expliciet optioneel.

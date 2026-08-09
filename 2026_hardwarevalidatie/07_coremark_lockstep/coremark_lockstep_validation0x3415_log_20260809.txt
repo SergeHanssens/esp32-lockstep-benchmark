@@ -1,0 +1,938 @@
+ESP-ROM:esp32s3-20210327
+Build:Mar 27 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0x8 (SPI_FAST_FLASH_BOOT)
+Saved PC:0x40377b12
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fce2820,len:0x159c
+load:0x403c8700,len:0xd24
+load:0x403cb700,len:0x2f48
+entry 0x403c8924
+I (24) boot: ESP-IDF v5.5 2nd stage bootloader
+I (24) boot: compile time Aug  9 2026 23:43:55
+I (25) boot: Multicore bootloader
+I (25) boot: chip revision: v0.2
+I (27) boot: efuse block revision: v1.3
+I (31) boot.esp32s3: Boot SPI Speed : 80MHz
+I (35) boot.esp32s3: SPI Mode       : DIO
+I (39) boot.esp32s3: SPI Flash Size : 2MB
+I (42) boot: Enabling RNG early entropy source...
+I (47) boot: Partition Table:
+I (49) boot: ## Label            Usage          Type ST Offset   Length
+I (56) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (62) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (69) boot:  2 factory          factory app      00 00 00010000 00100000
+I (75) boot: End of partition table
+I (79) esp_image: segment 0: paddr=00010020 vaddr=3c020020 size=0a6c8h ( 42696) map
+I (94) esp_image: segment 1: paddr=0001a6f0 vaddr=3fc91700 size=029d0h ( 10704) load
+I (96) esp_image: segment 2: paddr=0001d0c8 vaddr=40374000 size=02f50h ( 12112) load
+I (103) esp_image: segment 3: paddr=00020020 vaddr=42000020 size=1acc8h (109768) map
+I (128) esp_image: segment 4: paddr=0003acf0 vaddr=40376f50 size=0a6cch ( 42700) load
+I (137) esp_image: segment 5: paddr=000453c4 vaddr=600fe000 size=00020h (    32) load
+I (143) boot: Loaded app from partition at offset 0x10000
+I (143) boot: Disabling RNG early entropy source...
+I (155) cpu_start: Multicore app
+I (164) cpu_start: Pro cpu start user code
+I (164) cpu_start: cpu freq: 240000000 Hz
+I (164) app_init: Application information:
+I (164) app_init: Project name:     coremark_lockstep
+I (169) app_init: App version:      1
+I (172) app_init: Compile time:     Aug  9 2026 23:43:37
+I (177) app_init: ELF file SHA256:  872e19611...
+I (182) app_init: ESP-IDF:          v5.5
+I (185) efuse_init: Min chip rev:     v0.0
+I (189) efuse_init: Max chip rev:     v0.99 
+I (193) efuse_init: Chip rev:         v0.2
+I (197) heap_init: Initializing. RAM available for dynamic allocation:
+I (203) heap_init: At 3FC96250 len 000534C0 (333 KiB): RAM
+I (208) heap_init: At 3FCE9710 len 00005724 (21 KiB): RAM
+I (214) heap_init: At 3FCF0000 len 00008000 (32 KiB): DRAM
+I (219) heap_init: At 600FE020 len 00001FC8 (7 KiB): RTCRAM
+I (225) spi_flash: detected chip: boya
+I (228) spi_flash: flash io: dio
+W (231) spi_flash: Detected size(16384k) larger than the size in the binary image header(2048k). Using the size in the binary image header.
+I (243) sleep_gpio: Configure to isolate all GPIO pins in sleep state
+I (249) sleep_gpio: Enable automatic switching of GPIO sleep configuration
+I (256) main_task: Started on CPU0
+I (266) main_task: Calling app_main()
+
+=== 07_coremark_lockstep: EEMBC CoreMark in checkpoint-lockstep, CPU 240 MHz, app-core 0 / checker-core 1 ===
+[core 1] checkercore gestart (slaapstand)
+I (276) main_task: Returned from app_main()
+
+--- FASE onbeschermd_vol: 1 context(en), 1 segment(en) x 20000 iteraties ---
+2K validation run parameters for coremark.
+CoreMark Size    : 666
+Total ticks      : 34254640
+Total time (secs): 34.254640
+Iterations/Sec   : 583.862507
+Iterations       : 20000
+Compiler version : GCC14.2.0
+Compiler flags   : -O2 ESP-IDF v5.5
+Parallel ESP32S3-checkpoint-lockstep : 1
+Memory location  : STACK
+seedcrc          : 0x18f2
+[0]crclist       : 0xe3c1
+[0]crcmatrix     : 0x0747
+[0]crcstate      : 0x8d84
+[0]crcfinal      : 0xd304
+Correct operation validated. See README.md for run and reporting rules.
+iteraties 20000 | som getimede segmenten 34254640 us | wandkloktijd 34289795 us
+score getimed 583.86 it/s | score effectief (incl. herinit) 583.26 it/s
+FASE07;onbeschermd_vol;1;1;20000;20000;34254640;34289795;583.8625;583.2639;0;0;nvt
+
+--- FASE beschermd_duaal_vol: 2 context(en), 1 segment(en) x 20000 iteraties ---
+2K validation run parameters for coremark.
+CoreMark Size    : 666
+Total ticks      : 43227920
+Total time (secs): 43.227920
+Iterations/Sec   : 925.327890
+Iterations       : 40000
+Compiler version : GCC14.2.0
+Compiler flags   : -O2 ESP-IDF v5.5
+Parallel ESP32S3-checkpoint-lockstep : 2
+Memory location  : STACK
+seedcrc          : 0x18f2
+[0]crclist       : 0xe3c1
+[1]crclist       : 0xe3c1
+[0]crcmatrix     : 0x0747
+[1]crcmatrix     : 0x0747
+[0]crcstate      : 0x8d84
+[1]crcstate      : 0x8d84
+[0]crcfinal      : 0xd304
+[1]crcfinal      : 0xd304
+Correct operation validated. See README.md for run and reporting rules.
+iteraties 20000 | som getimede segmenten 43227920 us | wandkloktijd 43272488 us
+score getimed 462.66 it/s | score effectief (incl. herinit) 462.19 it/s
+checkpoints 1 | mismatches 0 | latentie gem 2209 / max 2209 cycli
+FASE07;beschermd_duaal_vol;2;1;20000;20000;43227920;43272488;462.6639;462.1874;0;0;nvt
+
+--- FASE onbeschermd_segment: 1 context(en), 400 segment(en) x 50 iteraties ---
+iteraties 20000 | som getimede segmenten 34261368 us | wandkloktijd 34462346 us
+score getimed 583.75 it/s | score effectief (incl. herinit) 580.34 it/s
+FASE07;onbeschermd_segment;1;400;50;20000;34261368;34462346;583.7479;580.3435;0;0;nvt
+CSV07;onbeschermd_segment;0;85788;0;0
+CSV07;onbeschermd_segment;1;85650;0;0
+CSV07;onbeschermd_segment;2;85657;0;0
+CSV07;onbeschermd_segment;3;85650;0;0
+CSV07;onbeschermd_segment;4;85656;0;0
+CSV07;onbeschermd_segment;5;85654;0;0
+CSV07;onbeschermd_segment;6;85652;0;0
+CSV07;onbeschermd_segment;7;85653;0;0
+CSV07;onbeschermd_segment;8;85656;0;0
+CSV07;onbeschermd_segment;9;85650;0;0
+CSV07;onbeschermd_segment;10;85656;0;0
+CSV07;onbeschermd_segment;11;85648;0;0
+CSV07;onbeschermd_segment;12;85657;0;0
+CSV07;onbeschermd_segment;13;85655;0;0
+CSV07;onbeschermd_segment;14;85651;0;0
+CSV07;onbeschermd_segment;15;85655;0;0
+CSV07;onbeschermd_segment;16;85651;0;0
+CSV07;onbeschermd_segment;17;85654;0;0
+CSV07;onbeschermd_segment;18;85657;0;0
+CSV07;onbeschermd_segment;19;85650;0;0
+CSV07;onbeschermd_segment;20;85655;0;0
+CSV07;onbeschermd_segment;21;85654;0;0
+CSV07;onbeschermd_segment;22;85652;0;0
+CSV07;onbeschermd_segment;23;85654;0;0
+CSV07;onbeschermd_segment;24;85651;0;0
+CSV07;onbeschermd_segment;25;85655;0;0
+CSV07;onbeschermd_segment;26;85657;0;0
+CSV07;onbeschermd_segment;27;85649;0;0
+CSV07;onbeschermd_segment;28;85656;0;0
+CSV07;onbeschermd_segment;29;85649;0;0
+CSV07;onbeschermd_segment;30;85657;0;0
+CSV07;onbeschermd_segment;31;85654;0;0
+CSV07;onbeschermd_segment;32;85651;0;0
+CSV07;onbeschermd_segment;33;85653;0;0
+CSV07;onbeschermd_segment;34;85656;0;0
+CSV07;onbeschermd_segment;35;85649;0;0
+CSV07;onbeschermd_segment;36;85657;0;0
+CSV07;onbeschermd_segment;37;85649;0;0
+CSV07;onbeschermd_segment;38;85658;0;0
+CSV07;onbeschermd_segment;39;85655;0;0
+CSV07;onbeschermd_segment;40;85651;0;0
+CSV07;onbeschermd_segment;41;85655;0;0
+CSV07;onbeschermd_segment;42;85651;0;0
+CSV07;onbeschermd_segment;43;85654;0;0
+CSV07;onbeschermd_segment;44;85656;0;0
+CSV07;onbeschermd_segment;45;85650;0;0
+CSV07;onbeschermd_segment;46;85655;0;0
+CSV07;onbeschermd_segment;47;85655;0;0
+CSV07;onbeschermd_segment;48;85651;0;0
+CSV07;onbeschermd_segment;49;85654;0;0
+CSV07;onbeschermd_segment;50;85651;0;0
+CSV07;onbeschermd_segment;51;85655;0;0
+CSV07;onbeschermd_segment;52;85658;0;0
+CSV07;onbeschermd_segment;53;85649;0;0
+CSV07;onbeschermd_segment;54;85657;0;0
+CSV07;onbeschermd_segment;55;85649;0;0
+CSV07;onbeschermd_segment;56;85656;0;0
+CSV07;onbeschermd_segment;57;85654;0;0
+CSV07;onbeschermd_segment;58;85652;0;0
+CSV07;onbeschermd_segment;59;85653;0;0
+CSV07;onbeschermd_segment;60;85656;0;0
+CSV07;onbeschermd_segment;61;85649;0;0
+CSV07;onbeschermd_segment;62;85657;0;0
+CSV07;onbeschermd_segment;63;85648;0;0
+CSV07;onbeschermd_segment;64;85656;0;0
+CSV07;onbeschermd_segment;65;85655;0;0
+CSV07;onbeschermd_segment;66;85650;0;0
+CSV07;onbeschermd_segment;67;85654;0;0
+CSV07;onbeschermd_segment;68;85651;0;0
+CSV07;onbeschermd_segment;69;85654;0;0
+CSV07;onbeschermd_segment;70;85656;0;0
+CSV07;onbeschermd_segment;71;85650;0;0
+CSV07;onbeschermd_segment;72;85656;0;0
+CSV07;onbeschermd_segment;73;85654;0;0
+CSV07;onbeschermd_segment;74;85652;0;0
+CSV07;onbeschermd_segment;75;85655;0;0
+CSV07;onbeschermd_segment;76;85650;0;0
+CSV07;onbeschermd_segment;77;85654;0;0
+CSV07;onbeschermd_segment;78;85657;0;0
+CSV07;onbeschermd_segment;79;85649;0;0
+CSV07;onbeschermd_segment;80;85657;0;0
+CSV07;onbeschermd_segment;81;85650;0;0
+CSV07;onbeschermd_segment;82;85656;0;0
+CSV07;onbeschermd_segment;83;85654;0;0
+CSV07;onbeschermd_segment;84;85652;0;0
+CSV07;onbeschermd_segment;85;85654;0;0
+CSV07;onbeschermd_segment;86;85657;0;0
+CSV07;onbeschermd_segment;87;85650;0;0
+CSV07;onbeschermd_segment;88;85656;0;0
+CSV07;onbeschermd_segment;89;85649;0;0
+CSV07;onbeschermd_segment;90;85657;0;0
+CSV07;onbeschermd_segment;91;85656;0;0
+CSV07;onbeschermd_segment;92;85650;0;0
+CSV07;onbeschermd_segment;93;85655;0;0
+CSV07;onbeschermd_segment;94;85651;0;0
+CSV07;onbeschermd_segment;95;85654;0;0
+CSV07;onbeschermd_segment;96;85656;0;0
+CSV07;onbeschermd_segment;97;85650;0;0
+CSV07;onbeschermd_segment;98;85656;0;0
+CSV07;onbeschermd_segment;99;85656;0;0
+CSV07;onbeschermd_segment;100;85652;0;0
+CSV07;onbeschermd_segment;101;85655;0;0
+CSV07;onbeschermd_segment;102;85650;0;0
+CSV07;onbeschermd_segment;103;85654;0;0
+CSV07;onbeschermd_segment;104;85657;0;0
+CSV07;onbeschermd_segment;105;85648;0;0
+CSV07;onbeschermd_segment;106;85656;0;0
+CSV07;onbeschermd_segment;107;85649;0;0
+CSV07;onbeschermd_segment;108;85656;0;0
+CSV07;onbeschermd_segment;109;85654;0;0
+CSV07;onbeschermd_segment;110;85652;0;0
+CSV07;onbeschermd_segment;111;85654;0;0
+CSV07;onbeschermd_segment;112;85656;0;0
+CSV07;onbeschermd_segment;113;85650;0;0
+CSV07;onbeschermd_segment;114;85657;0;0
+CSV07;onbeschermd_segment;115;85648;0;0
+CSV07;onbeschermd_segment;116;85657;0;0
+CSV07;onbeschermd_segment;117;85656;0;0
+CSV07;onbeschermd_segment;118;85650;0;0
+CSV07;onbeschermd_segment;119;85655;0;0
+CSV07;onbeschermd_segment;120;85651;0;0
+CSV07;onbeschermd_segment;121;85649;0;0
+CSV07;onbeschermd_segment;122;85656;0;0
+CSV07;onbeschermd_segment;123;85650;0;0
+CSV07;onbeschermd_segment;124;85656;0;0
+CSV07;onbeschermd_segment;125;85654;0;0
+CSV07;onbeschermd_segment;126;85652;0;0
+CSV07;onbeschermd_segment;127;85655;0;0
+CSV07;onbeschermd_segment;128;85651;0;0
+CSV07;onbeschermd_segment;129;85655;0;0
+CSV07;onbeschermd_segment;130;85658;0;0
+CSV07;onbeschermd_segment;131;85648;0;0
+CSV07;onbeschermd_segment;132;85657;0;0
+CSV07;onbeschermd_segment;133;85649;0;0
+CSV07;onbeschermd_segment;134;85651;0;0
+CSV07;onbeschermd_segment;135;85653;0;0
+CSV07;onbeschermd_segment;136;85653;0;0
+CSV07;onbeschermd_segment;137;85654;0;0
+CSV07;onbeschermd_segment;138;85656;0;0
+CSV07;onbeschermd_segment;139;85650;0;0
+CSV07;onbeschermd_segment;140;85657;0;0
+CSV07;onbeschermd_segment;141;85648;0;0
+CSV07;onbeschermd_segment;142;85656;0;0
+CSV07;onbeschermd_segment;143;85654;0;0
+CSV07;onbeschermd_segment;144;85650;0;0
+CSV07;onbeschermd_segment;145;85655;0;0
+CSV07;onbeschermd_segment;146;85651;0;0
+CSV07;onbeschermd_segment;147;85650;0;0
+CSV07;onbeschermd_segment;148;85655;0;0
+CSV07;onbeschermd_segment;149;85650;0;0
+CSV07;onbeschermd_segment;150;85656;0;0
+CSV07;onbeschermd_segment;151;85653;0;0
+CSV07;onbeschermd_segment;152;85652;0;0
+CSV07;onbeschermd_segment;153;85654;0;0
+CSV07;onbeschermd_segment;154;85651;0;0
+CSV07;onbeschermd_segment;155;85655;0;0
+CSV07;onbeschermd_segment;156;85658;0;0
+CSV07;onbeschermd_segment;157;85648;0;0
+CSV07;onbeschermd_segment;158;85655;0;0
+CSV07;onbeschermd_segment;159;85649;0;0
+CSV07;onbeschermd_segment;160;85651;0;0
+CSV07;onbeschermd_segment;161;85654;0;0
+CSV07;onbeschermd_segment;162;85652;0;0
+CSV07;onbeschermd_segment;163;85654;0;0
+CSV07;onbeschermd_segment;164;85656;0;0
+CSV07;onbeschermd_segment;165;85650;0;0
+CSV07;onbeschermd_segment;166;85656;0;0
+CSV07;onbeschermd_segment;167;85649;0;0
+CSV07;onbeschermd_segment;168;85656;0;0
+CSV07;onbeschermd_segment;169;85656;0;0
+CSV07;onbeschermd_segment;170;85650;0;0
+CSV07;onbeschermd_segment;171;85654;0;0
+CSV07;onbeschermd_segment;172;85652;0;0
+CSV07;onbeschermd_segment;173;85648;0;0
+CSV07;onbeschermd_segment;174;85657;0;0
+CSV07;onbeschermd_segment;175;85651;0;0
+CSV07;onbeschermd_segment;176;85656;0;0
+CSV07;onbeschermd_segment;177;85654;0;0
+CSV07;onbeschermd_segment;178;85652;0;0
+CSV07;onbeschermd_segment;179;85654;0;0
+CSV07;onbeschermd_segment;180;85651;0;0
+CSV07;onbeschermd_segment;181;85654;0;0
+CSV07;onbeschermd_segment;182;85657;0;0
+CSV07;onbeschermd_segment;183;85648;0;0
+CSV07;onbeschermd_segment;184;85656;0;0
+CSV07;onbeschermd_segment;185;85650;0;0
+CSV07;onbeschermd_segment;186;85651;0;0
+CSV07;onbeschermd_segment;187;85655;0;0
+CSV07;onbeschermd_segment;188;85651;0;0
+CSV07;onbeschermd_segment;189;85655;0;0
+CSV07;onbeschermd_segment;190;85655;0;0
+CSV07;onbeschermd_segment;191;85651;0;0
+CSV07;onbeschermd_segment;192;85656;0;0
+CSV07;onbeschermd_segment;193;85649;0;0
+CSV07;onbeschermd_segment;194;85656;0;0
+CSV07;onbeschermd_segment;195;85655;0;0
+CSV07;onbeschermd_segment;196;85650;0;0
+CSV07;onbeschermd_segment;197;85654;0;0
+CSV07;onbeschermd_segment;198;85652;0;0
+CSV07;onbeschermd_segment;199;85649;0;0
+CSV07;onbeschermd_segment;200;85656;0;0
+CSV07;onbeschermd_segment;201;85650;0;0
+CSV07;onbeschermd_segment;202;85657;0;0
+CSV07;onbeschermd_segment;203;85654;0;0
+CSV07;onbeschermd_segment;204;85652;0;0
+CSV07;onbeschermd_segment;205;85655;0;0
+CSV07;onbeschermd_segment;206;85650;0;0
+CSV07;onbeschermd_segment;207;85653;0;0
+CSV07;onbeschermd_segment;208;85658;0;0
+CSV07;onbeschermd_segment;209;85649;0;0
+CSV07;onbeschermd_segment;210;85657;0;0
+CSV07;onbeschermd_segment;211;85649;0;0
+CSV07;onbeschermd_segment;212;85651;0;0
+CSV07;onbeschermd_segment;213;85654;0;0
+CSV07;onbeschermd_segment;214;85652;0;0
+CSV07;onbeschermd_segment;215;85655;0;0
+CSV07;onbeschermd_segment;216;85655;0;0
+CSV07;onbeschermd_segment;217;85650;0;0
+CSV07;onbeschermd_segment;218;85656;0;0
+CSV07;onbeschermd_segment;219;85648;0;0
+CSV07;onbeschermd_segment;220;85656;0;0
+CSV07;onbeschermd_segment;221;85654;0;0
+CSV07;onbeschermd_segment;222;85650;0;0
+CSV07;onbeschermd_segment;223;85655;0;0
+CSV07;onbeschermd_segment;224;85651;0;0
+CSV07;onbeschermd_segment;225;85649;0;0
+CSV07;onbeschermd_segment;226;85656;0;0
+CSV07;onbeschermd_segment;227;85649;0;0
+CSV07;onbeschermd_segment;228;85657;0;0
+CSV07;onbeschermd_segment;229;85653;0;0
+CSV07;onbeschermd_segment;230;85652;0;0
+CSV07;onbeschermd_segment;231;85655;0;0
+CSV07;onbeschermd_segment;232;85651;0;0
+CSV07;onbeschermd_segment;233;85653;0;0
+CSV07;onbeschermd_segment;234;85658;0;0
+CSV07;onbeschermd_segment;235;85650;0;0
+CSV07;onbeschermd_segment;236;85657;0;0
+CSV07;onbeschermd_segment;237;85650;0;0
+CSV07;onbeschermd_segment;238;85651;0;0
+CSV07;onbeschermd_segment;239;85654;0;0
+CSV07;onbeschermd_segment;240;85652;0;0
+CSV07;onbeschermd_segment;241;85654;0;0
+CSV07;onbeschermd_segment;242;85655;0;0
+CSV07;onbeschermd_segment;243;85650;0;0
+CSV07;onbeschermd_segment;244;85656;0;0
+CSV07;onbeschermd_segment;245;85648;0;0
+CSV07;onbeschermd_segment;246;85656;0;0
+CSV07;onbeschermd_segment;247;85656;0;0
+CSV07;onbeschermd_segment;248;85651;0;0
+CSV07;onbeschermd_segment;249;85654;0;0
+CSV07;onbeschermd_segment;250;85652;0;0
+CSV07;onbeschermd_segment;251;85649;0;0
+CSV07;onbeschermd_segment;252;85656;0;0
+CSV07;onbeschermd_segment;253;85650;0;0
+CSV07;onbeschermd_segment;254;85656;0;0
+CSV07;onbeschermd_segment;255;85652;0;0
+CSV07;onbeschermd_segment;256;85652;0;0
+CSV07;onbeschermd_segment;257;85655;0;0
+CSV07;onbeschermd_segment;258;85650;0;0
+CSV07;onbeschermd_segment;259;85654;0;0
+CSV07;onbeschermd_segment;260;85658;0;0
+CSV07;onbeschermd_segment;261;85648;0;0
+CSV07;onbeschermd_segment;262;85656;0;0
+CSV07;onbeschermd_segment;263;85650;0;0
+CSV07;onbeschermd_segment;264;85650;0;0
+CSV07;onbeschermd_segment;265;85654;0;0
+CSV07;onbeschermd_segment;266;85651;0;0
+CSV07;onbeschermd_segment;267;85655;0;0
+CSV07;onbeschermd_segment;268;85655;0;0
+CSV07;onbeschermd_segment;269;85649;0;0
+CSV07;onbeschermd_segment;270;85657;0;0
+CSV07;onbeschermd_segment;271;85649;0;0
+CSV07;onbeschermd_segment;272;85655;0;0
+CSV07;onbeschermd_segment;273;85655;0;0
+CSV07;onbeschermd_segment;274;85650;0;0
+CSV07;onbeschermd_segment;275;85654;0;0
+CSV07;onbeschermd_segment;276;85653;0;0
+CSV07;onbeschermd_segment;277;85648;0;0
+CSV07;onbeschermd_segment;278;85656;0;0
+CSV07;onbeschermd_segment;279;85649;0;0
+CSV07;onbeschermd_segment;280;85656;0;0
+CSV07;onbeschermd_segment;281;85653;0;0
+CSV07;onbeschermd_segment;282;85652;0;0
+CSV07;onbeschermd_segment;283;85655;0;0
+CSV07;onbeschermd_segment;284;85651;0;0
+CSV07;onbeschermd_segment;285;85654;0;0
+CSV07;onbeschermd_segment;286;85657;0;0
+CSV07;onbeschermd_segment;287;85649;0;0
+CSV07;onbeschermd_segment;288;85656;0;0
+CSV07;onbeschermd_segment;289;85650;0;0
+CSV07;onbeschermd_segment;290;85650;0;0
+CSV07;onbeschermd_segment;291;85653;0;0
+CSV07;onbeschermd_segment;292;85652;0;0
+CSV07;onbeschermd_segment;293;85654;0;0
+CSV07;onbeschermd_segment;294;85654;0;0
+CSV07;onbeschermd_segment;295;85650;0;0
+CSV07;onbeschermd_segment;296;85657;0;0
+CSV07;onbeschermd_segment;297;85649;0;0
+CSV07;onbeschermd_segment;298;85657;0;0
+CSV07;onbeschermd_segment;299;85656;0;0
+CSV07;onbeschermd_segment;300;85652;0;0
+CSV07;onbeschermd_segment;301;85654;0;0
+CSV07;onbeschermd_segment;302;85652;0;0
+CSV07;onbeschermd_segment;303;85649;0;0
+CSV07;onbeschermd_segment;304;85656;0;0
+CSV07;onbeschermd_segment;305;85649;0;0
+CSV07;onbeschermd_segment;306;85657;0;0
+CSV07;onbeschermd_segment;307;85653;0;0
+CSV07;onbeschermd_segment;308;85651;0;0
+CSV07;onbeschermd_segment;309;85654;0;0
+CSV07;onbeschermd_segment;310;85651;0;0
+CSV07;onbeschermd_segment;311;85654;0;0
+CSV07;onbeschermd_segment;312;85656;0;0
+CSV07;onbeschermd_segment;313;85649;0;0
+CSV07;onbeschermd_segment;314;85656;0;0
+CSV07;onbeschermd_segment;315;85650;0;0
+CSV07;onbeschermd_segment;316;85650;0;0
+CSV07;onbeschermd_segment;317;85653;0;0
+CSV07;onbeschermd_segment;318;85652;0;0
+CSV07;onbeschermd_segment;319;85654;0;0
+CSV07;onbeschermd_segment;320;85655;0;0
+CSV07;onbeschermd_segment;321;85650;0;0
+CSV07;onbeschermd_segment;322;85657;0;0
+CSV07;onbeschermd_segment;323;85648;0;0
+CSV07;onbeschermd_segment;324;85656;0;0
+CSV07;onbeschermd_segment;325;85655;0;0
+CSV07;onbeschermd_segment;326;85651;0;0
+CSV07;onbeschermd_segment;327;85654;0;0
+CSV07;onbeschermd_segment;328;85652;0;0
+CSV07;onbeschermd_segment;329;85648;0;0
+CSV07;onbeschermd_segment;330;85657;0;0
+CSV07;onbeschermd_segment;331;85650;0;0
+CSV07;onbeschermd_segment;332;85656;0;0
+CSV07;onbeschermd_segment;333;85653;0;0
+CSV07;onbeschermd_segment;334;85652;0;0
+CSV07;onbeschermd_segment;335;85656;0;0
+CSV07;onbeschermd_segment;336;85651;0;0
+CSV07;onbeschermd_segment;337;85655;0;0
+CSV07;onbeschermd_segment;338;85657;0;0
+CSV07;onbeschermd_segment;339;85650;0;0
+CSV07;onbeschermd_segment;340;85656;0;0
+CSV07;onbeschermd_segment;341;85650;0;0
+CSV07;onbeschermd_segment;342;85651;0;0
+CSV07;onbeschermd_segment;343;85654;0;0
+CSV07;onbeschermd_segment;344;85652;0;0
+CSV07;onbeschermd_segment;345;85654;0;0
+CSV07;onbeschermd_segment;346;85657;0;0
+CSV07;onbeschermd_segment;347;85649;0;0
+CSV07;onbeschermd_segment;348;85657;0;0
+CSV07;onbeschermd_segment;349;85649;0;0
+CSV07;onbeschermd_segment;350;85656;0;0
+CSV07;onbeschermd_segment;351;85654;0;0
+CSV07;onbeschermd_segment;352;85651;0;0
+CSV07;onbeschermd_segment;353;85654;0;0
+CSV07;onbeschermd_segment;354;85652;0;0
+CSV07;onbeschermd_segment;355;85650;0;0
+CSV07;onbeschermd_segment;356;85656;0;0
+CSV07;onbeschermd_segment;357;85650;0;0
+CSV07;onbeschermd_segment;358;85657;0;0
+CSV07;onbeschermd_segment;359;85653;0;0
+CSV07;onbeschermd_segment;360;85651;0;0
+CSV07;onbeschermd_segment;361;85656;0;0
+CSV07;onbeschermd_segment;362;85650;0;0
+CSV07;onbeschermd_segment;363;85654;0;0
+CSV07;onbeschermd_segment;364;85656;0;0
+CSV07;onbeschermd_segment;365;85649;0;0
+CSV07;onbeschermd_segment;366;85656;0;0
+CSV07;onbeschermd_segment;367;85650;0;0
+CSV07;onbeschermd_segment;368;85651;0;0
+CSV07;onbeschermd_segment;369;85654;0;0
+CSV07;onbeschermd_segment;370;85652;0;0
+CSV07;onbeschermd_segment;371;85655;0;0
+CSV07;onbeschermd_segment;372;85656;0;0
+CSV07;onbeschermd_segment;373;85649;0;0
+CSV07;onbeschermd_segment;374;85657;0;0
+CSV07;onbeschermd_segment;375;85648;0;0
+CSV07;onbeschermd_segment;376;85656;0;0
+CSV07;onbeschermd_segment;377;85655;0;0
+CSV07;onbeschermd_segment;378;85652;0;0
+CSV07;onbeschermd_segment;379;85653;0;0
+CSV07;onbeschermd_segment;380;85652;0;0
+CSV07;onbeschermd_segment;381;85650;0;0
+CSV07;onbeschermd_segment;382;85656;0;0
+CSV07;onbeschermd_segment;383;85651;0;0
+CSV07;onbeschermd_segment;384;85657;0;0
+CSV07;onbeschermd_segment;385;85653;0;0
+CSV07;onbeschermd_segment;386;85651;0;0
+CSV07;onbeschermd_segment;387;85656;0;0
+CSV07;onbeschermd_segment;388;85650;0;0
+CSV07;onbeschermd_segment;389;85655;0;0
+CSV07;onbeschermd_segment;390;85656;0;0
+CSV07;onbeschermd_segment;391;85649;0;0
+CSV07;onbeschermd_segment;392;85656;0;0
+CSV07;onbeschermd_segment;393;85651;0;0
+CSV07;onbeschermd_segment;394;85651;0;0
+CSV07;onbeschermd_segment;395;85654;0;0
+CSV07;onbeschermd_segment;396;85652;0;0
+CSV07;onbeschermd_segment;397;85655;0;0
+CSV07;onbeschermd_segment;398;85656;0;0
+CSV07;onbeschermd_segment;399;85649;0;0
+
+--- FASE beschermd_segment: 2 context(en), 400 segment(en) x 50 iteraties ---
+iteraties 20000 | som getimede segmenten 43361803 us | wandkloktijd 43608200 us
+score getimed 461.24 it/s | score effectief (incl. herinit) 458.63 it/s
+checkpoints 400 | mismatches 0 | latentie gem 2184 / max 5424 cycli
+FASE07;beschermd_segment;2;400;50;20000;43361803;43608200;461.2354;458.6293;0;0;nvt
+CSV07;beschermd_segment;0;108523;948;0
+CSV07;beschermd_segment;1;108317;103;0
+CSV07;beschermd_segment;2;108316;494;0
+CSV07;beschermd_segment;3;108432;103;0
+CSV07;beschermd_segment;4;108405;496;0
+CSV07;beschermd_segment;5;108310;3419;0
+CSV07;beschermd_segment;6;108438;3030;0
+CSV07;beschermd_segment;7;108390;3315;0
+CSV07;beschermd_segment;8;108749;4837;0
+CSV07;beschermd_segment;9;108394;5417;0
+CSV07;beschermd_segment;10;108217;496;0
+CSV07;beschermd_segment;11;108367;103;0
+CSV07;beschermd_segment;12;108324;496;0
+CSV07;beschermd_segment;13;108427;103;0
+CSV07;beschermd_segment;14;108413;494;0
+CSV07;beschermd_segment;15;108345;3419;0
+CSV07;beschermd_segment;16;108447;2826;0
+CSV07;beschermd_segment;17;108376;3411;0
+CSV07;beschermd_segment;18;108335;4837;0
+CSV07;beschermd_segment;19;108518;5417;0
+CSV07;beschermd_segment;20;108273;496;0
+CSV07;beschermd_segment;21;108361;103;0
+CSV07;beschermd_segment;22;108327;494;0
+CSV07;beschermd_segment;23;108452;103;0
+CSV07;beschermd_segment;24;108383;496;0
+CSV07;beschermd_segment;25;108328;3419;0
+CSV07;beschermd_segment;26;108440;2629;0
+CSV07;beschermd_segment;27;108348;3315;0
+CSV07;beschermd_segment;28;108833;3426;0
+CSV07;beschermd_segment;29;108655;5417;0
+CSV07;beschermd_segment;30;108605;5424;0
+CSV07;beschermd_segment;31;108252;103;0
+CSV07;beschermd_segment;32;108321;496;0
+CSV07;beschermd_segment;33;108312;103;0
+CSV07;beschermd_segment;34;108323;496;0
+CSV07;beschermd_segment;35;108315;103;0
+CSV07;beschermd_segment;36;108774;1933;0
+CSV07;beschermd_segment;37;108434;2625;0
+CSV07;beschermd_segment;38;108402;3321;0
+CSV07;beschermd_segment;39;108641;4830;0
+CSV07;beschermd_segment;40;108394;5424;0
+CSV07;beschermd_segment;41;108214;103;0
+CSV07;beschermd_segment;42;108352;494;0
+CSV07;beschermd_segment;43;108327;103;0
+CSV07;beschermd_segment;44;108430;494;0
+CSV07;beschermd_segment;45;108413;103;0
+CSV07;beschermd_segment;46;108340;3426;0
+CSV07;beschermd_segment;47;108513;2819;0
+CSV07;beschermd_segment;48;108512;3226;0
+CSV07;beschermd_segment;49;108312;4830;0
+CSV07;beschermd_segment;50;108405;5424;0
+CSV07;beschermd_segment;51;108278;103;0
+CSV07;beschermd_segment;52;108450;496;0
+CSV07;beschermd_segment;53;108327;103;0
+CSV07;beschermd_segment;54;108301;496;0
+CSV07;beschermd_segment;55;108379;103;0
+CSV07;beschermd_segment;56;108322;3426;0
+CSV07;beschermd_segment;57;108435;2625;0
+CSV07;beschermd_segment;58;108386;3321;0
+CSV07;beschermd_segment;59;108814;3419;0
+CSV07;beschermd_segment;60;108659;5424;0
+CSV07;beschermd_segment;61;108607;5417;0
+CSV07;beschermd_segment;62;108259;496;0
+CSV07;beschermd_segment;63;108326;103;0
+CSV07;beschermd_segment;64;108310;494;0
+CSV07;beschermd_segment;65;108329;103;0
+CSV07;beschermd_segment;66;108313;496;0
+CSV07;beschermd_segment;67;108505;3730;0
+CSV07;beschermd_segment;68;108590;3030;0
+CSV07;beschermd_segment;69;108383;3315;0
+CSV07;beschermd_segment;70;108469;4838;0
+CSV07;beschermd_segment;71;108537;5417;0
+CSV07;beschermd_segment;72;108282;496;0
+CSV07;beschermd_segment;73;108352;103;0
+CSV07;beschermd_segment;74;108333;496;0
+CSV07;beschermd_segment;75;108444;103;0
+CSV07;beschermd_segment;76;108410;494;0
+CSV07;beschermd_segment;77;108329;3419;0
+CSV07;beschermd_segment;78;108431;2629;0
+CSV07;beschermd_segment;79;108394;3315;0
+CSV07;beschermd_segment;80;108641;4836;0
+CSV07;beschermd_segment;81;108395;5417;0
+CSV07;beschermd_segment;82;108215;496;0
+CSV07;beschermd_segment;83;108448;103;0
+CSV07;beschermd_segment;84;108327;494;0
+CSV07;beschermd_segment;85;108319;103;0
+CSV07;beschermd_segment;86;108414;494;0
+CSV07;beschermd_segment;87;108342;3419;0
+CSV07;beschermd_segment;88;108443;2630;0
+CSV07;beschermd_segment;89;108367;3411;0
+CSV07;beschermd_segment;90;108583;4838;0
+CSV07;beschermd_segment;91;108393;5417;0
+CSV07;beschermd_segment;92;108220;496;0
+CSV07;beschermd_segment;93;108370;103;0
+CSV07;beschermd_segment;94;108332;496;0
+CSV07;beschermd_segment;95;108337;103;0
+CSV07;beschermd_segment;96;108414;494;0
+CSV07;beschermd_segment;97;108328;3419;0
+CSV07;beschermd_segment;98;108440;2629;0
+CSV07;beschermd_segment;99;108342;3315;0
+CSV07;beschermd_segment;100;108639;4836;0
+CSV07;beschermd_segment;101;108398;5417;0
+CSV07;beschermd_segment;102;108213;496;0
+CSV07;beschermd_segment;103;108358;103;0
+CSV07;beschermd_segment;104;108326;496;0
+CSV07;beschermd_segment;105;108430;103;0
+CSV07;beschermd_segment;106;108386;496;0
+CSV07;beschermd_segment;107;108348;3419;0
+CSV07;beschermd_segment;108;108447;2826;0
+CSV07;beschermd_segment;109;108355;3315;0
+CSV07;beschermd_segment;110;108593;4837;0
+CSV07;beschermd_segment;111;108389;5417;0
+CSV07;beschermd_segment;112;108220;496;0
+CSV07;beschermd_segment;113;108450;103;0
+CSV07;beschermd_segment;114;108338;494;0
+CSV07;beschermd_segment;115;108316;103;0
+CSV07;beschermd_segment;116;108386;496;0
+CSV07;beschermd_segment;117;108326;3419;0
+CSV07;beschermd_segment;118;108430;2630;0
+CSV07;beschermd_segment;119;108360;3315;0
+CSV07;beschermd_segment;120;108350;4836;0
+CSV07;beschermd_segment;121;108507;5417;0
+CSV07;beschermd_segment;122;108274;496;0
+CSV07;beschermd_segment;123;108318;103;0
+CSV07;beschermd_segment;124;108329;496;0
+CSV07;beschermd_segment;125;108436;103;0
+CSV07;beschermd_segment;126;108403;494;0
+CSV07;beschermd_segment;127;108299;3419;0
+CSV07;beschermd_segment;128;108444;3029;0
+CSV07;beschermd_segment;129;108398;3315;0
+CSV07;beschermd_segment;130;108755;4838;0
+CSV07;beschermd_segment;131;108352;5417;0
+CSV07;beschermd_segment;132;108225;494;0
+CSV07;beschermd_segment;133;108355;103;0
+CSV07;beschermd_segment;134;108288;496;0
+CSV07;beschermd_segment;135;108434;103;0
+CSV07;beschermd_segment;136;108403;494;0
+CSV07;beschermd_segment;137;108321;3419;0
+CSV07;beschermd_segment;138;108429;2630;0
+CSV07;beschermd_segment;139;108377;3315;0
+CSV07;beschermd_segment;140;108646;4836;0
+CSV07;beschermd_segment;141;108394;5417;0
+CSV07;beschermd_segment;142;108217;496;0
+CSV07;beschermd_segment;143;108447;103;0
+CSV07;beschermd_segment;144;108332;496;0
+CSV07;beschermd_segment;145;108310;103;0
+CSV07;beschermd_segment;146;108414;496;0
+CSV07;beschermd_segment;147;108340;3419;0
+CSV07;beschermd_segment;148;108442;2826;0
+CSV07;beschermd_segment;149;108380;3411;0
+CSV07;beschermd_segment;150;108325;4838;0
+CSV07;beschermd_segment;151;108341;5417;0
+CSV07;beschermd_segment;152;108267;496;0
+CSV07;beschermd_segment;153;108244;103;0
+CSV07;beschermd_segment;154;108317;496;0
+CSV07;beschermd_segment;155;108326;103;0
+CSV07;beschermd_segment;156;108315;494;0
+CSV07;beschermd_segment;157;108229;2930;0
+CSV07;beschermd_segment;158;108370;3030;0
+CSV07;beschermd_segment;159;108546;5417;0
+CSV07;beschermd_segment;160;108569;5424;0
+CSV07;beschermd_segment;161;108613;5417;0
+CSV07;beschermd_segment;162;108257;494;0
+CSV07;beschermd_segment;163;108319;103;0
+CSV07;beschermd_segment;164;108309;496;0
+CSV07;beschermd_segment;165;108312;103;0
+CSV07;beschermd_segment;166;108724;1437;0
+CSV07;beschermd_segment;167;108293;3730;0
+CSV07;beschermd_segment;168;108441;3029;0
+CSV07;beschermd_segment;169;108396;3315;0
+CSV07;beschermd_segment;170;108952;3426;0
+CSV07;beschermd_segment;171;108654;5417;0
+CSV07;beschermd_segment;172;108609;5424;0
+CSV07;beschermd_segment;173;108254;103;0
+CSV07;beschermd_segment;174;108328;496;0
+CSV07;beschermd_segment;175;108309;103;0
+CSV07;beschermd_segment;176;108385;494;0
+CSV07;beschermd_segment;177;108334;103;0
+CSV07;beschermd_segment;178;108676;3426;0
+CSV07;beschermd_segment;179;108437;2625;0
+CSV07;beschermd_segment;180;108391;3321;0
+CSV07;beschermd_segment;181;108827;3419;0
+CSV07;beschermd_segment;182;108377;5424;0
+CSV07;beschermd_segment;183;108283;103;0
+CSV07;beschermd_segment;184;108263;494;0
+CSV07;beschermd_segment;185;108329;103;0
+CSV07;beschermd_segment;186;108322;496;0
+CSV07;beschermd_segment;187;108411;103;0
+CSV07;beschermd_segment;188;108345;3426;0
+CSV07;beschermd_segment;189;108445;2819;0
+CSV07;beschermd_segment;190;108357;3321;0
+CSV07;beschermd_segment;191;108583;4830;0
+CSV07;beschermd_segment;192;108397;5424;0
+CSV07;beschermd_segment;193;108224;103;0
+CSV07;beschermd_segment;194;108367;496;0
+CSV07;beschermd_segment;195;108329;103;0
+CSV07;beschermd_segment;196;108344;496;0
+CSV07;beschermd_segment;197;108405;103;0
+CSV07;beschermd_segment;198;108324;3426;0
+CSV07;beschermd_segment;199;108436;2625;0
+CSV07;beschermd_segment;200;108390;3321;0
+CSV07;beschermd_segment;201;108822;3419;0
+CSV07;beschermd_segment;202;108656;5424;0
+CSV07;beschermd_segment;203;108608;5417;0
+CSV07;beschermd_segment;204;108252;496;0
+CSV07;beschermd_segment;205;108324;103;0
+CSV07;beschermd_segment;206;108317;496;0
+CSV07;beschermd_segment;207;108340;103;0
+CSV07;beschermd_segment;208;108318;494;0
+CSV07;beschermd_segment;209;108755;1930;0
+CSV07;beschermd_segment;210;108260;3030;0
+CSV07;beschermd_segment;211;108369;3115;0
+CSV07;beschermd_segment;212;108502;4837;0
+CSV07;beschermd_segment;213;108371;5417;0
+CSV07;beschermd_segment;214;108224;496;0
+CSV07;beschermd_segment;215;108323;103;0
+CSV07;beschermd_segment;216;108267;494;0
+CSV07;beschermd_segment;217;108393;103;0
+CSV07;beschermd_segment;218;108720;1436;0
+CSV07;beschermd_segment;219;108307;3419;0
+CSV07;beschermd_segment;220;108443;3030;0
+CSV07;beschermd_segment;221;108391;3315;0
+CSV07;beschermd_segment;222;108465;4836;0
+CSV07;beschermd_segment;223;108357;5417;0
+CSV07;beschermd_segment;224;108262;496;0
+CSV07;beschermd_segment;225;108326;103;0
+CSV07;beschermd_segment;226;108308;494;0
+CSV07;beschermd_segment;227;108375;103;0
+CSV07;beschermd_segment;228;108322;496;0
+CSV07;beschermd_segment;229;108399;3130;0
+CSV07;beschermd_segment;230;108322;3133;0
+CSV07;beschermd_segment;231;108387;5417;0
+CSV07;beschermd_segment;232;108661;4838;0
+CSV07;beschermd_segment;233;108412;5417;0
+CSV07;beschermd_segment;234;108230;496;0
+CSV07;beschermd_segment;235;108338;103;0
+CSV07;beschermd_segment;236;108273;494;0
+CSV07;beschermd_segment;237;108394;103;0
+CSV07;beschermd_segment;238;108727;1438;0
+CSV07;beschermd_segment;239;108289;3730;0
+CSV07;beschermd_segment;240;108607;2630;0
+CSV07;beschermd_segment;241;108375;3315;0
+CSV07;beschermd_segment;242;108645;4836;0
+CSV07;beschermd_segment;243;108395;5417;0
+CSV07;beschermd_segment;244;108217;496;0
+CSV07;beschermd_segment;245;108441;103;0
+CSV07;beschermd_segment;246;108317;496;0
+CSV07;beschermd_segment;247;108308;103;0
+CSV07;beschermd_segment;248;108408;496;0
+CSV07;beschermd_segment;249;108325;3419;0
+CSV07;beschermd_segment;250;108434;2629;0
+CSV07;beschermd_segment;251;108362;3315;0
+CSV07;beschermd_segment;252;108641;4838;0
+CSV07;beschermd_segment;253;108396;5417;0
+CSV07;beschermd_segment;254;108215;494;0
+CSV07;beschermd_segment;255;108366;103;0
+CSV07;beschermd_segment;256;108334;496;0
+CSV07;beschermd_segment;257;108358;103;0
+CSV07;beschermd_segment;258;108406;496;0
+CSV07;beschermd_segment;259;108326;3419;0
+CSV07;beschermd_segment;260;108427;2629;0
+CSV07;beschermd_segment;261;108359;3315;0
+CSV07;beschermd_segment;262;108822;3426;0
+CSV07;beschermd_segment;263;108637;5417;0
+CSV07;beschermd_segment;264;108608;5424;0
+CSV07;beschermd_segment;265;108260;103;0
+CSV07;beschermd_segment;266;108443;496;0
+CSV07;beschermd_segment;267;108327;103;0
+CSV07;beschermd_segment;268;108424;496;0
+CSV07;beschermd_segment;269;108348;103;0
+CSV07;beschermd_segment;270;108390;3734;0
+CSV07;beschermd_segment;271;108438;3025;0
+CSV07;beschermd_segment;272;108396;3321;0
+CSV07;beschermd_segment;273;108743;4830;0
+CSV07;beschermd_segment;274;108398;5424;0
+CSV07;beschermd_segment;275;108273;103;0
+CSV07;beschermd_segment;276;108357;494;0
+CSV07;beschermd_segment;277;108331;103;0
+CSV07;beschermd_segment;278;108338;496;0
+CSV07;beschermd_segment;279;108396;103;0
+CSV07;beschermd_segment;280;108335;3426;0
+CSV07;beschermd_segment;281;108437;2625;0
+CSV07;beschermd_segment;282;108371;3321;0
+CSV07;beschermd_segment;283;108641;4830;0
+CSV07;beschermd_segment;284;108395;5424;0
+CSV07;beschermd_segment;285;108219;103;0
+CSV07;beschermd_segment;286;108368;496;0
+CSV07;beschermd_segment;287;108338;103;0
+CSV07;beschermd_segment;288;108357;496;0
+CSV07;beschermd_segment;289;108392;103;0
+CSV07;beschermd_segment;290;108336;3426;0
+CSV07;beschermd_segment;291;108440;2625;0
+CSV07;beschermd_segment;292;108359;3321;0
+CSV07;beschermd_segment;293;108637;4830;0
+CSV07;beschermd_segment;294;108391;5424;0
+CSV07;beschermd_segment;295;108218;103;0
+CSV07;beschermd_segment;296;108380;494;0
+CSV07;beschermd_segment;297;108334;103;0
+CSV07;beschermd_segment;298;108354;494;0
+CSV07;beschermd_segment;299;108407;103;0
+CSV07;beschermd_segment;300;108339;3426;0
+CSV07;beschermd_segment;301;108439;2625;0
+CSV07;beschermd_segment;302;108367;3321;0
+CSV07;beschermd_segment;303;108822;3419;0
+CSV07;beschermd_segment;304;108638;5424;0
+CSV07;beschermd_segment;305;108616;5417;0
+CSV07;beschermd_segment;306;108262;496;0
+CSV07;beschermd_segment;307;108326;103;0
+CSV07;beschermd_segment;308;108308;494;0
+CSV07;beschermd_segment;309;108375;103;0
+CSV07;beschermd_segment;310;108322;496;0
+CSV07;beschermd_segment;311;108399;3130;0
+CSV07;beschermd_segment;312;108322;3133;0
+CSV07;beschermd_segment;313;108387;5417;0
+CSV07;beschermd_segment;314;108661;4838;0
+CSV07;beschermd_segment;315;108412;5417;0
+CSV07;beschermd_segment;316;108230;496;0
+CSV07;beschermd_segment;317;108338;103;0
+CSV07;beschermd_segment;318;108273;494;0
+CSV07;beschermd_segment;319;108394;103;0
+CSV07;beschermd_segment;320;108727;1438;0
+CSV07;beschermd_segment;321;108289;3730;0
+CSV07;beschermd_segment;322;108607;2630;0
+CSV07;beschermd_segment;323;108375;3315;0
+CSV07;beschermd_segment;324;108645;4836;0
+CSV07;beschermd_segment;325;108395;5417;0
+CSV07;beschermd_segment;326;108217;496;0
+CSV07;beschermd_segment;327;108441;103;0
+CSV07;beschermd_segment;328;108317;496;0
+CSV07;beschermd_segment;329;108308;103;0
+CSV07;beschermd_segment;330;108408;496;0
+CSV07;beschermd_segment;331;108325;3419;0
+CSV07;beschermd_segment;332;108434;2629;0
+CSV07;beschermd_segment;333;108362;3315;0
+CSV07;beschermd_segment;334;108641;4838;0
+CSV07;beschermd_segment;335;108396;5417;0
+CSV07;beschermd_segment;336;108215;494;0
+CSV07;beschermd_segment;337;108366;103;0
+CSV07;beschermd_segment;338;108334;496;0
+CSV07;beschermd_segment;339;108358;103;0
+CSV07;beschermd_segment;340;108406;496;0
+CSV07;beschermd_segment;341;108326;3419;0
+CSV07;beschermd_segment;342;108427;2629;0
+CSV07;beschermd_segment;343;108359;3315;0
+CSV07;beschermd_segment;344;108822;3426;0
+CSV07;beschermd_segment;345;108637;5417;0
+CSV07;beschermd_segment;346;108608;5424;0
+CSV07;beschermd_segment;347;108260;103;0
+CSV07;beschermd_segment;348;108443;496;0
+CSV07;beschermd_segment;349;108327;103;0
+CSV07;beschermd_segment;350;108424;496;0
+CSV07;beschermd_segment;351;108348;103;0
+CSV07;beschermd_segment;352;108390;3734;0
+CSV07;beschermd_segment;353;108438;3025;0
+CSV07;beschermd_segment;354;108396;3321;0
+CSV07;beschermd_segment;355;108743;4830;0
+CSV07;beschermd_segment;356;108398;5424;0
+CSV07;beschermd_segment;357;108273;103;0
+CSV07;beschermd_segment;358;108357;494;0
+CSV07;beschermd_segment;359;108331;103;0
+CSV07;beschermd_segment;360;108338;496;0
+CSV07;beschermd_segment;361;108396;103;0
+CSV07;beschermd_segment;362;108335;3426;0
+CSV07;beschermd_segment;363;108437;2625;0
+CSV07;beschermd_segment;364;108371;3321;0
+CSV07;beschermd_segment;365;108641;4830;0
+CSV07;beschermd_segment;366;108395;5424;0
+CSV07;beschermd_segment;367;108219;103;0
+CSV07;beschermd_segment;368;108368;496;0
+CSV07;beschermd_segment;369;108338;103;0
+CSV07;beschermd_segment;370;108357;496;0
+CSV07;beschermd_segment;371;108392;103;0
+CSV07;beschermd_segment;372;108336;3426;0
+CSV07;beschermd_segment;373;108440;2625;0
+CSV07;beschermd_segment;374;108359;3321;0
+CSV07;beschermd_segment;375;108637;4830;0
+CSV07;beschermd_segment;376;108391;5424;0
+CSV07;beschermd_segment;377;108218;103;0
+CSV07;beschermd_segment;378;108380;494;0
+CSV07;beschermd_segment;379;108334;103;0
+CSV07;beschermd_segment;380;108354;494;0
+CSV07;beschermd_segment;381;108407;103;0
+CSV07;beschermd_segment;382;108339;3426;0
+CSV07;beschermd_segment;383;108439;2625;0
+CSV07;beschermd_segment;384;108367;3321;0
+CSV07;beschermd_segment;385;108822;3419;0
+CSV07;beschermd_segment;386;108638;5424;0
+CSV07;beschermd_segment;387;108616;5417;0
+CSV07;beschermd_segment;388;108262;496;0
+CSV07;beschermd_segment;389;108326;103;0
+CSV07;beschermd_segment;390;108308;494;0
+CSV07;beschermd_segment;391;108375;103;0
+CSV07;beschermd_segment;392;108322;496;0
+CSV07;beschermd_segment;393;108399;3130;0
+CSV07;beschermd_segment;394;108322;3133;0
+CSV07;beschermd_segment;395;108387;5417;0
+CSV07;beschermd_segment;396;108661;4838;0
+CSV07;beschermd_segment;397;108412;5417;0
+CSV07;beschermd_segment;398;108230;496;0
+CSV07;beschermd_segment;399;108338;103;0
+
+--- FASE zelftest_segment: 2 context(en), 10 segment(en) x 50 iteraties ---
+iteraties 500 | som getimede segmenten 1084254 us | wandkloktijd 1090987 us
+score getimed 461.15 it/s | score effectief (incl. herinit) 458.30 it/s
+checkpoints 10 | mismatches 1 | latentie gem 2177 / max 5417 cycli
+zelftest checkpoint-detectie (bitflip segment 5): GESLAAGD
+FASE07;zelftest_segment;2;10;50;500;1084254;1090987;461.1466;458.3006;0;1;GESLAAGD
+CSV07;zelftest_segment;0;108430;955;0
+CSV07;zelftest_segment;1;108336;103;0
+CSV07;zelftest_segment;2;108321;494;0
+CSV07;zelftest_segment;3;108504;3419;0
+CSV07;zelftest_segment;4;108603;2630;0
+CSV07;zelftest_segment;5;108394;3315;1
+CSV07;zelftest_segment;6;108644;4837;0
+CSV07;zelftest_segment;7;108404;5417;0
+CSV07;zelftest_segment;8;108230;496;0
+CSV07;zelftest_segment;9;108388;103;0
+
+=== KLAAR: alle fasen uitgevoerd. Log dit bestand als bewijs. ===
