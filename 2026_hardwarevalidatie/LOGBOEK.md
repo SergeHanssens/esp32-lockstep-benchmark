@@ -188,12 +188,14 @@ niet beïnvloedt.
 
 **Het kerncijfer, met ontleding (10 resets, 18u55–19u22).**
 Onbeschermd 584,75 it/s (stddev 0,0000); beschermd gesegmenteerd met 400
-checkpoints per run 462,51 it/s (stddev 0,033) → **20,90 % overhead**
+checkpoints per run 462,51 it/s (stddev 0,033) → **20,90 % scoreverlies**
 (21,26 % effectief incl. herinitialisatie). De ontleding maakt het cijfer
-begrijpelijk: duale uitvoering alleen kost al 20,43 % (buscontentie op de
-interne SRAM), segmentatie kost getimed vrijwel niets (0,03 %), en het
+begrijpelijk: duale uitvoering alleen kost al 20,43 % (waarschijnlijke
+verklaring: contentie op de gedeelde SRAM-interconnect; niet afzonderlijk
+geïsoleerd), segmentatie kost getimed vrijwel niets (0,03 %), en het
 checkpointmechanisme zelf ≈ 0,5 procentpunt. De detectie-infrastructuur is
-dus goedkoop; de prijs zit in de redundante uitvoering zelf. 4000
+binnen deze configuratie dus goedkoop; de prijs zit in de redundante
+uitvoering zelf. 4000
 checkpointlatenties binnen de beschermde runs: gemiddeld 2832 cycli
 (11,8 µs), P99 6623, P99,9 6908, max 6919 cycli (28,8 µs) — percentielen op
 de binnen-run-datapunten, gemiddelde en spreiding over de runscores, zoals

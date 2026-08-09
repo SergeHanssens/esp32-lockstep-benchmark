@@ -52,7 +52,7 @@ gebruikt.
 | `metingen/coremark_runs_20260808/` | reproduceerbaarheid (checkpoint 1) | 10 resets × 2 passes = 20 geldige runs in CSV; spreiding < 0,0002 it/s |
 | `05_lockstep_kern/` | de lockstep-kern zelf (checkpoint 2): app-core rekent, checker-core controleert invoer/verwerking/uitvoer | 1000 rondes @240 MHz: 0 valse positieven; detector-zelftest (bewuste bitflip in ronde 500) exact gedetecteerd met verdict VERWERKING+UITVOER; 1229,8 vs 263,1 cycli/ronde → ≈967 cycli vaste overhead per controlecyclus (`lockstep_kern_log_20260808.txt`) |
 | `06_foutinjectie/` | foutinjectie op de kern: campagne A = 333 gerichte bitflips (invoer/resultaat/uitvoer, random woord+bit, latentiemeting); campagne B = 1133 asynchrone flips via esp_timer over 50.000 rondes | A: **100 % detectie**, elk doelwit exact het voorspelde verdict (invoer→0x7, resultaat→0x6, uitvoer→0x4); latentie gem 2,7 / 1,6 / 1,5 µs. B: 210 gedetecteerde rondes (18,5 %), alle met verdict 0x7 — invoerfouten die naar verwerking en uitvoer propageren, waardoor de drie categorietellers elk tot 210 oplopen; 81,5 % gemaskeerd, consistent met het korte leefvenster van de data per ronde (`foutinjectie_log_20260808.txt`, CSV `foutinjectie_campagneA_20260808.csv`) |
-| `07_coremark_lockstep/` | het kerncijfer: overhead van échte CoreMark bínnen de checkpoint-lockstep | vijf fasen per run (onbeschermd vol / beschermd duaal vol / onbeschermd gesegmenteerd / beschermd gesegmenteerd 400×50 iteraties / zelftest); onbeschermd 584,75 it/s = exact de 04-baseline; beschermd gesegmenteerd 462,51 it/s → **20,90 % overhead** (getimed; 21,26 % effectief incl. herinitialisatie); ontleding: duale uitvoering 20,43 %, segmentatie 0,03 %, checkpointmechanisme ≈ 0,5 procentpunt; beide volle runs "Correct operation validated", crcfinal 0x382f op beide cores; zelftest-bitflip 10/10 exact gedetecteerd (`coremark_lockstep_log_20260808.txt`) |
+| `07_coremark_lockstep/` | het kerncijfer: overhead van échte CoreMark bínnen de checkpoint-lockstep | vijf fasen per run (onbeschermd vol / beschermd duaal vol / onbeschermd gesegmenteerd / beschermd gesegmenteerd 400×50 iteraties / zelftest); onbeschermd 584,75 it/s = exact de 04-baseline; beschermd gesegmenteerd 462,51 it/s → **20,90 % scoreverlies** (getimed; 21,26 % effectief incl. herinitialisatie); ontleding: duale uitvoering 20,43 %, segmentatie 0,03 %, checkpointmechanisme ≈ 0,5 procentpunt; beide volle runs "Correct operation validated", crcfinal 0x382f op beide cores; zelftest-bitflip 10/10 exact gedetecteerd (`coremark_lockstep_log_20260808.txt`) |
 | `metingen/lockstep_runs_20260808/` | reproduceerbaarheid kerncijfer | 10 resets × 5 fasen in CSV; stddev over runscores ≤ 0,10 it/s; 4000 checkpointlatenties bínnen de beschermde runs: gem 2832 cycli (11,8 µs), P50 3826, P99 6623 (27,6 µs), P99,9 6908 (28,8 µs), max 6919; 0 valse positieven over 4100 checkpoints (`lockstep_fasen_20260808.csv`, `lockstep_checkpoints_20260808.csv`, `analyse_lockstep_20260808.txt`) |
 
 Vier bevindingen verdienen toelichting, omdat ze het verschil tonen tussen
@@ -87,14 +87,17 @@ buildflags — een `-O3`-run staat op de lijst om dit te duiden.
 
 **De lockstep-overhead is vrijwel volledig duale-uitvoeringskost.** Het
 vierfasenontwerp van `07_coremark_lockstep` ontleedt het kerncijfer
-(20,90 %) in zijn componenten: alleen al beide cores simultaan dezelfde
-CoreMark laten draaien kost 20,43 % (buscontentie op de interne SRAM —
-beide cores vragen continu geheugentoegang aan dezelfde matrix van
-SRAM-banken); de opdeling in 400 segmenten kost in getimede termen
-vrijwel niets (0,03 %); en het eigenlijke checkpointmechanisme
-(CRC's publiceren, vergelijken, verdict terug) voegt daar nog ≈ 0,5
-procentpunt aan toe. De detectie-infrastructuur zelf is dus goedkoop; de
-prijs zit in de redundante uitvoering — inherent aan elke
+(20,90 % scoreverlies op de CoreMark-score) in zijn componenten: alleen al
+beide cores simultaan dezelfde CoreMark laten draaien kost 20,43 %
+(waarschijnlijke verklaring: contentie op de gedeelde geheugen- en
+interconnectresources — beide cores vragen continu toegang tot dezelfde
+matrix van SRAM-banken; deze microarchitecturale oorzaak is niet
+afzonderlijk experimenteel geïsoleerd); de opdeling in 400 segmenten kost
+in getimede termen vrijwel niets (0,03 %); en het eigenlijke
+checkpointmechanisme (CRC's publiceren, vergelijken, verdict terug) voegt
+daar nog ≈ 0,5 procentpunt aan toe. De detectie-infrastructuur zelf is
+binnen deze configuratie dus goedkoop; de prijs zit in de redundante
+uitvoering — inherent aan elke
 duale-uitvoeringsarchitectuur, ook hardware-lockstep. De
 checkpointlatentie (publicatie app-core tot verdict ontvangen) omvat naast
 handshake en vergelijking ook de restsynchronisatie tussen beide cores en
