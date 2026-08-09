@@ -10,3 +10,11 @@ target_compile_options(${COMPONENT_LIB} PRIVATE -O2 -Wno-error=format= -Wno-form
 
 # core_main.c definieert main(); hernoem naar coremark_main zodat de wrapper hem aanroept
 set_source_files_properties(core_main.c PROPERTIES COMPILE_FLAGS "-Dmain=coremark_main")
+
+# Validation-seed-run (EEMBC-seeds 0x3415/0x3415/0x66): bouw met
+#   idf.py -D LS_VALIDATION_RUN=1 build
+# Zonder deze cache-variabele blijven de performance-seeds (0x0/0x0/0x66) de standaard;
+# de seedkeuze zelf zit ongewijzigd in core_portme.c (VALIDATION_RUN/PERFORMANCE_RUN).
+if(LS_VALIDATION_RUN)
+    target_compile_definitions(${COMPONENT_LIB} PRIVATE "VALIDATION_RUN=1")
+endif()
