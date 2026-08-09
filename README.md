@@ -55,7 +55,7 @@ de methodologie en resultaten in
 | `02_enhanced_lockstep/` | 2025 | timing-analyse, CSV-logging en checker (workload = stub) |
 | `03_enhanced_lockstep_final/` | 2025 | modulaire eindversie 2025 (workload = stub) |
 | `docs/` | 2025 | bordfoto's, schema's en de [originele README](docs/README_2025_origineel.md) |
-| `2026_hardwarevalidatie/` | 2026 | stapsgewijze validatie op hardware: sync-primitieven, latentie-ontleding, echte CoreMark, meetscripts, logs en CSV |
+| `2026_hardwarevalidatie/` | 2026 | stapsgewijze validatie op hardware: sync-primitieven, latentie-ontleding, echte CoreMark, checkpoint-lockstep met foutinjectie en CoreMark-overheadmeting, meetscripts, logs en CSV |
 
 ## Transparantie over AI-gebruik
 

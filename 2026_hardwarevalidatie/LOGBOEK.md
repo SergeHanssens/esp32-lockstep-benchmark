@@ -163,16 +163,59 @@ transparantie over AI-gebruik staat waar ze hoort: in
 transparantieverklaring bij de thesis. Ik valideer en committeer alles
 zelf; die afspraak is nu ook als werkregel verankerd in CLAUDE.md.
 
+## Zaterdag 8 augustus, avond — het kerncijfer: CoreMark in de lockstep
+
+**Ontwerpbeslissing eerst.** Voor de CoreMark-in-lockstep-meting lagen twee
+opties op tafel: duale uitvoering (beide cores een volledige eigen CoreMark,
+één vergelijking op het einde) of gesegmenteerde uitvoering (CoreMark in
+korte segmenten met een checkpoint na elk segment). Gekozen: beide, in één
+firmware — de gesegmenteerde variant als hoofdmeting, de duale als
+referentiepunt om de buscontentiekost te isoleren. Het vijffasenontwerp
+(`07_coremark_lockstep`) voegt daar een onbeschermde volle run (in-situ
+kruischeck met de 04-baseline), een onbeschermd gesegmenteerde run
+(isoleert de segmentatiekost) en een zelftestfase aan toe.
+
+**Binnen de EEMBC-regels gebleven.** De zes kernbestanden zijn opnieuw
+byte-identiek aan upstream `1f483d5` (verificatiescript uitgebreid naar 07,
+12/12 OK). Parallellisme via het officiële `MULTITHREAD`-mechanisme in de
+porting-laag: context 0 = applicatiecore, context 1 = checkercore, met het
+02/03/05-handshakepatroon (data → `memw` → vlag) voor de
+checkpointvergelijking van de vier CRC's. Iteraties per segment via de
+officiële runtime-parameter (seed 4). Geheugenmethode STACK i.p.v. STATIC
+omdat core_main.c STATIC bij meerdere contexts weigert; dat fase A de
+04-baseline exact reproduceert (584,75 it/s) toont dat die keuze de score
+niet beïnvloedt.
+
+**Het kerncijfer, met ontleding (10 resets, 18u55–19u22).**
+Onbeschermd 584,75 it/s (stddev 0,0000); beschermd gesegmenteerd met 400
+checkpoints per run 462,51 it/s (stddev 0,033) → **20,90 % overhead**
+(21,26 % effectief incl. herinitialisatie). De ontleding maakt het cijfer
+begrijpelijk: duale uitvoering alleen kost al 20,43 % (buscontentie op de
+interne SRAM), segmentatie kost getimed vrijwel niets (0,03 %), en het
+checkpointmechanisme zelf ≈ 0,5 procentpunt. De detectie-infrastructuur is
+dus goedkoop; de prijs zit in de redundante uitvoering zelf. 4000
+checkpointlatenties binnen de beschermde runs: gemiddeld 2832 cycli
+(11,8 µs), P99 6623, P99,9 6908, max 6919 cycli (28,8 µs) — percentielen op
+de binnen-run-datapunten, gemiddelde en spreiding over de runscores, zoals
+in de statistiekmethodiek vastgelegd. 0 valse positieven over 4100
+checkpoints; de zelftest (bewuste bitflip op de gepubliceerde crcfinal in
+segment 5) is in alle 10 runs exact gedetecteerd: precies één mismatch, in
+precies dat segment, met precies het verwachte verdict.
+
+**Werkwijze als voorheen.** Alles op het bord gemeten; ruwe logs, CSV's en
+analyse-uitvoer in `metingen/lockstep_runs_20260808/`; meet- en
+analysescripts in `scripts/`. Eerste verificatierun apart bewaard als
+`07_coremark_lockstep/coremark_lockstep_log_20260808.txt`.
+
 ## Volgende stappen — planning vervroegd (beslist 8/8 avond)
 
-De onderzoekskern staat; de resterende dagen zijn voor het kerncijfer en
-vooral de tekst. De centrale onderzoeksvraag — de overhead van échte
-CoreMark bínnen de beschermde architectuur — is bewust het eerstvolgende
-werk: dat cijfer is er nog niet, en dat benoem ik liever zelf dan het te
-laten ondersneeuwen onder wat al wél gemeten is. Nieuwe mijlpalen:
-**zondag 9/8** CoreMark-in-lockstep meten (beschermd vs onbeschermd, met
-P99/P99,9 en standaarddeviatie) en alles uitschrijven wat al geschreven
-kan worden; **maandag 10/8 ochtend: eerste DRAFT (werkversie) naar de
+De onderzoekskern staat; de resterende dagen zijn voor de tekst. De
+centrale onderzoeksvraag — de overhead van échte CoreMark bínnen de
+beschermde architectuur — was bewust het eerstvolgende werk en is
+zaterdagavond gemeten en ontleed (zie hierboven): het kerncijfer staat.
+Nieuwe mijlpalen: **zondag 9/8** volledig voor de thesistekst — alles
+uitschrijven wat al geschreven kan worden, met de resultaten van 02 t.e.m.
+07 als ruggengraat; **maandag 10/8 ochtend: eerste DRAFT (werkversie) naar de
 promotor** — bewust vroeg en met open punten gemarkeerd, zodat hij iets
 concreets heeft om zijn beslissing op te baseren; **dinsdag 11/8 avond:
 onderzoek volledig afgerond** (onder voorbehoud van bijsturingen), incl.
