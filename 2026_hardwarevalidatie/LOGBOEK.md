@@ -253,8 +253,8 @@ duren ruim boven de vereiste 10 s. De afwijking t.o.v. de performance-run
 van 8/8 is klein (fase A −0,15 %; fase B −0,55 % t.o.v. de gepubliceerde
 verificatierun, −0,57 % t.o.v. het 10-run-gemiddelde 465,31 it/s) — dat ligt ruim buiten de gemeten run-tot-runvariatie
 van de performance-runs (stddev 0,00 it/s fase A, 0,04 it/s fase B over
-tien runs) en is dus vrijwel zeker toe te schrijven aan het andere
-datapatroon van de validation-seeds. De "CoreMark 1.0"-scoreregel verschijnt in deze log
+tien runs) en is consistent met het andere datapatroon van de
+validation-seeds als verklaring. De "CoreMark 1.0"-scoreregel verschijnt in deze log
 bewust niet: CoreMark drukt die alleen af bij performance-seeds. De score
 blijft dus uit de performance-run van 8/8 komen; de validation-run maakt
 het paar rapporteerbaar volgens de run and reporting rules. De
