@@ -58,13 +58,13 @@ ordent vóór de vlag wordt gepubliceerd (formele beperkingen: zie de sectie
 
 Vier bevindingen verdienen extra toelichting.
 
-**Uitschieters zijn koude-start-effecten.** De maxima in de
+**Uitschieters passen bij een koude-start-effect.** De maxima in de
 shared-memory-metingen (rondreis 543 cycli waar het gemiddelde 63,8 is) leken
 eerst op timer-interruptverstoring. Instrumentatie met een ronde-index wees
 uit dat de grote uitschieters telkens in ronde 0 van een meetfase vallen —
-een cold-start-effect, consistent met cache- en initialisatie-effecten;
-zodra caches warm zijn (fase 2) piekt de rondreis nog op amper 62 cycli. De eerdere
-hypothese "timer-interrupt" heb ik daarmee verworpen.
+een patroon dat consistent is met een cold-start- of initialisatie-effect;
+zodra caches warm zijn (fase 2) piekt de rondreis nog op amper 62 cycli. Dat
+maakt de eerdere timer-interrupthypothese minder waarschijnlijk.
 
 **De −0,6 % bij volle RTOS is verklaard, niet weggewuifd.** Met watchdogs aan
 zakt de score van 584,75 naar 581,28 it/s. Oorzaak, onderbouwd met de
