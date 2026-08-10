@@ -280,3 +280,50 @@ plus datapatroon", maar de gemeten variatie over tien performance-runs
 is daarvoor veel te klein; het datapatroon van de validation-seeds is de
 waarschijnlijke verklaring. De audit bevestigde verder de meting zelf
 (seedcrc, validation-CRC's, tijden, auteurschap van de commits).
+
+
+## Maandag 10 augustus — herinterpretatie campagne B en terminologie-aanscherping (documentatie, geen hermeting)
+
+Bij het schrijven van de thesistekst zijn drie interpretaties uit eerdere
+logboek-entries aangescherpt na een codecontrole van `06_foutinjectie/main/main.c`
+en twee onafhankelijke externe AI-audits. De metingen zelf en de firmware
+zijn ongewijzigd; dit is een correctie van de duiding, niet van de data.
+De oudere entries hierboven blijven staan als procesdocumentatie en moeten
+met deze correcties worden gelezen.
+
+Eén: campagne B telt injectie-events (`n_inj_b`) en rondes met een niet-nul
+verdict (`b_rondes_met_fout`) op twee losse tellers, zonder koppeling per
+injectie. De eerdere formulering "detectiegraad 18,5 % (210 van 1133)" en
+"maskering, precies zoals bij echte single-event upsets" was daarom te
+sterk: 210/1133 is een detectie-indicator op rondeniveau, geen per injectie
+bepaalde foutdekking, en het verschil kan niet per event worden
+geclassificeerd (temporele maskering is een plausibele verklaring, naast
+samenvallende injecties en interferentie door de niet-atomaire `^=` van de
+injector). Ook "het realistische SEU-scenario" was te sterk: de campagne
+benadert alleen het ongecontroleerde injectiemoment, met een intrusieve
+software-injector.
+
+Twee: het residuele ≈0,5 procentpunt uit de 07-ontleding werd eerder
+rechtstreeks aan "het checkpointmechanisme" toegeschreven; correct is dat
+het een uit de faseverschillen afgeleid residu is waarin checkpoint- en
+synchronisatielogica én mogelijke interactie-effecten vervat zitten.
+
+Drie: voor project 07 spreekt de thesis nu van een "vergelijkingsinterval"
+(≈43 s of ≈108 ms, twee gemeten configuraties) in plaats van een
+"checkpointperiode", omdat de 400 segmenten afzonderlijk geïnitialiseerde
+CoreMark-aanroepen zijn en geen checkpoints in één continu draaiende
+applicatietoestand. De README is op deze drie punten gelijkgetrokken met
+de thesistekst; de C-code is bewust niet aangeraakt (de gepubliceerde bron
+blijft exact de bron van de gemeten binaries).
+
+Aanvulling later op de dag (zelfde correctieronde): de gerapporteerde
+queue-eenreislatentie van ≈1920 cycli bleek niet transparant afgeleid.
+De ruwe log rapporteert ≈3919 cycli (24,5 µs), inclusief één extreme
+koude-start-uitschieter van 803.266 cycli in ronde 0 van de tweede
+meetfase; de ≈1920 cycli gelden pas na uitsluiting van uitsluitend die
+ronde. README en thesis vermelden nu beide waarden met de expliciete
+uitsluitingsregel. Ook "alle maxima vallen in ronde 0" is aangescherpt:
+in de RTOS-meting valt één rondreismaximum in ronde 1; de correcte
+formulering is dat de grote uitschieters telkens in ronde 0 van een
+meetfase vallen (cold-start-effect, consistent met cache- en
+initialisatie-effecten).

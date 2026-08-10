@@ -33,9 +33,10 @@ benoemt dat als beperking en toekomstwerk.
 
 **Geheugenbarrières.** Bij communicatie via gedeeld geheugen plaatst de
 schrijvende core een `memw`-instructie tussen het schrijven van de data en
-het zetten van de vlag, zodat de leesvolgorde op de andere core gegarandeerd
-is. Dit patroon (data → memw → vlag) is hetzelfde dat de lockstep-kern
-gebruikt.
+het zetten van de vlag, wat de geheugenoperaties aan de schrijvende zijde
+ordent vóór de vlag wordt gepubliceerd (formele beperkingen: zie de sectie
+"Waarom volatile + `memw` hier in de praktijk werkt" verderop). Dit patroon
+(data → memw → vlag) is hetzelfde dat de lockstep-kern gebruikt.
 
 ## Projecten en resultaten (alle logs van 8 augustus 2026, op het bord gemeten)
 
@@ -44,15 +45,15 @@ gebruikt.
 | `hello_world/` | werkt de omgeving? | boot van beide cores ok (`boot_log_20260808.txt`) |
 | `02_pingpong/` | rondreislatentie via gedeeld geheugen + `memw` | min/gem/max 62/96/402 cycli @160 MHz (`pingpong_log_20260808.txt`) |
 | `02_pingpong_rtos/` | zelfde rondreis via FreeRTOS-queues | 5299/5656/6278 cycli, ≈60× trager (`pingpong_rtos_log_20260808.txt`) |
-| `03_pingpong_oneway/` | rondreis ontleed in transport en verwerking, beide richtingen | enkele reis ≈ 20,2 cycli ≈ 0,126 µs; symmetrie 6,9 %; alle maxima vallen in ronde 0 (`oneway_rondeindex_log_20260808.txt`) |
-| `03_pingpong_oneway_rtos/` | zelfde ontleding via queues | enkele reis ≈ 1920 cycli ≈ 12 µs, ≈95× trager (`oneway_rtos_log_20260808.txt`) |
+| `03_pingpong_oneway/` | rondreis ontleed in transport en verwerking, beide richtingen | enkele reis ≈ 20,2 cycli ≈ 0,126 µs; symmetrie 6,9 %; alle transport- en rondreismaxima vallen in ronde 0 (`oneway_rondeindex_log_20260808.txt`) |
+| `03_pingpong_oneway_rtos/` | zelfde ontleding via queues | ruw ≈3919 cycli ≈ 24,5 µs per enkele reis (incl. één koude-start-uitschieter van 803.266 cycli in ronde 0); na uitsluiting van uitsluitend die ronde ≈1920 cycli ≈ 12 µs, ≈95× trager (`oneway_rtos_log_20260808.txt`) |
 | `04_coremark/` | officiële EEMBC CoreMark, baseline op core 0 | pass A (RTOS actief) 584,75 it/s; pass B (scheduler geschorst, interrupts uit) 585,06 it/s; crcfinal 0x382f (`coremark_baseline_log_20260808.txt`) |
 | `04_coremark_max_RTOS/` | aparte firmware, vol RTOS, watchdogs aan | 581,28 it/s, geldig (`coremark_max_rtos_log_20260808.txt`) |
 | `04_coremark_min_RTOS/` | aparte firmware, minimale modus | 585,06 it/s, geldig (`coremark_min_rtos_log_20260808.txt`) |
 | `metingen/coremark_runs_20260808/` | reproduceerbaarheid (checkpoint 1) | 10 resets × 2 passes = 20 geldige runs in CSV; spreiding < 0,0002 it/s |
 | `05_lockstep_kern/` | de lockstep-kern zelf (checkpoint 2): app-core rekent, checker-core controleert invoer/verwerking/uitvoer | 1000 rondes @240 MHz: 0 valse positieven; detector-zelftest (bewuste bitflip in ronde 500) exact gedetecteerd met verdict VERWERKING+UITVOER; 1229,8 vs 263,1 cycli/ronde → ≈967 cycli vaste overhead per controlecyclus (`lockstep_kern_log_20260808.txt`) |
-| `06_foutinjectie/` | foutinjectie op de kern: campagne A = 333 gerichte bitflips (invoer/resultaat/uitvoer, random woord+bit, latentiemeting); campagne B = 1133 asynchrone flips via esp_timer over 50.000 rondes | A: **100 % detectie**, elk doelwit exact het voorspelde verdict (invoer→0x7, resultaat→0x6, uitvoer→0x4); latentie gem 2,7 / 1,6 / 1,5 µs. B: 210 gedetecteerde rondes (18,5 %), alle met verdict 0x7 — invoerfouten die naar verwerking en uitvoer propageren, waardoor de drie categorietellers elk tot 210 oplopen; 81,5 % gemaskeerd, consistent met het korte leefvenster van de data per ronde (`foutinjectie_log_20260808.txt`, CSV `foutinjectie_campagneA_20260808.csv`) |
-| `07_coremark_lockstep/` | het kerncijfer: overhead van echte CoreMark binnen de checkpoint-lockstep | vijf fasen per run (onbeschermd vol / beschermd duaal vol / onbeschermd gesegmenteerd / beschermd gesegmenteerd 400×50 iteraties / zelftest); onbeschermd 584,75 it/s = exact de 04-baseline; beschermd gesegmenteerd 462,51 it/s → **20,90 % lagere doorvoer** (gesegmenteerd aggregaat, geen officiële CoreMark-score — zie toelichting onder de tabel; getimed; 21,26 % effectief incl. herinitialisatie); ontleding: duale uitvoering 20,43 %, segmentatie 0,03 %, checkpointmechanisme ≈ 0,5 procentpunt; beide volle runs "Correct operation validated", crcfinal 0x382f op beide cores; zelftest-bitflip 10/10 exact gedetecteerd (`coremark_lockstep_log_20260808.txt`) |
+| `06_foutinjectie/` | foutinjectie op de kern: campagne A = 333 gerichte bitflips (invoer/resultaat/uitvoer, random woord+bit, latentiemeting); campagne B = 1133 asynchrone flips via esp_timer over 50.000 rondes | A: **100 % detectie**, elk doelwit exact het voorspelde verdict (invoer→0x7, resultaat→0x6, uitvoer→0x4); latentie gem 2,7 / 1,6 / 1,5 µs. B: 210 rondes met foutverdict per 1133 injectie-events (detectie-indicator 18,5 % op rondeniveau; injecties en verdicts niet individueel gekoppeld), alle met verdict 0x7 — invoerfouten die naar verwerking en uitvoer propageren, waardoor de drie categorietellers elk tot 210 oplopen; het verschil kan niet per event worden verklaard; temporele maskering is een plausibele verklaring, consistent met het korte leefvenster van de data per ronde (`foutinjectie_log_20260808.txt`, CSV `foutinjectie_campagneA_20260808.csv`) |
+| `07_coremark_lockstep/` | het kerncijfer: overhead van echte CoreMark binnen de checkpoint-lockstep | vijf fasen per run (onbeschermd vol / beschermd duaal vol / onbeschermd gesegmenteerd / beschermd gesegmenteerd 400×50 iteraties / zelftest); onbeschermd 584,75 it/s = exact de 04-baseline; beschermd gesegmenteerd 462,51 it/s → **20,90 % lagere doorvoer** (gesegmenteerd aggregaat, geen officiële CoreMark-score — zie toelichting onder de tabel; getimed; 21,26 % effectief incl. herinitialisatie); ontleding: duale uitvoering 20,43 %, segmentatie 0,03 %, residu (checkpoint-/synchronisatielogica + interactie-effecten, afgeleid) ≈ 0,5 procentpunt; beide volle runs "Correct operation validated", crcfinal 0x382f op beide cores; zelftest-bitflip 10/10 exact gedetecteerd (`coremark_lockstep_log_20260808.txt`) |
 | `metingen/lockstep_runs_20260808/` | reproduceerbaarheid kerncijfer | 10 resets × 5 fasen in CSV; stddev over runscores ≤ 0,10 it/s; 4000 checkpointlatenties binnen de beschermde runs: gem 2832 cycli (11,8 µs), P50 3826, P99 6623 (27,6 µs), P99,9 6908 (28,8 µs), max 6919; 0 valse positieven over 4100 checkpoints (`lockstep_fasen_20260808.csv`, `lockstep_checkpoints_20260808.csv`, `analyse_lockstep_20260808.txt`) |
 
 Vier bevindingen verdienen extra toelichting.
@@ -60,8 +61,9 @@ Vier bevindingen verdienen extra toelichting.
 **Uitschieters zijn koude-start-effecten.** De maxima in de
 shared-memory-metingen (rondreis 543 cycli waar het gemiddelde 63,8 is) leken
 eerst op timer-interruptverstoring. Instrumentatie met een ronde-index wees
-uit dat alle maxima in ronde 0 van de eerste meetfase vallen; zodra caches
-warm zijn (fase 2) piekt de rondreis nog op amper 62 cycli. De eerdere
+uit dat de grote uitschieters telkens in ronde 0 van een meetfase vallen —
+een cold-start-effect, consistent met cache- en initialisatie-effecten;
+zodra caches warm zijn (fase 2) piekt de rondreis nog op amper 62 cycli. De eerdere
 hypothese "timer-interrupt" heb ik daarmee verworpen.
 
 **De −0,6 % bij volle RTOS is verklaard, niet weggewuifd.** Met watchdogs aan
@@ -81,8 +83,9 @@ EEMBC-runregels voorzien, eigen werk voor dit platform. De kruisvalidatie klopt 
 de aparte minimale firmware geven exact dezelfde score (585,06 it/s), zoals
 het hoort wanneer beide effectief zonder scheduler-verstoring draaien. Ter
 referentie: Espressif rapporteert 613,86 voor de S3 op 240 MHz single-core;
-het verschil (≈5 %) schrijf ik voorlopig toe aan `-O2` tegenover hun
-buildflags — een `-O3`-run staat op de lijst om dit te duiden.
+verschillen in compiler- en buildconfiguratie (o.a. `-O2`) zijn een
+mogelijke verklaring voor het verschil (≈5 %), maar dit is niet
+afzonderlijk onderzocht — een `-O3`-run staat op de lijst om dit te duiden.
 
 **De lockstep-overhead is vrijwel volledig duale-uitvoeringskost.** Het
 vierfasenontwerp van `07_coremark_lockstep` ontleedt het kerncijfer
@@ -92,10 +95,12 @@ beide cores simultaan dezelfde CoreMark laten draaien kost 20,43 %
 interconnectresources — beide cores vragen continu toegang tot dezelfde
 matrix van SRAM-banken; deze microarchitecturale oorzaak is niet
 afzonderlijk experimenteel geïsoleerd); de opdeling in 400 segmenten kost
-in getimede termen vrijwel niets (0,03 %); en het eigenlijke
-checkpointmechanisme (CRC's publiceren, vergelijken, verdict terug) voegt
-daar nog ≈ 0,5 procentpunt aan toe. De detectie-infrastructuur zelf is
-binnen deze configuratie dus goedkoop; de prijs zit in de redundante
+in getimede termen vrijwel niets (0,03 %); na aftrek van die rechtstreeks
+gemeten bijdragen blijft ≈ 0,5 procentpunt residueel verschil over, waarin
+de checkpoint- en synchronisatielogica (CRC's publiceren, vergelijken,
+verdict terug) en mogelijke interactie-effecten vervat zitten (afgeleid
+uit de faseverschillen, niet afzonderlijk geïsoleerd). Dat residu is
+binnen deze configuratie dus klein; de prijs zit in de redundante
 uitvoering — inherent aan elke
 duale-uitvoeringsarchitectuur, ook hardware-lockstep. De
 checkpointlatentie (publicatie app-core tot verdict ontvangen) omvat naast
@@ -135,12 +140,13 @@ build-optie `idf.py -D LS_VALIDATION_RUN=1` in de porting-laag): fase A
 met seedcrc 0x18f2 en identieke CRC's in beide contexten. De
 rapporteerbare score blijft die van de performance-run; de validation-run
 bevestigt de correcte werking op de tweede vereiste seedset. Ten derde de detectiegranulariteit: 400
-checkpoints verkorten de checkpointperiode van de volledige runduur
+checkpoints verkorten het vergelijkingsinterval van de volledige runduur
 (≈43 s) naar één segment (≈108 ms), waarna het verdict volgt binnen de
 gemeten handshakelatentie: onder 29 µs ná publicatie van de CRC's
-(P99,9 28,78 µs, maximum 28,83 µs) — een verbetering van de checkpointperiode met ongeveer een
-factor 400, tegen ≈0,5 procentpunt extra doorvoerverlies. Ook 108 ms is
-een checkpointperiode, geen gegarandeerde detectiegrens: maskering,
+(P99,9 28,78 µs, maximum 28,83 µs) — een verbetering met ongeveer een
+factor 400, tegen het hierboven beschreven residuele doorvoerverlies van
+≈0,5 procentpunt. Ook 108 ms is een vergelijkingsinterval van deze
+gesegmenteerde benchmarkopzet, geen gegarandeerde detectiegrens: maskering,
 CRC-collisies en common-cause-fouten blijven buiten bereik (zie
 "Beperkingen en geldigheid").
 
@@ -225,8 +231,8 @@ herordenen; die garantie dekt niet eventuele niet-volatile toegangen
 eromheen. Twee formele kanttekeningen horen daarbij. Ten eerste is
 gelijktijdige niet-atomaire toegang tot gedeelde objecten naar de letter
 van C11 een data race; dat dit patroon hier correct werkt, steunt op
-implementatie-eigenschappen (uitgelijnde 32-bit-toegangen zijn op de LX7
-ondeelbaar, alle gedeelde velden zijn volatile, geen cache op intern
+implementatieaannames (dat uitgelijnde 32-bit-toegangen zich op deze
+LX7-implementatie ondeelbaar gedragen, alle gedeelde velden zijn volatile, geen cache op intern
 SRAM), niet op een taalgarantie. Ten tweede heeft
 `asm volatile("memw")` in deze code geen `"memory"`-clobber en is het dus
 geen algemene compilerbarrière; de ordening steunt op de
@@ -241,8 +247,9 @@ toolchain/configuratie: sterk als proof-of-concept met bewezen
 reproduceerbaarheid binnen die opstelling (10 resets, spreiding
 < 0,0002 it/s), zwak voor generalisatie over exemplaren, temperatuur of
 buildflags. Campagne A bewijst de detectieketen (injecties op detecteerbare
-momenten); campagne B kwantificeert maskering bij asynchrone
-software-injectie — geen van beide simuleert fysieke SEU's, EM-glitches of
+momenten); campagne B levert een detectie-indicator op rondeniveau bij
+asynchrone software-injectie (injecties en verdicts niet individueel
+gekoppeld) — geen van beide simuleert fysieke SEU's, EM-glitches of
 spanningsdips. De software-injector van campagne B is bovendien intrusief:
 de esp_timer-callback draait via de standaard task-dispatch in de
 hoogprioritaire esp_timer-taak op core 0 (er is geen `dispatch_method`
