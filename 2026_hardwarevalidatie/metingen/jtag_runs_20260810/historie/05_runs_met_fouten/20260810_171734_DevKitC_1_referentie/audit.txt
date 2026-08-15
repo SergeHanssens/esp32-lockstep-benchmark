@@ -1,0 +1,108 @@
+﻿================ JTAG-INJECTIE AUDIT (geharde runner v3) ================
+bord           : DevKitC-1-referentie (COM3)
+adapter serial : CC:BA:97:14:2B:28
+tijd (run-id)  : 20260810_171734
+eindoordeel    : GELDIG - alle checks PASS
+openocd exit   : 0
+ELF SHA-256    : 31F8D511D6FE923BF31B602448F092447F0C952F5BA95E69F59E7F264F0F0B7D  (kopie: lockstep_kern.elf in deze map)
+main.c SHA-256 : 7905B034CE4E39AA82918AB7A7EDE78FD2BA45E9CFB440B7230263DD9BC82DE2 (kopie: main.c in deze map)
+adressen (ELF) : g_flip_invoer=0x3fc9475c g_flip_res=0x3fc94758 g_flip_uit=0x3fc94754 g_flip_invoerdata=0x3fc94750 g_det_totaal=0x3fc9473c g_det_uit=0x3fc94740 g_det_res=0x3fc94744 g_det_invoer=0x3fc94748
+
+----- VALIDATIE -----
+[PASS] adressen-uit-elf (g_flip_invoer=0x3fc9475c g_flip_res=0x3fc94758 g_flip_uit=0x3fc94754 g_flip_invoerdata=0x3fc94750 g_det_totaal=0x3fc9473c g_det_uit=0x3fc94740 g_det_res=0x3fc94744 g_det_invoer=0x3fc94748)
+[PASS] flash-geslaagd 
+[PASS] openocd-examine 
+[PASS] openocd-clean-shutdown 
+[PASS] openocd-exit-0 exit=0
+[PASS] readback-inj1(0x1) gelezen=0x1
+[PASS] readback-inj2(0x40) gelezen=0x40
+[PASS] readback-inj3(0x400) gelezen=0x400
+[PASS] readback-inj4(0x80) gelezen=0x80
+[PASS] eind-teller-totaal=4 gelezen=0x4
+[PASS] eind-teller-invoer=2 gelezen=0x2
+[PASS] eind-teller-verwerk=2 gelezen=0x2
+[PASS] eind-teller-uitvoer=2 gelezen=0x2
+[PASS] serieel-capture-nietleeg 
+[PASS] serieel-reeks-1-2-4-7 gelezen=[0x1,0x2,0x4,0x7]
+[PASS] eind-triggers-alle-0 gelezen=[0x0,0x0,0x0,0x0]
+
+----- OpenOCD Error-regels (NIET weggefilterd; hier waren dit benigne reset-timeouts) -----
+Error: [esp32s3.cpu0] Timed out waiting for CPU to be reset, target state=2
+Error: [esp32s3.cpu1] Timed out waiting for CPU to be reset, target state=2
+
+----- Kernwaarden -----
+readbacks : inj1=0x1 inj2=0x40 inj3=0x400 inj4=0x80
+tellers   : totaal=0x4 invoer=0x2 verwerking=0x2 uitvoer=0x2
+
+----- Seriele detecties -----
+hartslag: ronde 1000000, 0 valse positieven, detecties totaal 0
+hartslag: ronde 2000000, 0 valse positieven, detecties totaal 0
+hartslag: ronde 3000000, 0 valse positieven, detecties totaal 0
+hartslag: ronde 4000000, 0 valse positieven, detecties totaal 0
+JTAG-INJECTIE GEDETECTEERD: ronde 4614125 verdict 0x1 [INVOER] (tot: inv 1 / verw 0 / uit 0)
+JTAG-INJECTIE GEDETECTEERD: ronde 4769966 verdict 0x2 [VERWERKING] (tot: inv 1 / verw 1 / uit 0)
+JTAG-INJECTIE GEDETECTEERD: ronde 4926849 verdict 0x4 [UITVOER] (tot: inv 1 / verw 1 / uit 1)
+hartslag: ronde 5000000, 0 valse positieven, detecties totaal 3
+JTAG-INJECTIE GEDETECTEERD: ronde 5086189 verdict 0x7 [INVOER] [VERWERKING] [UITVOER] (tot: inv 2 / verw 2 / uit 2)
+hartslag: ronde 6000000, 0 valse positieven, detecties totaal 4
+hartslag: ronde 7000000, 0 valse positieven, detecties totaal 4
+
+----- VOLLEDIGE ruwe OpenOCD-log (ongefilterd) -> ook als openocd_raw.txt -----
+Open On-Chip Debugger v0.12.0-esp32-20250422 (2025-04-22-13:02)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+Info : only one transport option; autoselecting 'jtag'
+Info : esp_usb_jtag: VID set to 0x303a and PID to 0x1001
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+Info : esp_usb_jtag: serial (CC:BA:97:14:2B:28)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: esp32s3.tap1 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : [esp32s3.cpu0] Examination succeed
+Info : [esp32s3.cpu1] Examination succeed
+Info : [esp32s3.cpu0] starting gdb server on 3333
+Info : Listening on port 3333 for gdb connections
+Info : [esp32s3.cpu0] Debug controller was reset.
+Info : [esp32s3.cpu0] Core was reset.
+Info : [esp32s3.cpu1] Debug controller was reset.
+Info : [esp32s3.cpu1] Core was reset.
+Info : [esp32s3.cpu0] Target halted, PC=0x420084FA, debug_reason=00000000
+Error: [esp32s3.cpu0] Timed out waiting for CPU to be reset, target state=2
+Info : [esp32s3.cpu0] Reset cause (21) - (USB UART reset)
+Info : [esp32s3.cpu1] Target halted, PC=0x42008774, debug_reason=00000000
+Error: [esp32s3.cpu1] Timed out waiting for CPU to be reset, target state=2
+Info : [esp32s3.cpu1] Reset cause (21) - (USB UART reset)
+AUDIT OpenOCD Open On-Chip Debugger v0.12.0-esp32-20250422 (2025-04-22-13:02)
+=== INJECTIE 1 INVOER-CRC (verwacht 0x1) ===
+Info : [esp32s3.cpu0] Target halted, PC=0x4200860C, debug_reason=00000000
+Info : Set GDB target to 'esp32s3.cpu0'
+Info : [esp32s3.cpu1] Target halted, PC=0x420087BC, debug_reason=00000000
+  pre  g_det_totaal = 0x0
+  readback g_flip_invoer = 0x1
+=== INJECTIE 2 VERWERKING (verwacht 0x2) ===
+Info : [esp32s3.cpu0] Target halted, PC=0x4200860F, debug_reason=00000000
+Info : Set GDB target to 'esp32s3.cpu0'
+Info : [esp32s3.cpu1] Target halted, PC=0x420087BE, debug_reason=00000000
+  readback g_flip_res = 0x40
+=== INJECTIE 3 UITVOER (verwacht 0x4) ===
+Info : [esp32s3.cpu0] Target halted, PC=0x42008609, debug_reason=00000000
+Info : Set GDB target to 'esp32s3.cpu0'
+Info : [esp32s3.cpu1] Target halted, PC=0x420087CA, debug_reason=00000000
+  readback g_flip_uit = 0x400
+=== INJECTIE 4 ECHTE INVOER-DATABIT k.invoer idx5 bit7, PROPAGATIE (verwacht 0x7) ===
+Info : [esp32s3.cpu0] Target halted, PC=0x420084E8, debug_reason=00000000
+Info : Set GDB target to 'esp32s3.cpu0'
+Info : [esp32s3.cpu1] Target halted, PC=0x4200877A, debug_reason=00000000
+  readback g_flip_invoerdata = 0x80
+=== EIND: tellers en triggers ===
+Info : [esp32s3.cpu0] Target halted, PC=0x420084ED, debug_reason=00000000
+Info : Set GDB target to 'esp32s3.cpu0'
+Info : [esp32s3.cpu1] Target halted, PC=0x42008774, debug_reason=00000000
+  eind g_det_totaal = 0x4
+  eind g_det_invoer = 0x2
+  eind g_det_res    = 0x2
+  eind g_det_uit    = 0x2
+  eind trig invoer,res,uit,invoerdata = 0x0 0x0 0x0 0x0
+shutdown command invoked
