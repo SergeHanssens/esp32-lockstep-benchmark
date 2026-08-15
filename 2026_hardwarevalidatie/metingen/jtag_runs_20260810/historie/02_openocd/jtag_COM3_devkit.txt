@@ -1,0 +1,6 @@
+JTAG-INJECTIE GEDETECTEERD: ronde 764595 verdict 0x1 [INVOER] (tot: inv 1 / verw 0 / uit 0)
+JTAG-INJECTIE GEDETECTEERD: ronde 872572 verdict 0x2 [VERWERKING] (tot: inv 1 / verw 1 / uit 0)
+JTAG-INJECTIE GEDETECTEERD: ronde 987616 verdict 0x4 [UITVOER] (tot: inv 1 / verw 1 / uit 1)
+hartslag: ronde 1000000, 0 valse positieven, detecties totaal 3
+hartslag: ronde 2000000, 0 valse positieven, detecties totaal 3
+hartslag: ronde 3000000, 0 valse positieven, detecties totaal 3
