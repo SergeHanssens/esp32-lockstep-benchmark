@@ -1,0 +1,7 @@
+﻿[04:59:14] sessiemap: D:\ClaudeMasterproef\thesis\esp32-lockstep-benchmark\2026_hardwarevalidatie\metingen\campagne_20260815_045907
+[04:59:14] rondes: 04,07 | borden: DK1,DK2,DK3,F24A,F24B,F24C,F26A,F26B,F26C
+[04:59:17] ESP-IDF-profiel geladen
+[04:59:20] projectmap ronde 04 : D:\ClaudeMasterproef\thesis\esp32-lockstep-benchmark\2026_hardwarevalidatie\04_coremark
+[04:59:20] bouwen: 04
+[04:59:22] binary coremark_baseline.bin  sha256 867B44EDFDC8BA85745A18D78F50ECCCAC31C94EEEAAEBC9C3D05BB4FCC3B580
+[04:59:30] ronde 04 op DK1 (COM1, devkitc1)

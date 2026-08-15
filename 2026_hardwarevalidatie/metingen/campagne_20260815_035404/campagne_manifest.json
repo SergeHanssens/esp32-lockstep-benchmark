@@ -1,0 +1,53 @@
+﻿{
+    "sessie":  "20260815_035404",
+    "tijd_utc":  "2026-08-15T02:54:11Z",
+    "computer":  "SERGE-DESKAI",
+    "gebruiker":  "shans",
+    "basismap":  "D:\\ClaudeMasterproef\\thesis\\esp32-lockstep-benchmark\\2026_hardwarevalidatie",
+    "repomap":  "D:\\ClaudeMasterproef\\thesis\\esp32-lockstep-benchmark",
+    "rondes":  [
+                   "04",
+                   "07"
+               ],
+    "runs04":  1,
+    "runs07":  1,
+    "idf_versie":  "ESP-IDF v5.5",
+    "python":  "Python 3.11.9",
+    "git_commit":  "ba9c122dbbcbc0c0f77708a474449223f71c8486",
+    "git_schoon":  false,
+    "borden":  {
+                   "Bordnaam":  "DK1",
+                   "Bordtype":  "devkitc1",
+                   "Serie":  "CC:BA:97:14:2B:28",
+                   "Poort":  "COM1",
+                   "PID":  "1001",
+                   "Jtag":  true,
+                   "Klaar":  true
+               },
+    "builds":  {
+                   "04":  {
+                              "Bin":  "D:\\ClaudeMasterproef\\thesis\\esp32-lockstep-benchmark\\2026_hardwarevalidatie\\04_coremark\\build\\coremark_baseline.bin",
+                              "Sha256":  "867B44EDFDC8BA85745A18D78F50ECCCAC31C94EEEAAEBC9C3D05BB4FCC3B580",
+                              "Project":  "D:\\ClaudeMasterproef\\thesis\\esp32-lockstep-benchmark\\2026_hardwarevalidatie\\04_coremark"
+                          },
+                   "07":  {
+                              "Bin":  "D:\\ClaudeMasterproef\\thesis\\esp32-lockstep-benchmark\\2026_hardwarevalidatie\\07_coremark_lockstep\\build\\coremark_lockstep.bin",
+                              "Sha256":  "1DB0948FE74BCE25A66DC6B721DFBFD1E37ED20A6BC99AC5264F83F08B3D0845",
+                              "Project":  "D:\\ClaudeMasterproef\\thesis\\esp32-lockstep-benchmark\\2026_hardwarevalidatie\\07_coremark_lockstep"
+                          }
+               },
+    "resultaten":  [
+                       {
+                           "Bord":  "DK1",
+                           "Ronde":  "04",
+                           "Ok":  true,
+                           "Reden":  ""
+                       },
+                       {
+                           "Bord":  "DK1",
+                           "Ronde":  "07",
+                           "Ok":  true,
+                           "Reden":  ""
+                       }
+                   ]
+}

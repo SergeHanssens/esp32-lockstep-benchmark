@@ -1,0 +1,6 @@
+datum_iso,serie,bordtype,bordnaam,poort,soort,run,geldig,reden,pass_of_fase,contexts,segmenten,seg_iters,iteraties,som_ticks_us,wall_us,score_it_per_s,score_effectief,error_regels,mismatches,zelftest,logbestand,log_sha256
+2026-08-15T03:59:32,CC:BA:97:14:2B:28,devkitc1,DK1,COM1,07,1,ja,,onbeschermd_vol,1,1,20000,20000,34202521,34246120,584.7522,584.0078,0,0,nvt,run01_040214.txt,89e0b5f0412887dd089020ed66aa150c128ba7b7f333cb134eb5461d46338b1f
+2026-08-15T03:59:32,CC:BA:97:14:2B:28,devkitc1,DK1,COM1,07,1,ja,,beschermd_duaal_vol,2,1,20000,20000,42988897,43041912,465.2364,464.6634,0,0,nvt,run01_040214.txt,89e0b5f0412887dd089020ed66aa150c128ba7b7f333cb134eb5461d46338b1f
+2026-08-15T03:59:32,CC:BA:97:14:2B:28,devkitc1,DK1,COM1,07,1,ja,,onbeschermd_segment,1,400,50,20000,34213937,34419421,584.5571,581.0673,0,0,nvt,run01_040214.txt,89e0b5f0412887dd089020ed66aa150c128ba7b7f333cb134eb5461d46338b1f
+2026-08-15T03:59:32,CC:BA:97:14:2B:28,devkitc1,DK1,COM1,07,1,ja,,beschermd_segment,2,400,50,20000,43237869,43491184,462.5575,459.8633,0,0,nvt,run01_040214.txt,89e0b5f0412887dd089020ed66aa150c128ba7b7f333cb134eb5461d46338b1f
+2026-08-15T03:59:32,CC:BA:97:14:2B:28,devkitc1,DK1,COM1,07,1,ja,,zelftest_segment,2,10,50,500,1081066,1087847,462.5065,459.6235,0,1,GESLAAGD,run01_040214.txt,89e0b5f0412887dd089020ed66aa150c128ba7b7f333cb134eb5461d46338b1f

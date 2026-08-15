@@ -1,0 +1,110 @@
+[
+    {
+        "Bord":  "DK1",
+        "Ronde":  "04",
+        "Ok":  true,
+        "Reden":  ""
+    },
+    {
+        "Bord":  "DK2",
+        "Ronde":  "04",
+        "Ok":  true,
+        "Reden":  ""
+    },
+    {
+        "Bord":  "DK3",
+        "Ronde":  "04",
+        "Ok":  true,
+        "Reden":  ""
+    },
+    {
+        "Bord":  "F24A",
+        "Ronde":  "04",
+        "Ok":  true,
+        "Reden":  ""
+    },
+    {
+        "Bord":  "F24B",
+        "Ronde":  "04",
+        "Ok":  false,
+        "Reden":  "CMake Error at run_serial_tool.cmake:67 (message):"
+    },
+    {
+        "Bord":  "F24C",
+        "Ronde":  "04",
+        "Ok":  true,
+        "Reden":  ""
+    },
+    {
+        "Bord":  "F26A",
+        "Ronde":  "04",
+        "Ok":  true,
+        "Reden":  ""
+    },
+    {
+        "Bord":  "F26B",
+        "Ronde":  "04",
+        "Ok":  true,
+        "Reden":  ""
+    },
+    {
+        "Bord":  "F26C",
+        "Ronde":  "04",
+        "Ok":  true,
+        "Reden":  ""
+    },
+    {
+        "Bord":  "DK1",
+        "Ronde":  "07",
+        "Ok":  true,
+        "Reden":  ""
+    },
+    {
+        "Bord":  "DK2",
+        "Ronde":  "07",
+        "Ok":  true,
+        "Reden":  ""
+    },
+    {
+        "Bord":  "DK3",
+        "Ronde":  "07",
+        "Ok":  true,
+        "Reden":  ""
+    },
+    {
+        "Bord":  "F24A",
+        "Ronde":  "07",
+        "Ok":  true,
+        "Reden":  ""
+    },
+    {
+        "Bord":  "F24B",
+        "Ronde":  "07",
+        "Ok":  false,
+        "Reden":  "CMake Error at run_serial_tool.cmake:67 (message):"
+    },
+    {
+        "Bord":  "F24C",
+        "Ronde":  "07",
+        "Ok":  true,
+        "Reden":  ""
+    },
+    {
+        "Bord":  "F26A",
+        "Ronde":  "07",
+        "Ok":  true,
+        "Reden":  ""
+    },
+    {
+        "Bord":  "F26B",
+        "Ronde":  "07",
+        "Ok":  true,
+        "Reden":  ""
+    },
+    {
+        "Bord":  "F26C",
+        "Ronde":  "07",
+        "Ok":  true,
+        "Reden":  ""
+    }
+]

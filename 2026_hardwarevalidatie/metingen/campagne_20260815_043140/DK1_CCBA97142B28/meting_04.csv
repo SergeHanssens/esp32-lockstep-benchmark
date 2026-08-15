@@ -1,0 +1,3 @@
+datum_iso,serie,bordtype,bordnaam,poort,soort,run,geldig,reden,pass_of_fase,iteraties,total_ticks,score_it_per_s,crcfinal,gevalideerd,score_regel,logbestand,log_sha256
+2026-08-15T04:32:11,CC:BA:97:14:2B:28,devkitc1,DK1,COM1,04,1,ja,,A,20000,34202583,584.751158,0x382f,ja,CoreMark 1.0 : 584.751158 / GCC14.2.0 -O2 ESP-IDF v5.5 / STATIC,run01_043322.txt,594860f386e47100d891081de7620308700dee12d1aac7640a05d989a03e49f8
+2026-08-15T04:32:11,CC:BA:97:14:2B:28,devkitc1,DK1,COM1,04,1,ja,,B,20000,34184435,585.061593,0x382f,ja,CoreMark 1.0 : 585.061593 / GCC14.2.0 -O2 ESP-IDF v5.5 / STATIC,run01_043322.txt,594860f386e47100d891081de7620308700dee12d1aac7640a05d989a03e49f8

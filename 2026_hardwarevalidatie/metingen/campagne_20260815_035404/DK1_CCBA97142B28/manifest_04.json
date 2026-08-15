@@ -1,0 +1,33 @@
+{
+  "bord": {
+    "serie": "CC:BA:97:14:2B:28",
+    "bordtype": "devkitc1",
+    "bordnaam": "DK1",
+    "poort": "COM1"
+  },
+  "soort": "04",
+  "runs_gevraagd": 1,
+  "start_utc": "2026-08-15T02:56:27+00:00",
+  "max_sec": 150.0,
+  "runs": [
+    {
+      "run": 1,
+      "start": "2026-08-15T03:56:27",
+      "duur_s": 70.3,
+      "geldig": "ja",
+      "reden": "",
+      "logbestand": "run01_035737.txt",
+      "sha256": "4a985b5c9669800db6600526d355595f510e007be7fb91131cf2d7cda0c1b649",
+      "bytes": 4487,
+      "bootcontext": {
+        "rom": "ESP-ROM:esp32s3-20210327",
+        "idf": "5.5",
+        "chip_rev": "0.2",
+        "cpu_mhz": "240",
+        "flash_speed": "80MHz"
+      }
+    }
+  ],
+  "eind_utc": "2026-08-15T02:57:37+00:00",
+  "runs_geldig": 1
+}

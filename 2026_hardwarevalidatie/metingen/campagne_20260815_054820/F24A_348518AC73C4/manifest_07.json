@@ -1,0 +1,101 @@
+{
+  "bord": {
+    "serie": "34:85:18:AC:73:C4",
+    "bordtype": "fri3d2024",
+    "bordnaam": "F24A",
+    "poort": "COM4"
+  },
+  "soort": "07",
+  "runs_gevraagd": 5,
+  "start_utc": "2026-08-15T06:21:55+00:00",
+  "max_sec": 420.0,
+  "runs": [
+    {
+      "run": 1,
+      "start": "2026-08-15T07:21:55",
+      "duur_s": 163.0,
+      "geldig": "ja",
+      "reden": "",
+      "logbestand": "run01_072438.txt",
+      "sha256": "4558f769ca21ffe48537d3bc1ba3c1b835f7fb8b196166a3d0180312d2036a42",
+      "bytes": 40952,
+      "bootcontext": {
+        "rom": "ESP-ROM:esp32s3-20210327",
+        "idf": "5.5",
+        "chip_rev": "0.1",
+        "cpu_mhz": "240",
+        "flash_speed": "80MHz"
+      }
+    },
+    {
+      "run": 2,
+      "start": "2026-08-15T07:24:38",
+      "duur_s": 163.0,
+      "geldig": "ja",
+      "reden": "",
+      "logbestand": "run02_072721.txt",
+      "sha256": "464e0b72ca953cbe0233fc3a53db4a39695aa835bb86073eb285b9756d9cdb24",
+      "bytes": 40950,
+      "bootcontext": {
+        "rom": "ESP-ROM:esp32s3-20210327",
+        "idf": "5.5",
+        "chip_rev": "0.1",
+        "cpu_mhz": "240",
+        "flash_speed": "80MHz"
+      }
+    },
+    {
+      "run": 3,
+      "start": "2026-08-15T07:27:21",
+      "duur_s": 163.0,
+      "geldig": "ja",
+      "reden": "",
+      "logbestand": "run03_073004.txt",
+      "sha256": "cf29607b07d817cf37c8b4813d74949ff629245fb0044c36903da19c3ac2f617",
+      "bytes": 40955,
+      "bootcontext": {
+        "rom": "ESP-ROM:esp32s3-20210327",
+        "idf": "5.5",
+        "chip_rev": "0.1",
+        "cpu_mhz": "240",
+        "flash_speed": "80MHz"
+      }
+    },
+    {
+      "run": 4,
+      "start": "2026-08-15T07:30:04",
+      "duur_s": 163.0,
+      "geldig": "ja",
+      "reden": "",
+      "logbestand": "run04_073247.txt",
+      "sha256": "b520dbae06dd10f583c4b316a67f4ead88d3b3679d18607e243996402aaf7234",
+      "bytes": 40953,
+      "bootcontext": {
+        "rom": "ESP-ROM:esp32s3-20210327",
+        "idf": "5.5",
+        "chip_rev": "0.1",
+        "cpu_mhz": "240",
+        "flash_speed": "80MHz"
+      }
+    },
+    {
+      "run": 5,
+      "start": "2026-08-15T07:32:47",
+      "duur_s": 163.0,
+      "geldig": "ja",
+      "reden": "",
+      "logbestand": "run05_073530.txt",
+      "sha256": "03db70bd02c050941d7f7b0a6b7135c2c22318a6a7cd578dc17fd6abc13c065a",
+      "bytes": 40951,
+      "bootcontext": {
+        "rom": "ESP-ROM:esp32s3-20210327",
+        "idf": "5.5",
+        "chip_rev": "0.1",
+        "cpu_mhz": "240",
+        "flash_speed": "80MHz"
+      }
+    }
+  ],
+  "eind_utc": "2026-08-15T06:35:31+00:00",
+  "runs_geldig": 5
+}

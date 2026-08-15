@@ -1,0 +1,13 @@
+﻿[09:18:30] sessiemap: D:\ClaudeMasterproef\thesis\esp32-lockstep-benchmark\2026_hardwarevalidatie\metingen\campagne_20260815_091825
+[09:18:30] rondes: 04,07 | borden: F24B
+[09:18:31] ESP-IDF-profiel geladen
+[09:18:33] projectmap ronde 04 : D:\ClaudeMasterproef\thesis\esp32-lockstep-benchmark\2026_hardwarevalidatie\04_coremark
+[09:18:33] bouwen: 04
+[09:18:35] binary coremark_baseline.bin  sha256 867B44EDFDC8BA85745A18D78F50ECCCAC31C94EEEAAEBC9C3D05BB4FCC3B580
+[09:18:41] ronde 04 op F24B (COM21, fri3d2024)
+[09:25:02] projectmap ronde 07 : D:\ClaudeMasterproef\thesis\esp32-lockstep-benchmark\2026_hardwarevalidatie\07_coremark_lockstep
+[09:25:02] bouwen: 07
+[09:25:04] binary coremark_lockstep.bin  sha256 1DB0948FE74BCE25A66DC6B721DFBFD1E37ED20A6BC99AC5264F83F08B3D0845
+[09:25:10] ronde 07 op F24B (COM21, fri3d2024)
+[09:39:03] klaar: 2 van 2 bord-rondes geslaagd
+[09:39:03] alles staat in: D:\ClaudeMasterproef\thesis\esp32-lockstep-benchmark\2026_hardwarevalidatie\metingen\campagne_20260815_091825

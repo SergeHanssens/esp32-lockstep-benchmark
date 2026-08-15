@@ -9,3 +9,5 @@ __pycache__/
 # OS
 Thumbs.db
 .DS_Store
+# lokale zip-archieven van metingen
+*.zip

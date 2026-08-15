@@ -1,0 +1,7 @@
+﻿[03:52:03] sessiemap: D:\ClaudeMasterproef\thesis\esp32-lockstep-benchmark\2026_hardwarevalidatie\metingen\campagne_20260815_035158
+[03:52:03] rondes: 04,07 | borden: DK1
+[03:52:09] ESP-IDF-profiel geladen
+[03:52:19] projectmap niet gevonden: D:\ClaudeMasterproef\thesis\ClaudeCode\04_coremark - ronde 04 overgeslagen
+[03:52:19] projectmap niet gevonden: D:\ClaudeMasterproef\thesis\ClaudeCode\07_coremark_lockstep - ronde 07 overgeslagen
+[03:52:19] klaar: 0 van 0 bord-rondes geslaagd
+[03:52:19] alles staat in: D:\ClaudeMasterproef\thesis\esp32-lockstep-benchmark\2026_hardwarevalidatie\metingen\campagne_20260815_035158

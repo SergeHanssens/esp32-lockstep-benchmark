@@ -1,0 +1,31 @@
+﻿[05:48:25] sessiemap: D:\ClaudeMasterproef\thesis\esp32-lockstep-benchmark\2026_hardwarevalidatie\metingen\campagne_20260815_054820
+[05:48:25] rondes: 04,07 | borden: DK1,DK2,DK3,F24A,F24B,F24C,F26A,F26B,F26C
+[05:48:26] ESP-IDF-profiel geladen
+[05:48:28] projectmap ronde 04 : D:\ClaudeMasterproef\thesis\esp32-lockstep-benchmark\2026_hardwarevalidatie\04_coremark
+[05:48:28] bouwen: 04
+[05:48:30] binary coremark_baseline.bin  sha256 867B44EDFDC8BA85745A18D78F50ECCCAC31C94EEEAAEBC9C3D05BB4FCC3B580
+[05:48:36] ronde 04 op DK1 (COM1, devkitc1)
+[05:54:58] ronde 04 op DK2 (COM2, devkitc1)
+[06:01:20] ronde 04 op DK3 (COM3, devkitc1)
+[06:07:41] ronde 04 op F24A (COM4, fri3d2024)
+[06:14:03] ronde 04 op F24B (COM5, fri3d2024)
+[06:14:08] ronde 04 op F24B afgebroken: CMake Error at run_serial_tool.cmake:67 (message):
+[06:14:14] ronde 04 op F24C (COM6, fri3d2024)
+[06:20:34] ronde 04 op F26A (COM7, fri3d2026)
+[06:26:55] ronde 04 op F26B (COM8, fri3d2026)
+[06:33:15] ronde 04 op F26C (COM9, fri3d2026)
+[06:39:32] projectmap ronde 07 : D:\ClaudeMasterproef\thesis\esp32-lockstep-benchmark\2026_hardwarevalidatie\07_coremark_lockstep
+[06:39:32] bouwen: 07
+[06:39:34] binary coremark_lockstep.bin  sha256 1DB0948FE74BCE25A66DC6B721DFBFD1E37ED20A6BC99AC5264F83F08B3D0845
+[06:39:39] ronde 07 op DK1 (COM1, devkitc1)
+[06:53:38] ronde 07 op DK2 (COM2, devkitc1)
+[07:07:37] ronde 07 op DK3 (COM3, devkitc1)
+[07:21:37] ronde 07 op F24A (COM4, fri3d2024)
+[07:35:36] ronde 07 op F24B (COM5, fri3d2024)
+[07:35:41] ronde 07 op F24B afgebroken: CMake Error at run_serial_tool.cmake:67 (message):
+[07:35:47] ronde 07 op F24C (COM6, fri3d2024)
+[07:49:45] ronde 07 op F26A (COM7, fri3d2026)
+[08:03:42] ronde 07 op F26B (COM8, fri3d2026)
+[08:17:39] ronde 07 op F26C (COM9, fri3d2026)
+[08:31:34] klaar: 16 van 18 bord-rondes geslaagd
+[08:31:34] alles staat in: D:\ClaudeMasterproef\thesis\esp32-lockstep-benchmark\2026_hardwarevalidatie\metingen\campagne_20260815_054820
