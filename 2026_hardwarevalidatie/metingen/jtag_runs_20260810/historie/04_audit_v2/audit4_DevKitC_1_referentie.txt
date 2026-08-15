@@ -1,0 +1,41 @@
+﻿================ JTAG-INJECTIE AUDITTRAIL (4 injecties) ================
+bord           : DevKitC-1-referentie (COM3)
+adapter serial : CC:BA:97:14:2B:28
+tijd           : 2026-08-10T15:31:51
+firmware ELF   : D:\thesis\ClaudeCode\jtag\05b_jtag_lockstep\build\lockstep_kern.elf
+ELF MD5        : E3AE9BFB7E2CE592476EF3F5A9DA079D
+OpenOCD cfg MD5: 7C3A67C01FEE677D92EE40D13EB009D7
+adres-map trig : g_flip_invoerdata=0x3fc94750 g_flip_uit=0x3fc94754 g_flip_res=0x3fc94758 g_flip_invoer=0x3fc9475c
+adres-map tel  : g_det_totaal=0x3fc9473c g_det_uit=0x3fc94740 g_det_res=0x3fc94744 g_det_invoer=0x3fc94748
+verwacht       : 1->0x1[INVOER], 2->0x2[VERWERKING], 3->0x4[UITVOER], 4->0x7[INVOER+VERWERKING+UITVOER]
+verwacht eind  : tellers totaal=4, uit=2, res=2, invoer=2
+=======================================================================
+
+----- OpenOCD JTAG-transcript (mww + readback + tellers) -----
+Info : [esp32s3.cpu0] Examination succeed
+Info : [esp32s3.cpu1] Examination succeed
+AUDIT OpenOCD Open On-Chip Debugger v0.12.0-esp32-20250422 (2025-04-22-13:02)
+=== INJECTIE 1 INVOER-CRC (alleen CRC, verwacht 0x1) ===
+  pre  tellers totaal,uit,res,invoer = 0x0 0x0 0x0 0x0
+  mww  g_flip_invoer 0x1 -> readback = 0x1
+=== INJECTIE 2 VERWERKING (verwacht 0x2) ===
+  mww  g_flip_res 0x40 -> readback   = 0x40
+=== INJECTIE 3 UITVOER (verwacht 0x4) ===
+  mww  g_flip_uit 0x400 -> readback  = 0x400
+=== INJECTIE 4 ECHTE INVOER-DATABIT k.invoer idx5 bit7, PROPAGATIE (verwacht 0x7) ===
+  mww  g_flip_invoerdata 0x80 -> readback = 0x80
+=== EIND: tellers en triggers (triggers moeten weer 0 zijn) ===
+  eind tellers totaal,uit,res,invoer      = 0x4 0x2 0x2 0x2
+  eind triggers invoerdata,uit,res,invoer = 0x0 0x0 0x0 0x0
+
+----- Seriele detecties van het bord -----
+hartslag: ronde 1000000, 0 valse positieven, detecties totaal 0
+hartslag: ronde 2000000, 0 valse positieven, detecties totaal 0
+hartslag: ronde 3000000, 0 valse positieven, detecties totaal 0
+hartslag: ronde 4000000, 0 valse positieven, detecties totaal 0
+JTAG-INJECTIE GEDETECTEERD: ronde 4373436 verdict 0x1 [INVOER] (tot: inv 1 / verw 0 / uit 0)
+JTAG-INJECTIE GEDETECTEERD: ronde 4528739 verdict 0x2 [VERWERKING] (tot: inv 1 / verw 1 / uit 0)
+JTAG-INJECTIE GEDETECTEERD: ronde 4685586 verdict 0x4 [UITVOER] (tot: inv 1 / verw 1 / uit 1)
+JTAG-INJECTIE GEDETECTEERD: ronde 4865809 verdict 0x7 [INVOER] [VERWERKING] [UITVOER] (tot: inv 2 / verw 2 / uit 2)
+hartslag: ronde 5000000, 0 valse positieven, detecties totaal 4
+hartslag: ronde 6000000, 0 valse positieven, detecties totaal 4
