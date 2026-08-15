@@ -1,0 +1,56 @@
+Open On-Chip Debugger v0.12.0-esp32-20250422 (2025-04-22-13:02)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+Info : only one transport option; autoselecting 'jtag'
+Info : esp_usb_jtag: VID set to 0x303a and PID to 0x1001
+Info : esp_usb_jtag: capabilities descriptor set to 0x2000
+Info : esp_usb_jtag: serial (34:85:18:AC:73:C4)
+Info : esp_usb_jtag: Device found. Base speed 40000KHz, div range 1 to 255
+Info : clock speed 40000 kHz
+Info : JTAG tap: esp32s3.tap0 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : JTAG tap: esp32s3.tap1 tap/device found: 0x120034e5 (mfg: 0x272 (Tensilica), part: 0x2003, ver: 0x1)
+Info : [esp32s3.cpu0] Examination succeed
+Info : [esp32s3.cpu1] Examination succeed
+Info : [esp32s3.cpu0] starting gdb server on 3333
+Info : Listening on port 3333 for gdb connections
+AUDIT OpenOCD Open On-Chip Debugger v0.12.0-esp32-20250422 (2025-04-22-13:02)
+=== INJECTIE 1 INVOER-CRC (verwacht 0x1) ===
+Info : [esp32s3.cpu0] Debug controller was reset.
+Info : [esp32s3.cpu0] Core was reset.
+Info : [esp32s3.cpu0] Target halted, PC=0x42008609, debug_reason=00000000
+Info : Set GDB target to 'esp32s3.cpu0'
+Info : [esp32s3.cpu1] Debug controller was reset.
+Info : [esp32s3.cpu1] Core was reset.
+Info : [esp32s3.cpu1] Target halted, PC=0x420087D4, debug_reason=00000000
+Info : [esp32s3.cpu1] Reset cause (21) - (USB UART reset)
+  pre  g_det_totaal = 0x0
+  readback g_flip_invoer = 0x1
+Info : [esp32s3.cpu0] Target halted, PC=0x42008504, debug_reason=00000000
+Info : [esp32s3.cpu0] Reset cause (21) - (USB UART reset)
+=== INJECTIE 2 VERWERKING (verwacht 0x2) ===
+Info : [esp32s3.cpu0] Target halted, PC=0x42008594, debug_reason=00000000
+Info : Set GDB target to 'esp32s3.cpu0'
+Info : [esp32s3.cpu1] Target halted, PC=0x42008798, debug_reason=00000000
+  readback g_flip_res = 0x40
+=== INJECTIE 3 UITVOER (verwacht 0x4) ===
+Info : [esp32s3.cpu0] Target halted, PC=0x4200850E, debug_reason=00000000
+Info : Set GDB target to 'esp32s3.cpu0'
+Info : [esp32s3.cpu1] Target halted, PC=0x42008774, debug_reason=00000000
+  readback g_flip_uit = 0x400
+=== INJECTIE 4 ECHTE INVOER-DATABIT k.invoer idx5 bit7, PROPAGATIE (verwacht 0x7) ===
+Info : [esp32s3.cpu0] Target halted, PC=0x42008507, debug_reason=00000000
+Info : Set GDB target to 'esp32s3.cpu0'
+Info : [esp32s3.cpu1] Target halted, PC=0x42008777, debug_reason=00000000
+  readback g_flip_invoerdata = 0x80
+=== EIND: tellers en triggers ===
+Info : [esp32s3.cpu0] Target halted, PC=0x4200850E, debug_reason=00000000
+Info : Set GDB target to 'esp32s3.cpu0'
+Info : [esp32s3.cpu1] Target halted, PC=0x4200877A, debug_reason=00000000
+  eind g_det_totaal = 0x4
+  eind g_det_invoer = 0x2
+  eind g_det_res    = 0x2
+  eind g_det_uit    = 0x2
+  eind trig invoer,res,uit,invoerdata = 0x0 0x0 0x0 0x0
+shutdown command invoked
+

@@ -1,0 +1,270 @@
+<title>JTAG-foutinjectie op drie ESP32-S3 borden</title>
+<style>
+  :root {
+    --bg: #eef1f0; --panel: #ffffff; --panel-2: #f5f7f6; --ink: #14201f;
+    --muted: #5d6b69; --hair: #d7dedb; --rail: #c8d2cf;
+    --accent: #b8760a;            /* JTAG / signaal (amber, phosphor-bias) */
+    --invoer: #0e7c8c;            /* checkpoint 1 */
+    --verwerking: #b8760a;        /* checkpoint 2 */
+    --uitvoer: #a83567;           /* checkpoint 3 */
+    --propagatie: #b5341f;        /* injectie 4: echte databit -> 0x7 */
+    --ok: #1f7a4d;               /* geen onverwachte detecties */
+    --ok-soft: #dcefe3;
+    --track: #e4e9e7;
+    --shadow: 0 1px 0 rgba(20,32,31,.04), 0 8px 24px -18px rgba(20,32,31,.5);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0c1210; --panel: #131b19; --panel-2: #0f1614; --ink: #d3dedb;
+      --muted: #8395901a; --muted: #86969120; --muted: #869691; --hair: #223029;
+      --rail: #2b3a34; --accent: #f2a83a; --invoer: #3fc1cf; --verwerking: #f2a83a;
+      --uitvoer: #e07aa6; --propagatie: #ff7a5c; --ok: #4bd07a; --ok-soft: #12271c; --track: #1a2521;
+      --shadow: 0 1px 0 rgba(0,0,0,.3), 0 10px 30px -18px rgba(0,0,0,.8);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #eef1f0; --panel: #ffffff; --panel-2: #f5f7f6; --ink: #14201f;
+    --muted: #5d6b69; --hair: #d7dedb; --rail: #c8d2cf; --accent: #b8760a;
+    --invoer: #0e7c8c; --verwerking: #b8760a; --uitvoer: #a83567; --ok: #1f7a4d;
+    --ok-soft: #dcefe3; --track: #e4e9e7; --shadow: 0 1px 0 rgba(20,32,31,.04), 0 8px 24px -18px rgba(20,32,31,.5);
+  }
+  :root[data-theme="dark"] {
+    --bg: #0c1210; --panel: #131b19; --panel-2: #0f1614; --ink: #d3dedb;
+    --muted: #869691; --hair: #223029; --rail: #2b3a34; --accent: #f2a83a;
+    --invoer: #3fc1cf; --verwerking: #f2a83a; --uitvoer: #e07aa6; --propagatie: #ff7a5c; --ok: #4bd07a;
+    --ok-soft: #12271c; --track: #1a2521; --shadow: 0 1px 0 rgba(0,0,0,.3), 0 10px 30px -18px rgba(0,0,0,.8);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.5; -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: clamp(20px, 4vw, 56px) clamp(16px, 4vw, 40px) 64px; }
+
+  header.top { border-bottom: 1px solid var(--hair); padding-bottom: 26px; margin-bottom: 30px; }
+  .eyebrow {
+    font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--accent); margin: 0 0 14px;
+  }
+  h1 { font-size: clamp(26px, 4.4vw, 42px); line-height: 1.08; margin: 0 0 14px; text-wrap: balance; font-weight: 650; letter-spacing: -.01em; }
+  .lede { color: var(--muted); max-width: 62ch; font-size: 16px; margin: 0; }
+
+  .headline {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1px;
+    background: var(--hair); border: 1px solid var(--hair); border-radius: 12px; overflow: hidden;
+    margin: 28px 0 8px;
+  }
+  .kpi { background: var(--panel); padding: 18px 20px; }
+  .kpi .n { font-size: 26px; font-weight: 640; letter-spacing: -.01em; }
+  .kpi .n.ok { color: var(--ok); }
+  .kpi .l { font-size: 12.5px; color: var(--muted); margin-top: 3px; }
+
+  section { margin-top: 40px; }
+  .sec-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 18px; }
+  .sec-head h2 { font-size: 15px; letter-spacing: .04em; text-transform: uppercase; margin: 0; font-weight: 620; }
+  .sec-head .rule { flex: 1; height: 1px; background: var(--hair); }
+  .sec-head .tag { font-size: 12px; color: var(--muted); }
+
+  /* legend / mapping */
+  .map { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  @media (max-width: 620px) { .map { grid-template-columns: 1fr; } }
+  .maprow {
+    background: var(--panel); border: 1px solid var(--hair); border-radius: 10px; padding: 14px 16px;
+    box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 8px;
+  }
+  .chip { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 600; }
+  .dot { width: 11px; height: 11px; border-radius: 3px; flex: none; box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 16%, transparent); }
+  .flow { font-size: 12.5px; color: var(--muted); }
+  .flow b { color: var(--ink); font-weight: 600; }
+  .verdict { align-self: flex-start; font-size: 12px; padding: 2px 9px; border-radius: 20px; border: 1px solid currentColor; font-weight: 640; }
+
+  /* board channels */
+  .boards { display: flex; flex-direction: column; gap: 16px; }
+  .board { background: var(--panel); border: 1px solid var(--hair); border-radius: 14px; padding: 20px 22px; box-shadow: var(--shadow); }
+  .board-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-bottom: 4px; }
+  .board-head .name { font-size: 17px; font-weight: 640; }
+  .board-head .role { font-size: 12.5px; color: var(--muted); }
+  .pill { margin-left: auto; font-size: 11.5px; font-weight: 650; letter-spacing: .03em; text-transform: uppercase;
+          color: var(--ok); background: var(--ok-soft); border: 1px solid color-mix(in srgb, var(--ok) 35%, transparent);
+          padding: 3px 11px; border-radius: 20px; }
+  .meta { display: flex; flex-wrap: wrap; gap: 6px 20px; margin: 10px 0 18px; font-size: 12.5px; color: var(--muted); }
+  .meta b { color: var(--ink); font-weight: 600; }
+
+  .func { display: flex; flex-wrap: wrap; gap: 8px 10px; margin-bottom: 20px; font-size: 12.5px; }
+  .fbadge { display: inline-flex; align-items: center; gap: 7px; padding: 5px 11px; border-radius: 8px;
+            background: var(--panel-2); border: 1px solid var(--hair); }
+  .fbadge .tick { color: var(--ok); font-weight: 700; }
+
+  /* timeline track */
+  .track-label { display: flex; justify-content: space-between; font-size: 11.5px; color: var(--muted); margin-bottom: 7px; }
+  .track { position: relative; height: 58px; background: var(--track); border-radius: 8px; border: 1px solid var(--hair); overflow: hidden; }
+  .track .grid { position: absolute; inset: 0; }
+  .track .grid i { position: absolute; top: 0; bottom: 0; width: 1px; background: color-mix(in srgb, var(--rail) 60%, transparent); }
+  .baseline { position: absolute; left: 0; top: 50%; height: 2px; background: var(--ok); opacity: .55; }
+  .marker { position: absolute; top: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 0; }
+  .marker .glyph { width: 15px; height: 15px; transform: rotate(45deg); border-radius: 3px; box-shadow: 0 0 0 4px color-mix(in srgb, currentColor 18%, transparent), 0 2px 6px rgba(0,0,0,.25); }
+  .marker .stem { position: absolute; top: 50%; width: 1px; height: 22px; background: currentColor; opacity: .4; }
+  .mlabel { position: absolute; transform: translateX(-50%); font-size: 10.5px; font-weight: 640; white-space: nowrap; }
+  .track-axis { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--muted); margin-top: 6px; }
+  .events { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .ev { font-size: 11.5px; display: inline-flex; align-items: center; gap: 7px; padding: 4px 10px; border-radius: 7px;
+        background: var(--panel-2); border: 1px solid var(--hair); }
+  .ev .sq { width: 9px; height: 9px; border-radius: 2px; }
+
+  .foot { margin-top: 30px; border-top: 1px solid var(--hair); padding-top: 22px; color: var(--muted); font-size: 13px; }
+  .foot h3 { color: var(--ink); font-size: 13px; text-transform: uppercase; letter-spacing: .05em; margin: 0 0 10px; }
+  .foot p { margin: 0 0 10px; max-width: 78ch; }
+  .foot code { font-family: ui-monospace, Menlo, Consolas, monospace; background: var(--panel-2); border: 1px solid var(--hair); padding: 1px 6px; border-radius: 5px; font-size: 12px; color: var(--ink); }
+  .note { border-left: 2px solid var(--accent); padding-left: 14px; }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <p class="eyebrow">OpenOCD &middot; USB-JTAG &middot; ESP32-S3 software-lockstep</p>
+    <h1>Extern gestuurde foutinjectie, live geclassificeerd door de checkpoint-lockstep</h1>
+    <p class="lede">Op drie ESP32-S3 borden schrijft OpenOCD via de ingebouwde USB-JTAG een
+      single-bitmasker in een gelatchte trigger in RAM (<span class="mono">mww &lt;adres&gt; &lt;masker&gt;</span>);
+      de firmware zet dat deterministisch om in één XOR-corruptie op de echte databaan.
+      Drie geïsoleerde injecties raken elk één controlepunt (0x1 / 0x2 / 0x4); een vierde draait
+      een echte bit in het gedeelde invoerblok om, waarna die fout door alle drie de controlepunten
+      propageert (0x7). Alle twaalf proeven worden met exact het voorspelde verdict geclassificeerd
+      — geen onverwachte detecties.</p>
+
+    <div class="headline">
+      <div class="kpi"><div class="n">3 / 3</div><div class="l">borden werkend + injecteerbaar</div></div>
+      <div class="kpi"><div class="n">12 / 12</div><div class="l">JTAG-injecties correct geclassificeerd</div></div>
+      <div class="kpi"><div class="n ok">0</div><div class="l">onverwachte detecties (gelogd)</div></div>
+      <div class="kpi"><div class="n mono">6 000 000+</div><div class="l">gecontroleerde rondes per bord</div></div>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head"><h2>Injectiekaart</h2><span class="rule"></span><span class="tag">masker &rarr; databaan &rarr; verdict</span></div>
+    <div class="map">
+      <div class="maprow" style="color: var(--invoer)">
+        <span class="chip"><span class="dot" style="background: var(--invoer)"></span> Checkpoint 1 &middot; INVOER</span>
+        <span class="flow"><span class="mono">mww g_flip_invoer 0x1</span> &rarr; XOR op de gepubliceerde <b>invoer-CRC</b>; de checker ziet een CRC-mismatch.</span>
+        <span class="verdict">verdict 0x1</span>
+      </div>
+      <div class="maprow" style="color: var(--verwerking)">
+        <span class="chip"><span class="dot" style="background: var(--verwerking)"></span> Checkpoint 2 &middot; VERWERKING</span>
+        <span class="flow"><span class="mono">mww g_flip_res 0x40</span> &rarr; XOR op het gepubliceerde <b>rekenresultaat</b>; de uitvoer blijft correct.</span>
+        <span class="verdict">verdict 0x2</span>
+      </div>
+      <div class="maprow" style="color: var(--uitvoer)">
+        <span class="chip"><span class="dot" style="background: var(--uitvoer)"></span> Checkpoint 3 &middot; UITVOER</span>
+        <span class="flow"><span class="mono">mww g_flip_uit 0x400</span> &rarr; XOR op het <b>weggeschreven resultaat</b>; het rekenresultaat blijft correct.</span>
+        <span class="verdict">verdict 0x4</span>
+      </div>
+      <div class="maprow" style="color: var(--propagatie)">
+        <span class="chip"><span class="dot" style="background: var(--propagatie)"></span> Injectie 4 &middot; ECHTE DATABIT + PROPAGATIE</span>
+        <span class="flow"><span class="mono">mww g_flip_invoerdata 0x80</span> &rarr; XOR op een <b>echt woord in het gedeelde invoerblok</b> <span class="mono">k.invoer[5]</span>; de CRC blijft correct, dus de fout wordt gezien &eacute;n propageert door verwerking en uitvoer.</span>
+        <span class="verdict">verdict 0x7</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Drie borden, vier injecties elk</h2><span class="rule"></span><span class="tag">gemeten 10 aug 2026</span></div>
+    <div class="boards" id="boards"></div>
+  </section>
+
+  <div class="foot">
+    <h3>Wat dit wél en niet bewijst</h3>
+    <p><b>Wél bewezen:</b> OpenOCD heeft via de ingebouwde USB-JTAG toegang tot alle drie de
+      borden; een extern gestuurde trigger in RAM wordt deterministisch omgezet in één
+      bitcorruptie op de echte databaan; de oorspronkelijke checkpointvergelijkingen classificeren
+      alle twaalf proeven (4 per bord) exact zoals voorspeld — de drie geïsoleerde tests als
+      0x1 / 0x2 / 0x4, en een <b>echte bitflip in het gedeelde invoerblok die propageert</b> door
+      alle drie de checkpoints als <b>0x7</b>. Werkt op DevKit én beide Fri3d-badges.</p>
+    <p><b>Niet bewezen:</b> detectie van een echte SEU, straling of glitch; een flip op een
+      willekeurig moment in een willekeurig RAM-woord; dekking buiten de geïnstrumenteerde
+      injectiepunten; bescherming tegen register-, instructie-, control-flow- of
+      checkerfouten. Dit is een <b>geïnstrumenteerde</b> injectie, geen fysieke fout-emulatie.</p>
+    <p class="note"><b>Hoe de injectie werkt.</b> De demo draait op een continu-variant
+      (<code>05b_jtag_lockstep</code>, alleen in de werkmap) waarvan <b>de detectielogica
+      identiek is aan <code>05_lockstep_kern</code></b>, maar het programma eromheen is
+      aangepast (oneindige lus, vier triggervariabelen, tellers, seriële hartslag, geen
+      ronde-500-zelftest). OpenOCD schrijft een masker in een triggerwoord
+      (<code>halt &rarr; mww &rarr; resume</code>); de app-core XORt dat één keer op de echte
+      databaan. Injecties&nbsp;1&ndash;3 zijn <i>geïsoleerde</i> tests: enkel de gepubliceerde CRC
+      (0x1), enkel <code>k.res_app</code> (0x2), of enkel <code>k.uitvoer</code> (0x4). Injectie&nbsp;4
+      draait een bit om in een <i>echt woord van het gedeelde invoerblok</i> (<code>k.invoer[5]</code>)
+      terwijl de CRC correct blijft: de checker ziet de fout én die propageert door verwerking en
+      uitvoer &rarr; <b>0x7</b>. Elke <code>mww</code> is via JTAG teruggelezen; de eind-tellers
+      (totaal&nbsp;4, elk&nbsp;2) staan in zelfvaliderende auditbundels onder
+      <code>logs\audit_runs\</code> — met per run een kopie van de exacte ELF (SHA-256), de
+      volledige ruwe OpenOCD-log (reset-timeouts inbegrepen), de uit de ELF afgeleide adressen,
+      en een GELDIG/ONGELDIG-eindoordeel over <b>18 controles</b> (o.a. OpenOCD-exitcode&nbsp;0,
+      clean shutdown en geen timeout, de beginteller&nbsp;0, de vier JTAG-readbacks, de vier
+      eind-tellers, de volledige seriële verdictreeks
+      <span class="mono">0x1&rarr;0x2&rarr;0x4&rarr;0x7</span>, en de nulstand van alle triggers).
+      Een <code>MANIFEST.txt</code> wijst de drie gezaghebbende runs aan; de rondenummers hierboven
+      komen uit precies die runs (zie <span class="mono">audit-run</span> per bord).</p>
+    <p><b>"Geen onverwachte detecties."</b> Er is geen aparte valse-positief-teller; de claim
+      steunt op <code>g_det_totaal</code>, die na de vier bedoelde injecties op 4 blijft staan
+      tot voorbij 6&nbsp;miljoen gecontroleerde rondes. Elke andere mismatch zou die teller
+      verhogen. Op dat meetpunt: 4&nbsp;bedoelde injecties, de rest foutloos gecontroleerd.</p>
+    <p><b>Borden.</b> COM3 = ESP32-S3-DevKitC-1 (rev v0.2, referentie). COM4 = Fri3d-badge 2024
+      (rev v0.1). COM6 = Fri3d-badge 2026 (rev v0.2): draaide op TinyUSB-CDC zonder
+      JTAG-interface en moest handmatig in downloadmode; na het flashen komt de USB-Serial-JTAG
+      terug (als COM5). Originele badge-firmware overschreven, herstelbaar via Fri3d's web-flasher.</p>
+    <p>Alle meetwaarden zijn overgenomen uit de opgeslagen seriële én OpenOCD-auditlogs onder
+      <code>logs\audit_runs\</code>; dit dashboard is een statische weergave daarvan (de
+      rondenummers staan als vaste waarden in de pagina). Rondenummers en verdicts komen uit de
+      seriële logs; JTAG-serienummers, readbacks, adressen en exitstatus uit de OpenOCD/ELF-logs.</p>
+  </div>
+</div>
+
+<script>
+  const boards = [
+    { name: "COM3", role: "ESP32-S3-DevKitC-1 · referentie", rev: "v0.2", serial: "CC:BA:97:14:2B:28", run: "20260810_173458",
+      inj: [ {r:763748, v:"0x1", k:"INVOER", c:"--invoer"}, {r:908402, v:"0x2", k:"VERWERKING", c:"--verwerking"}, {r:1060503, v:"0x4", k:"UITVOER", c:"--uitvoer"}, {r:1212375, v:"0x7", k:"INVOER+VERWERKING+UITVOER", c:"--propagatie"} ] },
+    { name: "COM4", role: "Fri3d-badge 2024", rev: "v0.1", serial: "34:85:18:AC:73:C4", run: "20260810_173336",
+      inj: [ {r:778033, v:"0x1", k:"INVOER", c:"--invoer"}, {r:924101, v:"0x2", k:"VERWERKING", c:"--verwerking"}, {r:1076935, v:"0x4", k:"UITVOER", c:"--uitvoer"}, {r:1229811, v:"0x7", k:"INVOER+VERWERKING+UITVOER", c:"--propagatie"} ] },
+    { name: "COM5 / COM6", role: "Fri3d-badge 2026", rev: "v0.2", serial: "DC:B4:D9:0B:7F:3C", run: "20260810_173608",
+      inj: [ {r:768782, v:"0x1", k:"INVOER", c:"--invoer"}, {r:913314, v:"0x2", k:"VERWERKING", c:"--verwerking"}, {r:1064312, v:"0x4", k:"UITVOER", c:"--uitvoer"}, {r:1215727, v:"0x7", k:"INVOER+VERWERKING+UITVOER", c:"--propagatie"} ] },
+  ];
+  const fmt = n => n.toLocaleString("nl-BE").replace(/\u00A0/g, " ");
+  document.getElementById("boards").innerHTML = boards.map(b => {
+    const n = b.inj.length;
+    const markers = b.inj.map((x, i) => {
+      const pct = ((i + 1) / (n + 1)) * 100;
+      return `<div class="marker" style="left:${pct}%;color:var(${x.c})">
+                <span class="stem"></span><span class="glyph" style="background:var(${x.c})"></span>
+              </div>
+              <div class="mlabel" style="left:${pct}%;top:2px;color:var(${x.c})">${x.v}</div>
+              <div class="mlabel" style="left:${pct}%;bottom:2px;color:var(--muted);font-weight:500">#${i + 1}</div>`;
+    }).join("");
+    const events = b.inj.map((x, i) =>
+      `<span class="ev"><span class="sq" style="background:var(${x.c})"></span>
+        <b class="mono" style="margin-right:3px">${x.v}</b> [${x.k}] <span style="color:var(--muted);margin-left:3px">ronde ${fmt(x.r)}</span></span>`
+    ).join("");
+    return `<div class="board">
+      <div class="board-head">
+        <span class="name mono">${b.name}</span><span class="role">${b.role}</span>
+        <span class="pill">werkend &middot; injecteerbaar</span>
+      </div>
+      <div class="meta">
+        <span>chip-rev <b>${b.rev}</b></span>
+        <span>JTAG-serienr <b class="mono">${b.serial}</b></span>
+        <span>eind-tellers <b class="mono">totaal 4 &middot; inv/verw/uit elk 2</b></span>
+        <span>audit-run <b class="mono">${b.run}</b></span>
+      </div>
+      <div class="func">
+        <span class="fbadge"><span class="tick">&#10003;</span> reproduceert referentie <span class="mono">1229,8 / 263,1 cycli</span></span>
+        <span class="fbadge"><span class="tick">&#10003;</span> zelftest ronde 500 <span class="mono">verdict 0x6</span></span>
+        <span class="fbadge"><span class="tick">&#10003;</span> <span class="mono">6&nbsp;000&nbsp;000+</span> gecontroleerde rondes, geen onverwachte detecties</span>
+      </div>
+      <div class="track-label"><span>4 JTAG-injecties in volgorde (detectieronde als annotatie)</span><span>elke <span class="mono">mww</span> teruggelezen via JTAG</span></div>
+      <div class="track">
+        <div class="baseline" style="width:100%"></div>
+        ${markers}
+      </div>
+      <div class="events">${events}</div>
+    </div>`;
+  }).join("");
+</script>

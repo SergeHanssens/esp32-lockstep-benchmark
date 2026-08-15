@@ -1,0 +1,20 @@
+﻿================ MANIFEST - gezaghebbende JTAG-audit-runs ================
+gegenereerd : 2026-08-10T17:37:45
+regel       : per bord telt UITSLUITEND de gemarkeerde (*) run; overige zijn historie.
+
+  * DevKitC-1-referentie (COM3) | 20260810_173458_DevKitC_1_referentie | GELDIG - alle checks PASS | ELF 31F8D511D6FE923BF31B602448F092447F0C952F5BA95E69F59E7F264F0F0B7D
+  * Fri3d-badge-2024 (COM4)    | 20260810_173336_Fri3d_badge_2024 | GELDIG - alle checks PASS | ELF 31F8D511D6FE923BF31B602448F092447F0C952F5BA95E69F59E7F264F0F0B7D
+  * Fri3d-badge-2026 (COM5)    | 20260810_173608_Fri3d_badge_2026 | GELDIG - alle checks PASS | ELF 31F8D511D6FE923BF31B602448F092447F0C952F5BA95E69F59E7F264F0F0B7D
+
+--- volledige historie ---
+    20260810_155519_Fri3d_badge_2024         | Fri3d-badge-2024 (COM4)    | ONGELDIG - zie checks
+    20260810_155653_Fri3d_badge_2024         | Fri3d-badge-2024 (COM4)    | GELDIG - alle checks PASS
+    20260810_155812_DevKitC_1_referentie     | DevKitC-1-referentie (COM3) | GELDIG - alle checks PASS
+    20260810_155929_Fri3d_badge_2026         | Fri3d-badge-2026 (COM5)    | GELDIG - alle checks PASS
+    20260810_171436_Fri3d_badge_2024         | Fri3d-badge-2024 (COM4)    | ONGELDIG - zie checks
+    20260810_171614_Fri3d_badge_2024         | Fri3d-badge-2024 (COM4)    | GELDIG - alle checks PASS
+    20260810_171734_DevKitC_1_referentie     | DevKitC-1-referentie (COM3) | GELDIG - alle checks PASS
+    20260810_171844_Fri3d_badge_2026         | Fri3d-badge-2026 (COM5)    | GELDIG - alle checks PASS
+  * 20260810_173336_Fri3d_badge_2024         | Fri3d-badge-2024 (COM4)    | GELDIG - alle checks PASS
+  * 20260810_173458_DevKitC_1_referentie     | DevKitC-1-referentie (COM3) | GELDIG - alle checks PASS
+  * 20260810_173608_Fri3d_badge_2026         | Fri3d-badge-2026 (COM5)    | GELDIG - alle checks PASS
