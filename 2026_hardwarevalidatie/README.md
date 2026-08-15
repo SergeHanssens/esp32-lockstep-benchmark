@@ -15,11 +15,15 @@ Twee keuzes bepalen alle metingen in dit traject.
 **Per-core cycle-counters.** Elke Xtensa-core heeft een eigen CCOUNT-register
 en die tellers lopen niet synchroon. Tijdstempels van core 0 en core 1 zijn
 dus niet rechtstreeks vergelijkbaar. Daarom meet elke core uitsluitend met
-zijn eigen teller en wordt de transporttijd afgeleid:
-*transport = rondreis (initiator) − verwerking (responder)*. Door daarna de
-rollen om te draaien (core 1 initieert, core 0 antwoordt) meet ik de
-symmetrie in plaats van ze aan te nemen; het gemeten verschil tussen beide
-richtingen bedraagt 6,9 %.
+zijn eigen teller en wordt een transportresidu afgeleid:
+*residu = rondreis (initiator) − verwerking (responder) = heen + terug samen*.
+Deze opzet kan de twee richtingen niet afzonderlijk meten: ook na het
+omdraaien van de rollen (core 1 initieert, core 0 antwoordt) bevat het
+residu beide richtingen. residu/2 is daarom een afgeleide gemiddelde
+bijdrage per traject onder de aanname heen ≈ terug, en het verschil tussen
+beide rolconfiguraties is een rolverschil, geen richtingssymmetrie-bewijs.
+In de v2-meting van 15 augustus (met vooraf gedefinieerde warm-uprondes)
+bedraagt dat rolverschil 0,0 % via gedeeld geheugen en 1,7 % via queues.
 
 **Terminologie en afbakening.** "Lockstep" is hier steeds softwarematige
 checkpoint-lockstep: onafhankelijk rekenende cores, vergeleken op
@@ -42,29 +46,32 @@ ordent vóór de vlag wordt gepubliceerd (formele beperkingen: zie de sectie
 
 | Project | Vraag | Resultaat (log als bewijs) |
 |---|---|---|
-| `hello_world/` | werkt de omgeving? | boot van beide cores ok (`boot_log_20260808.txt`) |
-| `02_pingpong/` | rondreislatentie via gedeeld geheugen + `memw` | min/gem/max 62/96/402 cycli @160 MHz (`pingpong_log_20260808.txt`) |
-| `02_pingpong_rtos/` | zelfde rondreis via FreeRTOS-queues | 5299/5656/6278 cycli, ≈60× trager (`pingpong_rtos_log_20260808.txt`) |
-| `03_pingpong_oneway/` | rondreis ontleed in transport en verwerking, beide richtingen | enkele reis ≈ 20,2 cycli ≈ 0,126 µs; symmetrie 6,9 %; alle transport- en rondreismaxima vallen in ronde 0 (`oneway_rondeindex_log_20260808.txt`) |
-| `03_pingpong_oneway_rtos/` | zelfde ontleding via queues | ruw ≈3919 cycli ≈ 24,5 µs per enkele reis (incl. één koude-start-uitschieter van 803.266 cycli in ronde 0); na uitsluiting van uitsluitend die ronde ≈1920 cycli ≈ 12 µs, ≈95× trager (`oneway_rtos_log_20260808.txt`) |
+| `hello_world/` | werkt de omgeving? | dual-core chip gedetecteerd en multicore ESP-IDF-boot bevestigd; gelijktijdige uitvoering van eigen code op beide cores wordt in 02 aangetoond (`boot_log_20260808.txt`) |
+| `02_pingpong/` | rondreislatentie via gedeeld geheugen + `memw` | min/gem/max 62/96/402 cycli @160 MHz; het gemiddelde wordt door de koude ronde 0 (402) gedomineerd, de typische ronde is 62 cycli — zie 03 v2 voor de meting met warm-up (`pingpong_log_20260808.txt`) |
+| `02_pingpong_rtos/` | zelfde rondreis via FreeRTOS-queues | 5299/5656/6278 cycli in deze korte demonstratierun (10 rondes, incl. koude start); de zuivere factor na warm-up is ≈62×, zie 03 v2 (`pingpong_rtos_log_20260808.txt`) |
+| `03_pingpong_oneway/` | rondreis ontleed in verwerking en residu (v2, 15 aug 2026, 10 warm-uprondes) | rondreis exact 61 cycli in alle 100 meetrondes van beide fasen (min=gem=max), verwerking 20, residu 41; rolverschil 0,0 %; afgeleide gemiddelde transportbijdrage per traject 20,5 cycli ≈ 0,128 µs (`oneway_log_v2_20260815.txt`; v1-log met koude-startvervuiling en verkeerd "symmetrie"-label: `oneway_rondeindex_log_20260808.txt`) |
+| `03_pingpong_oneway_rtos/` | zelfde ontleding via queues (v2, 15 aug 2026, busy-wait-barrier + 10 warm-uprondes) | rondreis 3790–3853 cycli gemiddeld per fase (max 6187, schedulerjitter in ronde 82), factor ≈62× t.o.v. gedeeld geheugen; afgeleide bijdrage per traject 1908 cycli ≈ 11,9 µs; de v1-uitschieter van 803.266 cycli in ronde 0 bleek een barrière-artefact van vTaskDelay(1) in de meetcode, geen cache-effect (`oneway_rtos_log_v2_20260815.txt`; v1: `oneway_rtos_log_20260808.txt`) |
 | `04_coremark/` | officiële EEMBC CoreMark, baseline op core 0 | pass A (RTOS actief) 584,75 it/s; pass B (scheduler geschorst, interrupts uit) 585,06 it/s; crcfinal 0x382f (`coremark_baseline_log_20260808.txt`) |
 | `04_coremark_max_RTOS/` | aparte firmware, vol RTOS, watchdogs aan | 581,28 it/s, geldig (`coremark_max_rtos_log_20260808.txt`) |
 | `04_coremark_min_RTOS/` | aparte firmware, minimale modus | 585,06 it/s, geldig (`coremark_min_rtos_log_20260808.txt`) |
 | `metingen/coremark_runs_20260808/` | reproduceerbaarheid (checkpoint 1) | 10 resets × 2 passes = 20 geldige runs in CSV; spreiding < 0,0002 it/s |
-| `05_lockstep_kern/` | de lockstep-kern zelf (checkpoint 2): app-core rekent, checker-core controleert invoer/verwerking/uitvoer | 1000 rondes @240 MHz: 0 valse positieven; detector-zelftest (bewuste bitflip in ronde 500) exact gedetecteerd met verdict VERWERKING+UITVOER; 1229,8 vs 263,1 cycli/ronde → ≈967 cycli bijkomende kost per controlecyclus in deze microbenchmark (`lockstep_kern_log_20260808.txt`) |
+| `05_lockstep_kern/` | de lockstep-kern zelf (checkpoint 2): app-core rekent, checker-core controleert invoer/verwerking/uitvoer | v2, 15 aug 2026: 1000 rondes @240 MHz, 0 valse positieven; detector-zelftest (bewuste bitflip in ronde 500) exact gedetecteerd met verdict VERWERKING+UITVOER; 1229,4 vs 494,8 cycli/ronde → ≈735 cycli = +148,5 % bijkomende kost per controlecyclus in deze microbenchmark (blok 32 woorden; één blokgrootte, dus geen bewijs van constante kost per blok). De v1-cijfers (263,1 onbeschermd, ≈967 cycli, +367 %) zijn ONGELDIG: de onbeschermde v1-lus eindigde op (void)-casts en de compiler (-O3) verwijderde bewerk() en de CRC volledig uit de meetlus, vastgesteld in de disassembly op 15 aug (`lockstep_kern_log_v2_20260815.txt`; v1: `lockstep_kern_log_20260808.txt`) |
 | `06_foutinjectie/` | foutinjectie op de kern: campagne A = 333 gerichte bitflips (invoer/resultaat/uitvoer, random woord+bit, latentiemeting); campagne B = 1133 asynchrone flips via esp_timer over 50.000 rondes | A: **100 % detectie**, elk doelwit exact het voorspelde verdict (invoer→0x7, resultaat→0x6, uitvoer→0x4); latentie gem 2,7 / 1,6 / 1,5 µs. B: 210 rondes met foutverdict per 1133 injectie-events (detectie-indicator 18,5 % op rondeniveau; injecties en verdicts niet individueel gekoppeld), alle met verdict 0x7 — de checker stelde in die rondes een afwijking vast aan invoer, verwerking én uitvoer, waardoor de drie categorietellers elk tot 210 oplopen (consistent met het invoerblok als grootste en langstlevende doelwit, maar niet herleidbaar tot individuele injectiedoelen); het verschil kan niet per event worden verklaard; temporele maskering is een plausibele verklaring, consistent met het korte leefvenster van de data per ronde (`foutinjectie_log_20260808.txt`, CSV `foutinjectie_campagneA_20260808.csv`) |
 | `07_coremark_lockstep/` | het kerncijfer: overhead van echte CoreMark binnen de checkpoint-lockstep | vijf fasen per run (onbeschermd vol / beschermd duaal vol / onbeschermd gesegmenteerd / beschermd gesegmenteerd 400×50 iteraties / zelftest); onbeschermd 584,75 it/s = exact de 04-baseline; beschermd gesegmenteerd 462,51 it/s → **20,90 % lagere doorvoer** (gesegmenteerd aggregaat, geen officiële CoreMark-score — zie toelichting onder de tabel; getimed; 21,26 % effectief incl. herinitialisatie); ontleding: duale uitvoering 20,43 %, segmentatie 0,03 %, residu (checkpoint-/synchronisatielogica + interactie-effecten, afgeleid) ≈ 0,5 procentpunt; beide volle runs "Correct operation validated", crcfinal 0x382f op beide cores; zelftest-bitflip 10/10 exact gedetecteerd (`coremark_lockstep_log_20260808.txt`) |
 | `metingen/lockstep_runs_20260808/` | reproduceerbaarheid kerncijfer | 10 resets × 5 fasen in CSV; stddev over runscores ≤ 0,10 it/s; 4000 checkpointlatenties binnen de beschermde runs: gem 2832 cycli (11,8 µs), P50 3826, P99 6623 (27,6 µs), P99,9 6908 (28,8 µs), max 6919; 0 valse positieven over 4100 checkpoints (`lockstep_fasen_20260808.csv`, `lockstep_checkpoints_20260808.csv`, `analyse_lockstep_20260808.txt`) |
 
 Vier bevindingen verdienen extra toelichting.
 
-**Uitschieters passen bij een koude-start-effect.** De maxima in de
-shared-memory-metingen (rondreis 543 cycli waar het gemiddelde 63,8 is) leken
-eerst op timer-interruptverstoring. Instrumentatie met een ronde-index wees
-uit dat de grote uitschieters telkens in ronde 0 van een meetfase vallen —
-een patroon dat consistent is met een cold-start- of initialisatie-effect;
-zodra caches warm zijn (fase 2) piekt de rondreis nog op amper 62 cycli. Dat
-maakt de eerdere timer-interrupthypothese minder waarschijnlijk.
+**Uitschieters: koude start én één meetcode-artefact.** De kleine maxima in
+de shared-memory-metingen (rondreis 543 cycli waar het gemiddelde 63,8 is)
+vallen telkens in ronde 0 van een meetfase — consistent met een cold-start-
+of initialisatie-effect; zodra caches warm zijn piekt de rondreis nog op
+amper 62 cycli. De grote uitschieter van 803.266 cycli in de queue-variant
+was echter GEEN cache-effect: dat was een barrière-artefact van vTaskDelay(1)
+in de meetcode zelf (core 0 sliep tot een RTOS-tick terwijl core 1 al mat).
+In v2 is die barrière vervangen door een busy-wait en zijn vooraf
+gedefinieerde warm-uprondes toegevoegd; daarmee verdwenen zowel de koude
+ronde 0 als het artefact uit de statistiek.
 
 **De −0,6 % bij volle RTOS is verklaard, niet weggewuifd.** Met watchdogs aan
 zakt de score van 584,75 naar 581,28 it/s. Oorzaak, onderbouwd met de

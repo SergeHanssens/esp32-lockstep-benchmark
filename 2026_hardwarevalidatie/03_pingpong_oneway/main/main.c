@@ -1,15 +1,24 @@
 /*
- * 03_pingpong_oneway: rondreis ONTLEED in heen / verwerking / terug.
+ * 03_pingpong_oneway v2: rondreis ONTLEED in rondreis / verwerking / residu.
  *
- * Probleem: elke core heeft een eigen cycle-counter (CCOUNT) en die lopen
- * niet synchroon -> tijdstempels van core 0 en core 1 zijn NIET direct
+ * Elke core heeft een eigen cycle-counter (CCOUNT) en die lopen niet
+ * synchroon -> tijdstempels van core 0 en core 1 zijn NIET direct
  * vergelijkbaar. Daarom meet elke core uitsluitend met zijn eigen teller:
- *   rondreis (initiator)  = heen + verwerking(responder) + terug
+ *   rondreis (initiator)   = heen + verwerking(responder) + terug
  *   verwerking (responder) meet de responder zelf
- *   => transport = heen + terug = rondreis - verwerking
- * Fase 1: core 0 initieert. Fase 2: core 1 initieert (richting omgekeerd).
- * Gelijke transporttijd in beide richtingen onderbouwt heen ~= terug
- * ~= transport / 2 (symmetrie gemeten i.p.v. aangenomen).
+ *   => residu = rondreis - verwerking = heen + terug SAMEN
+ *
+ * v2-CORRECTIE (15 aug 2026): deze opzet kan de twee richtingen NIET
+ * afzonderlijk meten. Fase 1 (core 0 initieert) en fase 2 (core 1
+ * initieert) meten allebei dezelfde som heen+terug; het omkeren van de
+ * initiator verwisselt de ROLLEN van de cores, niet de gemeten richting.
+ * residu/2 is dus een AFGELEIDE gemiddelde transportbijdrage per traject
+ * onder de aanname heen ~= terug, geen gemeten one-way-latentie, en het
+ * verschil tussen de fasen is een ROLVERSCHIL, geen symmetriebewijs.
+ * (Voor echte per-richting-latenties is een gemeenschappelijke tijdbasis
+ * of externe observatie nodig.) v1 noemde dit ten onrechte een gemeten
+ * symmetrie. v2 voegt ook WARMUP-rondes toe die niet worden meegeteld.
+ *
  * FreeRTOS enkel voor het opstarten van 1 taak per core; meetpad is
  * volatile gedeeld geheugen + spin-wait + memw (zoals 02_pingpong).
  */
@@ -20,6 +29,7 @@
 #include "esp_cpu.h"
 
 #define RONDES 100
+#define WARMUP 10
 #define CPU_MHZ 160.0
 
 typedef struct {
@@ -36,22 +46,22 @@ static uint32_t rt_f2[RONDES], verw_f2[RONDES];   /* fase 2: c1 init, c0 resp */
 
 static void speel_initiator(uint32_t *rt)
 {
-    for (int i = 0; i < RONDES; i++) {
+    for (int i = 0; i < WARMUP + RONDES; i++) {
         uint32_t t0 = esp_cpu_get_cycle_count();
-        k.data_ab = i;
+        k.data_ab = (uint32_t)i;
         __asm__ __volatile__("memw");
         k.vlag_ab = 1;
         while (k.vlag_ba == 0) { }
         uint32_t t3 = esp_cpu_get_cycle_count();
         k.vlag_ba = 0;
         (void)k.data_ba;
-        rt[i] = t3 - t0;
+        if (i >= WARMUP) rt[i - WARMUP] = t3 - t0;
     }
 }
 
 static void speel_responder(uint32_t *verw)
 {
-    for (int i = 0; i < RONDES; i++) {
+    for (int i = 0; i < WARMUP + RONDES; i++) {
         while (k.vlag_ab == 0) { }
         uint32_t t1 = esp_cpu_get_cycle_count();
         uint32_t d = k.data_ab;
@@ -60,7 +70,7 @@ static void speel_responder(uint32_t *verw)
         __asm__ __volatile__("memw");
         uint32_t t2 = esp_cpu_get_cycle_count();
         k.vlag_ba = 1;
-        verw[i] = t2 - t1;
+        if (i >= WARMUP) verw[i - WARMUP] = t2 - t1;
     }
 }
 
@@ -91,7 +101,8 @@ static void taak_core0(void *arg)
     wacht_op_stap(3);
 
     /* rapportage (alle waarden zijn nu gewone getallen) */
-    printf("\n=== RESULTATEN (%d rondes per fase, 8 aug 2026) ===\n", RONDES);
+    printf("\n=== RESULTATEN v2 (%d meetrondes per fase na %d warm-uprondes, 15 aug 2026) ===\n",
+           RONDES, WARMUP);
     printf("--- Fase 1: core 0 -> core 1 -> core 0 ---\n");
     stats("rondreis (core 0)", rt_f1, RONDES);
     stats("verwerking core 1", verw_f1, RONDES);
@@ -104,17 +115,19 @@ static void taak_core0(void *arg)
         tr1[i] = rt_f1[i] - verw_f1[i];
         tr2[i] = rt_f2[i] - verw_f2[i];
     }
-    printf("--- Transport = rondreis - verwerking (heen + terug samen) ---\n");
-    stats("transport richting 0->1->0", tr1, RONDES);
-    stats("transport richting 1->0->1", tr2, RONDES);
+    printf("--- Residu = rondreis - verwerking (heen + terug SAMEN) ---\n");
+    stats("residu fase 1 (c0 init)", tr1, RONDES);
+    stats("residu fase 2 (c1 init)", tr2, RONDES);
     uint64_t s1 = 0, s2 = 0;
     for (int i = 0; i < RONDES; i++) { s1 += tr1[i]; s2 += tr2[i]; }
     double g1 = (double)s1 / RONDES, g2 = (double)s2 / RONDES;
-    printf("\nSymmetrie-check: verschil tussen beide richtingen: %.1f cycli (%.1f%%)\n",
+    printf("\nRolverschil initiator c0 vs c1 (GEEN richtingssymmetrie-bewijs): %.1f cycli (%.1f%%)\n",
            g1 > g2 ? g1 - g2 : g2 - g1, 100.0 * ((g1 > g2 ? g1 - g2 : g2 - g1) / ((g1 + g2) / 2)));
-    printf("=> enkele reis (heen ~= terug) ~= %.1f cycli ~= %.3f us\n",
+    printf("=> afgeleide gemiddelde transportbijdrage per traject (residu/2,\n");
+    printf("   onder de aanname heen ~= terug) ~= %.1f cycli ~= %.3f us\n",
            (g1 + g2) / 4.0, ((g1 + g2) / 4.0) / CPU_MHZ);
-    printf("BEWIJS: rondreis ontleed met per-core eigen cycle-counters; richting omgekeerd gemeten.\n");
+    printf("BEWIJS: v2 15 aug 2026; rondreis is de primaire grootheid; per-core eigen CCOUNT;\n");
+    printf("%d warm-uprondes per fase uitgesloten van de statistiek.\n", WARMUP);
     vTaskDelete(NULL);
 }
 
@@ -131,7 +144,7 @@ static void taak_core1(void *arg)
 
 void app_main(void)
 {
-    printf("=== 03_pingpong_oneway: heen/terug-ontleding core 0 <-> core 1 ===\n");
+    printf("=== 03_pingpong_oneway v2: rondreis-ontleding core 0 <-> core 1 ===\n");
     xTaskCreatePinnedToCore(taak_core1, "c1", 8192, NULL, 5, NULL, 1);
     vTaskDelay(pdMS_TO_TICKS(100));
     xTaskCreatePinnedToCore(taak_core0, "c0", 16384, NULL, 5, NULL, 0);

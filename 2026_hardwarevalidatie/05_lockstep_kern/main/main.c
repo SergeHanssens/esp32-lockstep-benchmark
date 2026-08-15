@@ -1,5 +1,5 @@
 /*
- * 05_lockstep_kern: minimale software-lockstep op de ESP32-S3 (checkpoint 2).
+ * 05_lockstep_kern v2: minimale software-lockstep op de ESP32-S3 (checkpoint 2).
  *
  * Rolverdeling volgens het thesisontwerp:
  *   core 0 = applicatiecore: "leest" invoer in, verwerkt ze en schrijft het
@@ -12,7 +12,7 @@
  *
  * Transport: gedeeld geheugen met het in 02/03 gevalideerde patroon
  * data -> memw -> vlag (spin-wait, geen FreeRTOS in het meetpad; queues zijn
- * daar ~60-95x trager, zie 02/03). FreeRTOS start enkel de twee taken op.
+ * daar veel trager, zie 02/03). FreeRTOS start enkel de twee taken op.
  *
  * Zelftest van de detector: in ronde ZELFTEST_RONDE corrumpeert de
  * applicatiecore BEWUST zijn resultaat (1 bitflip) na de berekening.
@@ -21,9 +21,23 @@
  * alle andere rondes verdict 0. Een detector zonder bewezen detectie
  * is geen detector.
  *
- * Overheadmeting: na de lockstep-fase draait de applicatiecore dezelfde
- * workload nog eens ONBESCHERMD (zonder checker/handshake); het verschil in
- * cycli per ronde is de kern-overhead van de lockstep (nog zonder CoreMark).
+ * Overheadmeting (v2, 15 aug 2026): na de lockstep-fase draait de
+ * applicatiecore dezelfde applicatieworkload (genereer + bewerk +
+ * observeerbare uitvoer) nog eens ONBESCHERMD; het verschil in cycli per
+ * ronde is de kern-overhead van de bescherming (CRC + delen + handshake +
+ * verdict) bij DEZE blokgrootte.
+ *
+ * v2-CORRECTIE (15 aug 2026): in v1 eindigde de onbeschermde lus op
+ * "(void)crc; (void)res;". Een (void)-cast maakt een resultaat niet
+ * observeerbaar; onder -O2 verwijderde de compiler daardoor de CRC-lus en
+ * bewerk() volledig uit de onbeschermde meetlus (vastgesteld in de
+ * disassembly: tussen de twee CCOUNT-lezingen stond alleen nog
+ * genereer_invoer). De v1-baseline (263,1 cycli) mat dus alleen de
+ * invoergeneratie en de v1-overheadcijfers (966,6 cycli, +367,3%) zijn
+ * ONGELDIG. In v2 gaat het resultaat naar een volatile sink en hoort de
+ * CRC bewust NIET bij de baseline (CRC is beschermingskost, geen
+ * applicatiewerk). De aanwezigheid van bewerk() in beide meetlussen is na
+ * het bouwen opnieuw in de disassembly geverifieerd.
  */
 #include <stdio.h>
 #include <stdint.h>
@@ -61,6 +75,7 @@ static uint32_t cycli_onbeschermd[RONDES];
 static struct { uint32_t ronde; uint32_t verdict; } foutlog[MAX_FOUTLOG];
 static volatile uint32_t n_fouten = 0;
 static volatile uint32_t tel_invoer = 0, tel_verwerking = 0, tel_uitvoer = 0;
+static volatile uint32_t sink_onbeschermd; /* observeerbare uitvoer baseline (v2) */
 
 /* --- deterministische workload (identiek op beide cores) ----------------- */
 
@@ -214,20 +229,23 @@ static void taak_app(void *arg)
         }
     }
 
-    /* FASE 2: onbeschermd (zelfde workload, geen checker/handshake) */
+    /* FASE 2: onbeschermd (dezelfde applicatieworkload, geen bescherming).
+     * v2: het resultaat gaat naar een volatile sink, zoals een echte
+     * applicatie haar uitvoer wegschrijft; zonder die sink verwijdert -O2
+     * bewerk() volledig als dode code (de v1-fout). De CRC hoort bij de
+     * BESCHERMING en staat daarom bewust niet in de baseline: de gemeten
+     * overhead omvat zo ook de CRC-kost, wat de eerlijke toerekening is. */
     for (uint32_t ronde = 0; ronde < RONDES; ronde++) {
         uint32_t t0 = esp_cpu_get_cycle_count();
         genereer_invoer(ronde, app_invoer);
-        uint32_t crc = 0;
-        for (int i = 0; i < BLOK; i++) crc = crc_stap(crc, app_invoer[i]);
         uint32_t res = bewerk(app_invoer);
-        (void)crc; (void)res;
+        sink_onbeschermd = res;
         uint32_t t1 = esp_cpu_get_cycle_count();
         cycli_onbeschermd[ronde] = t1 - t0;
     }
 
     /* --- rapportage ------------------------------------------------------ */
-    printf("\n=== RESULTATEN lockstep-kern (%d rondes, blok %d woorden, 8 aug 2026) ===\n",
+    printf("\n=== RESULTATEN lockstep-kern v2 (%d rondes, blok %d woorden, 15 aug 2026) ===\n",
            RONDES, BLOK);
     printf("mismatch-tellers: invoer %u / verwerking %u / uitvoer %u  (rondes met fout: %u)\n",
            (unsigned)tel_invoer, (unsigned)tel_verwerking, (unsigned)tel_uitvoer,
@@ -255,18 +273,20 @@ static void taak_app(void *arg)
     stats("onbeschermd", cycli_onbeschermd, RONDES);
     double gb = gemiddelde(cycli_beschermd, RONDES);
     double go = gemiddelde(cycli_onbeschermd, RONDES);
-    printf("overhead lockstep-kern: %.1f cycli/ronde = %.1f%% t.o.v. onbeschermd\n",
+    printf("overhead bescherming: %.1f cycli/ronde = %.1f%% t.o.v. onbeschermd\n",
            gb - go, 100.0 * (gb - go) / go);
-    printf("(overhead = delen invoer + CRC + 4x handshake + wachten op verdict;\n");
-    printf(" de checker rekent parallel, dus de netto wachttijd hangt af van de\n");
-    printf(" verhouding rekenwerk/transport bij deze blokgrootte)\n");
+    printf("(baseline = genereer + bewerk + volatile uitvoer; overhead = CRC +\n");
+    printf(" delen invoer + 4x handshake + wachten op verdict; de checker rekent\n");
+    printf(" parallel. Geldt voor DEZE blokgrootte van %d woorden; met een enkele\n", BLOK);
+    printf(" blokgrootte is NIET aangetoond dat de kost per blok constant is.\n");
+    printf(" NB: de beschermde reeks bevat ook zelftestronde %d.)\n", ZELFTEST_RONDE);
     printf("BEWIJS: alle tellers en cycli komen uit deze run op het bord; zie log met datum.\n");
     vTaskDelete(NULL);
 }
 
 void app_main(void)
 {
-    printf("=== 05_lockstep_kern: app-core (0) + checker-core (1), 3 controlepunten ===\n");
+    printf("=== 05_lockstep_kern v2: app-core (0) + checker-core (1), 3 controlepunten ===\n");
     xTaskCreatePinnedToCore(taak_checker, "chk", 8192, NULL, 5, NULL, 1);
     vTaskDelay(pdMS_TO_TICKS(100));
     xTaskCreatePinnedToCore(taak_app, "app", 16384, NULL, 5, NULL, 0);

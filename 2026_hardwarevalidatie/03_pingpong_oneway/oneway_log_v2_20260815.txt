@@ -1,0 +1,80 @@
+ESP-ROM:esp32s3-20210327
+Build:Mar 27 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0x8 (SPI_FAST_FLASH_BOOT)
+Saved PC:0x42006033
+--- 0x42006033: uart_ll_get_txfifo_len at D:/Espressif/v5.5/esp-idf/components/hal/esp32s3/include/hal/uart_ll.h:422
+--- (inlined by) uart_tx_char at D:/Espressif/v5.5/esp-idf/components/esp_driver_uart/src/uart_vfs.c:190
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fce2820,len:0x159c
+load:0x403c8700,len:0xd24
+--- 0x403c8700: _stext at ??:?
+load:0x403cb700,len:0x2f48
+entry 0x403c8924
+--- 0x403c8924: call_start_cpu0 at D:/Espressif/v5.5/esp-idf/components/bootloader/subproject/main/bootloader_start.c:25
+I (24) boot: ESP-IDF v5.5 2nd stage bootloader
+I (24) boot: compile time Aug 15 2026 13:32:10
+I (25) boot: Multicore bootloader
+I (25) boot: chip revision: v0.2
+I (27) boot: efuse block revision: v1.3
+I (31) boot.esp32s3: Boot SPI Speed : 80MHz
+I (35) boot.esp32s3: SPI Mode       : DIO
+I (39) boot.esp32s3: SPI Flash Size : 2MB
+I (42) boot: Enabling RNG early entropy source...
+I (47) boot: Partition Table:
+I (49) boot: ## Label            Usage          Type ST Offset   Length
+I (56) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (62) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (69) boot:  2 factory          factory app      00 00 00010000 00100000
+I (75) boot: End of partition table
+I (79) esp_image: segment 0: paddr=00010020 vaddr=3c020020 size=0a670h ( 42608) map
+I (93) esp_image: segment 1: paddr=0001a698 vaddr=3fc92700 size=02ad8h ( 10968) load
+I (96) esp_image: segment 2: paddr=0001d178 vaddr=40374000 size=02ea0h ( 11936) load
+I (103) esp_image: segment 3: paddr=00020020 vaddr=42000020 size=17bc8h ( 97224) map
+I (125) esp_image: segment 4: paddr=00037bf0 vaddr=40376ea0 size=0b758h ( 46936) load
+I (136) esp_image: segment 5: paddr=00043350 vaddr=600fe000 size=00020h (    32) load
+I (142) boot: Loaded app from partition at offset 0x10000
+I (142) boot: Disabling RNG early entropy source...
+I (154) cpu_start: Multicore app
+I (163) cpu_start: Pro cpu start user code
+I (163) cpu_start: cpu freq: 160000000 Hz
+I (163) app_init: Application information:
+I (163) app_init: Project name:     pingpong_oneway
+I (168) app_init: App version:      ba9c122-dirty
+I (172) app_init: Compile time:     Aug 15 2026 14:04:41
+I (177) app_init: ELF file SHA256:  50731cc66...
+I (181) app_init: ESP-IDF:          v5.5
+I (185) efuse_init: Min chip rev:     v0.0
+I (189) efuse_init: Max chip rev:     v0.99
+I (193) efuse_init: Chip rev:         v0.2
+I (197) heap_init: Initializing. RAM available for dynamic allocation:
+I (203) heap_init: At 3FC96100 len 00053610 (333 KiB): RAM
+I (208) heap_init: At 3FCE9710 len 00005724 (21 KiB): RAM
+I (213) heap_init: At 3FCF0000 len 00008000 (32 KiB): DRAM
+I (218) heap_init: At 600FE020 len 00001FC8 (7 KiB): RTCRAM
+I (225) spi_flash: detected chip: boya
+I (227) spi_flash: flash io: dio
+W (230) spi_flash: Detected size(16384k) larger than the size in the binary image header(2048k). Using the size in the binary image header.
+I (242) sleep_gpio: Configure to isolate all GPIO pins in sleep state
+I (249) sleep_gpio: Enable automatic switching of GPIO sleep configuration
+I (256) main_task: Started on CPU0
+I (266) main_task: Calling app_main()
+=== 03_pingpong_oneway v2: rondreis-ontleding core 0 <-> core 1 ===
+[core 1] taak gestart
+[core 0] taak gestart
+=== RESULTATEN v2 (100 meetrondes per fase na 10 warm-uprondes, 15 aug 2026) ===
+--- Fase 1: core 0 -> core 1 -> core 0 ---
+rondreis (core 0)            min    61 / gem    61.0 / max    61 cycli (max in ronde 0)  (gem 0.381 us)
+verwerking core 1            min    20 / gem    20.0 / max    20 cycli (max in ronde 0)  (gem 0.125 us)
+--- Fase 2: core 1 -> core 0 -> core 1 ---
+rondreis (core 1)            min    61 / gem    61.0 / max    61 cycli (max in ronde 0)  (gem 0.381 us)
+verwerking core 0            min    20 / gem    20.0 / max    20 cycli (max in ronde 0)  (gem 0.125 us)
+--- Residu = rondreis - verwerking (heen + terug SAMEN) ---
+residu fase 1 (c0 init)      min    41 / gem    41.0 / max    41 cycli (max in ronde 0)  (gem 0.256 us)
+residu fase 2 (c1 init)      min    41 / gem    41.0 / max    41 cycli (max in ronde 0)  (gem 0.256 us)
+Rolverschil initiator c0 vs c1 (GEEN richtingssymmetrie-bewijs): 0.0 cycli (0.0%)
+=> afgeleide gemiddelde transportbijdrage per traject (residu/2,
+   onder de aanname heen ~= terug) ~= 20.5 cycli ~= 0.128 us
+BEWIJS: v2 15 aug 2026; rondreis is de primaire grootheid; per-core eigen CCOUNT;
+10 warm-uprondes per fase uitgesloten van de statistiek.
+I (456) main_task: Returned from app_main()
