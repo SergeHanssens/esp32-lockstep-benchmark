@@ -1,0 +1,37 @@
+﻿================ JTAG-INJECTIE AUDITTRAIL ================
+bord           : Fri3d-badge-2026 (COM5)
+adapter serial : DC:B4:D9:0B:7F:3C
+tijd           : 2026-08-10T15:10:28
+firmware ELF   : D:\thesis\ClaudeCode\jtag\05b_jtag_lockstep\build\lockstep_kern.elf
+ELF MD5        : 04592D6EC445C68CBA213826C41E695D
+OpenOCD cfg MD5: 7E21B58A28D1B9717F1133D623E89A84
+adres-map      : g_det_totaal=0x3fc9472c g_flip_uit=0x3fc94740 g_flip_res=0x3fc94744 g_flip_invoer=0x3fc94748
+verwacht       : injectie1->0x1[INVOER], injectie2->0x2[VERWERKING], injectie3->0x4[UITVOER]
+=========================================================
+
+----- OpenOCD JTAG-transcript (mww + readback + tellers) -----
+Info : [esp32s3.cpu0] Examination succeed
+Info : [esp32s3.cpu1] Examination succeed
+AUDIT OpenOCD Open On-Chip Debugger v0.12.0-esp32-20250422 (2025-04-22-13:02)
+=== INJECTIE 1 INVOER (verwacht verdict 0x1) ===
+  pre  tellers totaal,uit,res,invoer = 0x0 0x0 0x0 0x0
+  pre  g_flip_invoer                 = 0x0
+  mww  g_flip_invoer 0x1 -> readback = 0x1
+=== INJECTIE 2 VERWERKING (verwacht verdict 0x2) ===
+  mww  g_flip_res 0x40 -> readback   = 0x40
+=== INJECTIE 3 UITVOER (verwacht verdict 0x4) ===
+  mww  g_flip_uit 0x400 -> readback  = 0x400
+=== EIND: tellerstand en triggers (moeten weer 0 zijn) ===
+  eind tellers totaal,uit,res,invoer = 0x3 0x1 0x1 0x1
+  eind triggers uit,res,invoer       = 0x0 0x0 0x0
+
+----- Seriele detecties van het bord -----
+hartslag: ronde 1000000, 0 valse positieven, detecties totaal 0
+JTAG-INJECTIE GEDETECTEERD: ronde 1554332 verdict 0x1 [INVOER] (tot: inv 1 / verw 0 / uit 0)
+JTAG-INJECTIE GEDETECTEERD: ronde 1694873 verdict 0x2 [VERWERKING] (tot: inv 1 / verw 1 / uit 0)
+JTAG-INJECTIE GEDETECTEERD: ronde 1878657 verdict 0x4 [UITVOER] (tot: inv 1 / verw 1 / uit 1)
+hartslag: ronde 2000000, 0 valse positieven, detecties totaal 3
+hartslag: ronde 3000000, 0 valse positieven, detecties totaal 3
+hartslag: ronde 4000000, 0 valse positieven, detecties totaal 3
+hartslag: ronde 5000000, 0 valse positieven, detecties totaal 3
+hartslag: ronde 6000000, 0 valse positieven, detecties totaal 3
