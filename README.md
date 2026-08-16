@@ -1,6 +1,7 @@
-# ESP32-S3 software-lockstep — masterproef ZA0324
+# ESP32-S3 softwarematige checkpoint-redundantie — masterproef ZA0324
 
-Deze repository hoort bij mijn masterproef **"Software lockstep op de ESP32-S3"**
+Deze repository hoort bij mijn masterproef **"Softwarematige checkpoint-redundantie op de ESP32-S3"**
+(eerdere werktitel: "Software lockstep op de ESP32-S3")
 (Master industriële wetenschappen: elektronica-ICT, KU Leuven — Faculteit
 Industriële Ingenieurswetenschappen, campus Geel; promotor prof. dr. ing.
 Jeffrey Prinzie). Het doel is een softwarematige lockstep waarbij één core de
@@ -40,8 +41,13 @@ volgt, met één regel die alles stuurt:
 > **Elk getal komt uit een meting op het echte bord, met de ruwe log als
 > bewijs in deze repository. Geen log, geen resultaat.**
 
-Alle metingen draaien op een ESP32-S3-DevKitC-1 (N16R8) met ESP-IDF v5.5 en
-de officiële, tegen upstream geverifieerde EEMBC CoreMark. De opbouw, de
+De basissessies draaien op een ESP32-S3-DevKitC-1 (N16R8) met ESP-IDF v5.5 en
+de officiële, tegen upstream geverifieerde EEMBC CoreMark. Op 15 augustus
+2026 is het volledige CoreMark-meetprotocol herhaald op negen fysieke borden
+(3× DevKitC-1, 3× Fri3d-badge 2024, 3× Fri3d-badge 2026): 45 runs, 315
+meetrijen, 36 450 checkpointrijen, nul ongeldige runs — zie
+[`2026_hardwarevalidatie/metingen/`](2026_hardwarevalidatie/metingen/) en
+[`2026_hardwarevalidatie/final_dataset_manifest.md`](2026_hardwarevalidatie/final_dataset_manifest.md). De opbouw, de
 tussenresultaten en de motivering van elke stap staan in
 [`2026_hardwarevalidatie/LOGBOEK.md`](2026_hardwarevalidatie/LOGBOEK.md);
 de methodologie en resultaten in

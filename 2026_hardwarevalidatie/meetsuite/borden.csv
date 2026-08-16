@@ -1,0 +1,10 @@
+serie,bordtype,bordnaam,poort_gezien_20260812,rol
+CC:BA:97:14:2B:28,devkitc1,DK1,COM1,referentie
+CC:BA:97:14:03:24,devkitc1,DK2,COM2,replica
+CC:BA:97:13:FD:68,devkitc1,DK3,COM3,replica
+34:85:18:AC:73:C4,fri3d2024,F24A,COM4,replica
+34:85:18:AC:3A:54,fri3d2024,F24B,COM5,replica
+34:85:18:6C:A4:38,fri3d2024,F24C,COM6,replica
+DC:B4:D9:0B:7F:3C,fri3d2026,F26A,COM7,replica
+1C:DB:D4:9C:E2:48,fri3d2026,F26B,COM8,replica
+90:70:69:01:BA:F4,fri3d2026,F26C,COM9,replica

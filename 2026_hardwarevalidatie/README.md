@@ -252,11 +252,14 @@ De formeel correcte weg (L32AI/S32RI, of C11-atomics met
 acquire/release-semantiek en `atomic_thread_fence`) is de aangewezen route
 voor een productie-implementatie en staat als toekomstig werk genoteerd.
 
-**Meetcontext.** Alle metingen komen van één bord, één dag, één
-toolchain/configuratie: sterk als proof-of-concept met bewezen
-reproduceerbaarheid binnen die opstelling (10 resets, spreiding
-< 0,0002 it/s), zwak voor generalisatie over exemplaren, temperatuur of
-buildflags. Campagne A bewijst de detectieketen (injecties op detecteerbare
+**Meetcontext.** De basissessies (8–9 augustus) komen van één bord en één
+toolchain/configuratie (10 resets, spreiding < 0,0002 it/s). Op 15 augustus
+2026 zijn de prestatiemetingen herhaald op negen borden van drie bordtypes,
+vijf runs per bord (zie `metingen/` en `final_dataset_manifest.md`): mediaan
+C→D-doorvoerverlies 20,8769 %, bereik over de negen bordmedianen 0,0097
+procentpunt. Dat ondersteunt reproduceerbaarheid binnen deze SoC-familie,
+toolchain en meetconfiguratie; over andere toolchains, temperaturen of
+productiebatches zegt het niets. Campagne A bewijst de detectieketen (injecties op detecteerbare
 momenten); campagne B levert een detectie-indicator op rondeniveau bij
 asynchrone software-injectie (injecties en verdicts niet individueel
 gekoppeld) — geen van beide simuleert fysieke SEU's, EM-glitches of
